@@ -55,7 +55,8 @@ namespace Reestr.DAL.Repositories
                     List<ServiceReestr> orgs = _con.Query<ServiceReestr>($"SELECT ServiceReestr.Id, ServiceReestr.OrganizationId, " +
                         $"ServiceReestr.ServiceId, ServiceReestr.Price, ServiceReestr.BeginDate FROM ServiceReestr " +
                         $"INNER JOIN Organizations ON ServiceReestr.OrganizationId = Organizations.Id " +
-                        $"INNER JOIN Services ON ServiceReestr.ServiceId = Services.Id {where} OFFSET (@Offset) ROWS FETCH NEXT @Limit ROWS ONLY",
+                        $"INNER JOIN Services ON ServiceReestr.ServiceId = Services.Id {where} " +
+                        $"OFFSET (@Offset) ROWS FETCH NEXT @Limit ROWS ONLY",
                         new
                         {
                             OrganizationName = query.OrganizationName,

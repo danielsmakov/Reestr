@@ -39,7 +39,7 @@ namespace Reestr.DAL.Repositories
         }
         public List<ProducedService> List(IQuery queryModel)
         {
-            var query = queryModel as OrganizationQuery;
+            var query = queryModel as ProducedServiceQuery;
 
             using (var _con = new SqlConnection(connectString))
             {
@@ -50,7 +50,8 @@ namespace Reestr.DAL.Repositories
                     var where = "WHERE 1=1";
                     if (query.IsDeleted) where += " AND EndDate is not null ";
 
-                    List<ProducedService> orgs = _con.Query<ProducedService>($"SELECT * FROM ProducedServices {where} OFFSET (@Offset) ROWS FETCH NEXT @Limit ROWS ONLY",
+                    List<ProducedService> orgs = _con.Query<ProducedService>($"SELECT * FROM ProducedServices {where} " +
+                        $"OFFSET (@Offset) ROWS FETCH NEXT @Limit ROWS ONLY",
                         new
                         {
                             Offset = query.Offset,

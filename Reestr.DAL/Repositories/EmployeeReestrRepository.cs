@@ -54,8 +54,10 @@ namespace Reestr.DAL.Repositories
                      
                     List<EmployeeReestr> orgs = _con.Query<EmployeeReestr>($"SELECT EmployeeReestr.Id, EmployeeReestr.OrganizationId, " +
                         $"EmployeeReestr.IIN, EmployeeReestr.FullName, EmployeeReestr.DateOfBirth, EmployeeReestr.PhoneNumber, " +
-                        $"EmployeeReestr.BeginDate, EmployeeReestr.EndDate FROM Organizations " +
-                        $"INNER JOIN Organizations ON EmployeeReestr.OrganizationId = Organizations.Id {where} OFFSET (@Offset) ROWS FETCH NEXT @Limit ROWS ONLY",
+                        $"EmployeeReestr.BeginDate " +
+                        $"FROM Organizations " +
+                        $"INNER JOIN Organizations ON EmployeeReestr.OrganizationId = Organizations.Id {where} " +
+                        $"OFFSET (@Offset) ROWS FETCH NEXT @Limit ROWS ONLY",
                         new
                         {
                             OrganizationName = query.OrganizationName,
