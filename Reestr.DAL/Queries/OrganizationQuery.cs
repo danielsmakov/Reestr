@@ -10,6 +10,7 @@ namespace Reestr.DAL.Queries
     public class OrganizationQuery : PaginationQuery, IQuery 
     {
         public string Name { get; set; }
+
         public bool IsDeleted { get; set; }
     }
 }
