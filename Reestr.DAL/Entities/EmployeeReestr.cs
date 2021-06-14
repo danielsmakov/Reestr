@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Reestr.DAL.Entities
 {
-    public class Employee
+    public class EmployeeReestr
     {
         public int Id { get; set; }
         /// <summary>

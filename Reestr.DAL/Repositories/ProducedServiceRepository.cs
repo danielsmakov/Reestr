@@ -12,24 +12,24 @@ using System.Threading.Tasks;
 
 namespace Reestr.DAL.Repositories
 {
-    public class OrganizationRepository : IRepository<Organization>
+    class ProducedServiceRepository : IRepository<ProducedService>
     {
         string connectString = ConfigurationManager.ConnectionStrings["RegistryDBConnection"].ConnectionString;
-        public Organization Get(int id)
+        public ProducedService Get(int id)
         {
             using (SqlConnection _con = new SqlConnection(connectString))
             {
                 try
                 {
                     _con.Open();
-                    Organization org = _con.QuerySingle<Organization>("Select * From Organizations Where Id = @Id",
+                    ProducedService entity = _con.QuerySingle<ProducedService>("Select * From ProducedServices Where Id = @Id",
                         new
                         {
                             id = id
                         }
                         );
                     _con.Close();
-                    return org;
+                    return entity;
                 }
                 catch (Exception ex)
                 {
@@ -37,7 +37,7 @@ namespace Reestr.DAL.Repositories
                 }
             }
         }
-        public List<Organization> List(OrganizationQuery query)
+        public List<ProducedService> List(OrganizationQuery query)
         {
             using (var _con = new SqlConnection(connectString))
             {
@@ -49,7 +49,7 @@ namespace Reestr.DAL.Repositories
                     if (query.IsDeleted) where += " AND EndDate is not null ";
                     if (!string.IsNullOrEmpty(query.Name)) where += " AND Name like '%@Name%'";
 
-                    List<Organization> orgs = _con.Query<Organization>($"Select * From Organizations {where}",
+                    List<ProducedService> orgs = _con.Query<ProducedService>($"Select * From ProducedServices {where}",
                         new
                         {
                             name = query.Name
@@ -64,14 +64,14 @@ namespace Reestr.DAL.Repositories
                 }
             }
         }
-        public void Insert(Organization entity)
+        public void Insert(ProducedService entity)
         {
             using (var _con = new SqlConnection(connectString))
             {
                 try
                 {
                     _con.Open();
-                    _con.Execute("Insert Into Organizations (Id, Name, BIN, PhoneNumber, BeginDate, EndDate) Values (@Id, @Name, @BIN, @PhoneNumber, @BeginDate, @EndDate)", new { entity });
+                    _con.Execute("Insert Into ProducedServices (Id, OrganizationId, ServiceId, EmployeeId, BeginDate, EndDate) Values (@Id, @OrganizationId, @ServiceId, @EmployeeId, @BeginDate, @EndDate)", new { entity });
                     _con.Close();
                 }
                 catch (Exception ex)
@@ -80,14 +80,14 @@ namespace Reestr.DAL.Repositories
                 }
             }
         }
-        public void Update(Organization entity)
+        public void Update(ProducedService entity)
         {
             using (var _con = new SqlConnection(connectString))
             {
                 try
                 {
                     _con.Open();
-                    _con.Execute("Update Organizations Set Name = @Name, BIN = @BIN, PhoneNumber = @PhoneNumber, BeginDate = @BeginDate Where Id = @Id", new { entity });
+                    _con.Execute("Update ProducedServices Set OrganizationId = @OrganizationId, ServiceId = @ServiceId, EmployeeId = @EmployeeId, BeginDate = @BeginDate Where Id = @Id", new { entity });
                     _con.Close();
                 }
                 catch (Exception ex)
@@ -103,7 +103,7 @@ namespace Reestr.DAL.Repositories
                 try
                 {
                     _con.Open();
-                    _con.Execute("Update Organizations Set EndDate = GETDATE() Where Id = @Id", new { id });
+                    _con.Execute("Update ProducedServices Set EndDate = GETDATE() Where Id = @Id", new { id });
                     _con.Close();
                 }
                 catch (Exception ex)

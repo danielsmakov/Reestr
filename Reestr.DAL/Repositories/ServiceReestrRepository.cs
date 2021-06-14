@@ -12,24 +12,24 @@ using System.Threading.Tasks;
 
 namespace Reestr.DAL.Repositories
 {
-    public class OrganizationRepository : IRepository<Organization>
+    class ServiceReestrRepository : IRepository<ServiceReestr>
     {
         string connectString = ConfigurationManager.ConnectionStrings["RegistryDBConnection"].ConnectionString;
-        public Organization Get(int id)
+        public ServiceReestr Get(int id)
         {
             using (SqlConnection _con = new SqlConnection(connectString))
             {
                 try
                 {
                     _con.Open();
-                    Organization org = _con.QuerySingle<Organization>("Select * From Organizations Where Id = @Id",
+                    ServiceReestr entity = _con.QuerySingle<ServiceReestr>("Select * From ServiceReestr Where Id = @Id",
                         new
                         {
                             id = id
                         }
                         );
                     _con.Close();
-                    return org;
+                    return entity;
                 }
                 catch (Exception ex)
                 {
@@ -37,7 +37,7 @@ namespace Reestr.DAL.Repositories
                 }
             }
         }
-        public List<Organization> List(OrganizationQuery query)
+        public List<ServiceReestr> List(OrganizationQuery query)
         {
             using (var _con = new SqlConnection(connectString))
             {
@@ -49,7 +49,7 @@ namespace Reestr.DAL.Repositories
                     if (query.IsDeleted) where += " AND EndDate is not null ";
                     if (!string.IsNullOrEmpty(query.Name)) where += " AND Name like '%@Name%'";
 
-                    List<Organization> orgs = _con.Query<Organization>($"Select * From Organizations {where}",
+                    List<ServiceReestr> orgs = _con.Query<ServiceReestr>($"Select * From ServiceReestr {where}",
                         new
                         {
                             name = query.Name
@@ -64,14 +64,14 @@ namespace Reestr.DAL.Repositories
                 }
             }
         }
-        public void Insert(Organization entity)
+        public void Insert(ServiceReestr entity)
         {
             using (var _con = new SqlConnection(connectString))
             {
                 try
                 {
                     _con.Open();
-                    _con.Execute("Insert Into Organizations (Id, Name, BIN, PhoneNumber, BeginDate, EndDate) Values (@Id, @Name, @BIN, @PhoneNumber, @BeginDate, @EndDate)", new { entity });
+                    _con.Execute("Insert Into ServiceReestr (Id, OrganizationId, ServiceId, Price, BeginDate, EndDate) Values (@Id, @OrganizationId, @ServiceId, @Price, @BeginDate, @EndDate)", new { entity });
                     _con.Close();
                 }
                 catch (Exception ex)
@@ -80,14 +80,14 @@ namespace Reestr.DAL.Repositories
                 }
             }
         }
-        public void Update(Organization entity)
+        public void Update(ServiceReestr entity)
         {
             using (var _con = new SqlConnection(connectString))
             {
                 try
                 {
                     _con.Open();
-                    _con.Execute("Update Organizations Set Name = @Name, BIN = @BIN, PhoneNumber = @PhoneNumber, BeginDate = @BeginDate Where Id = @Id", new { entity });
+                    _con.Execute("Update ServiceReestr Set OrganizationId = @OrganizationId, ServiceId = @ServiceId, Price = @Price, BeginDate = @BeginDate Where Id = @Id", new { entity });
                     _con.Close();
                 }
                 catch (Exception ex)
@@ -103,7 +103,7 @@ namespace Reestr.DAL.Repositories
                 try
                 {
                     _con.Open();
-                    _con.Execute("Update Organizations Set EndDate = GETDATE() Where Id = @Id", new { id });
+                    _con.Execute("Update ServiceReestr Set EndDate = GETDATE() Where Id = @Id", new { id });
                     _con.Close();
                 }
                 catch (Exception ex)

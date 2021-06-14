@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Reestr.DAL.Entities
 {
-    public class ServiceOfOrganization
+    public class ServiceReestr
     {
         public int Id { get; set; }
         public int OrganizationId { get; set; }

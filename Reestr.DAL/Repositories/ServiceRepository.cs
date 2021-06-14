@@ -12,24 +12,24 @@ using System.Threading.Tasks;
 
 namespace Reestr.DAL.Repositories
 {
-    public class OrganizationRepository : IRepository<Organization>
+    class ServiceRepository : IRepository<Service>
     {
         string connectString = ConfigurationManager.ConnectionStrings["RegistryDBConnection"].ConnectionString;
-        public Organization Get(int id)
+        public Service Get(int id)
         {
             using (SqlConnection _con = new SqlConnection(connectString))
             {
                 try
                 {
                     _con.Open();
-                    Organization org = _con.QuerySingle<Organization>("Select * From Organizations Where Id = @Id",
+                    Service service = _con.QuerySingle<Service>("Select * From Services Where Id = @Id",
                         new
                         {
                             id = id
                         }
                         );
                     _con.Close();
-                    return org;
+                    return service;
                 }
                 catch (Exception ex)
                 {
@@ -37,7 +37,7 @@ namespace Reestr.DAL.Repositories
                 }
             }
         }
-        public List<Organization> List(OrganizationQuery query)
+        public List<Service> List(OrganizationQuery query)
         {
             using (var _con = new SqlConnection(connectString))
             {
@@ -49,7 +49,7 @@ namespace Reestr.DAL.Repositories
                     if (query.IsDeleted) where += " AND EndDate is not null ";
                     if (!string.IsNullOrEmpty(query.Name)) where += " AND Name like '%@Name%'";
 
-                    List<Organization> orgs = _con.Query<Organization>($"Select * From Organizations {where}",
+                    List<Service> orgs = _con.Query<Service>($"Select * From Services {where}",
                         new
                         {
                             name = query.Name
@@ -64,14 +64,14 @@ namespace Reestr.DAL.Repositories
                 }
             }
         }
-        public void Insert(Organization entity)
+        public void Insert(Service entity)
         {
             using (var _con = new SqlConnection(connectString))
             {
                 try
                 {
                     _con.Open();
-                    _con.Execute("Insert Into Organizations (Id, Name, BIN, PhoneNumber, BeginDate, EndDate) Values (@Id, @Name, @BIN, @PhoneNumber, @BeginDate, @EndDate)", new { entity });
+                    _con.Execute("Insert Into Services (Id, Name, Code, Price, BeginDate, EndDate) Values (@Id, @Name, @Code, @Price, @BeginDate, @EndDate)", new { entity });
                     _con.Close();
                 }
                 catch (Exception ex)
@@ -80,14 +80,14 @@ namespace Reestr.DAL.Repositories
                 }
             }
         }
-        public void Update(Organization entity)
+        public void Update(Service entity)
         {
             using (var _con = new SqlConnection(connectString))
             {
                 try
                 {
                     _con.Open();
-                    _con.Execute("Update Organizations Set Name = @Name, BIN = @BIN, PhoneNumber = @PhoneNumber, BeginDate = @BeginDate Where Id = @Id", new { entity });
+                    _con.Execute("Update Services Set Name = @Name, Code = @Code, Price = @Price, BeginDate = @BeginDate Where Id = @Id", new { entity });
                     _con.Close();
                 }
                 catch (Exception ex)
@@ -103,7 +103,7 @@ namespace Reestr.DAL.Repositories
                 try
                 {
                     _con.Open();
-                    _con.Execute("Update Organizations Set EndDate = GETDATE() Where Id = @Id", new { id });
+                    _con.Execute("Update Services Set EndDate = GETDATE() Where Id = @Id", new { id });
                     _con.Close();
                 }
                 catch (Exception ex)
