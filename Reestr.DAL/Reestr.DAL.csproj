@@ -74,6 +74,7 @@
     <Compile Include="Entities\ServiceReestr.cs" />
     <Compile Include="Interfaces\IQuery.cs" />
     <Compile Include="Interfaces\IRepository.cs" />
+    <Compile Include="Interfaces\IUnitOfWork.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Queries\EmployeeReestrQuery.cs" />
     <Compile Include="Queries\OrganizationQuery.cs" />
@@ -86,6 +87,7 @@
     <Compile Include="Repositories\ProducedServiceRepository.cs" />
     <Compile Include="Repositories\ServiceReestrRepository.cs" />
     <Compile Include="Repositories\ServiceRepository.cs" />
+    <Compile Include="Repositories\UnitOfWork.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

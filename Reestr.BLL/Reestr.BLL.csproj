@@ -46,10 +46,15 @@
     <Compile Include="DTOs\ProducedServiceDTO.cs" />
     <Compile Include="DTOs\ServiceDTO.cs" />
     <Compile Include="DTOs\ServiceReestrDTO.cs" />
+    <Compile Include="Interfaces\IManager.cs" />
+    <Compile Include="Managers\OrganizationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Managers\" />
+    <ProjectReference Include="..\Reestr.DAL\Reestr.DAL.csproj">
+      <Project>{2f88fa83-afde-4056-bc05-ddbfddcb2042}</Project>
+      <Name>Reestr.DAL</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
