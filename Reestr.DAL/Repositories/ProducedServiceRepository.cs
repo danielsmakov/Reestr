@@ -22,7 +22,7 @@ namespace Reestr.DAL.Repositories
                 try
                 {
                     _con.Open();
-                    ProducedService entity = _con.QuerySingle<ProducedService>("Select * From ProducedServices Where Id = @Id",
+                    ProducedService entity = _con.QuerySingle<ProducedService>("SELECT * FROM ProducedServices WHERE Id = @Id",
                         new
                         {
                             id = id
@@ -37,8 +37,10 @@ namespace Reestr.DAL.Repositories
                 }
             }
         }
-        public List<ProducedService> List(OrganizationQuery query)
+        public List<ProducedService> List(IQuery queryModel)
         {
+            var query = queryModel as OrganizationQuery;
+
             using (var _con = new SqlConnection(connectString))
             {
                 try
@@ -47,12 +49,12 @@ namespace Reestr.DAL.Repositories
 
                     var where = "WHERE 1=1";
                     if (query.IsDeleted) where += " AND EndDate is not null ";
-                    if (!string.IsNullOrEmpty(query.Name)) where += " AND Name like '%@Name%'";
 
-                    List<ProducedService> orgs = _con.Query<ProducedService>($"Select * From ProducedServices {where}",
+                    List<ProducedService> orgs = _con.Query<ProducedService>($"SELECT * FROM ProducedServices {where} OFFSET (@Offset) ROWS FETCH NEXT @Limit ROWS ONLY",
                         new
                         {
-                            name = query.Name
+                            Offset = query.Offset,
+                            Limit = query.Limit
                         }
                         ).ToList();
                     _con.Close();
@@ -71,7 +73,7 @@ namespace Reestr.DAL.Repositories
                 try
                 {
                     _con.Open();
-                    _con.Execute("Insert Into ProducedServices (Id, OrganizationId, ServiceId, EmployeeId, BeginDate, EndDate) Values (@Id, @OrganizationId, @ServiceId, @EmployeeId, @BeginDate, @EndDate)", new { entity });
+                    _con.Execute("INSERT INTO ProducedServices (Id, OrganizationId, ServiceId, EmployeeId, BeginDate) VALUES (@Id, @OrganizationId, @ServiceId, @EmployeeId, @BeginDate)", new { entity });
                     _con.Close();
                 }
                 catch (Exception ex)
@@ -87,7 +89,7 @@ namespace Reestr.DAL.Repositories
                 try
                 {
                     _con.Open();
-                    _con.Execute("Update ProducedServices Set OrganizationId = @OrganizationId, ServiceId = @ServiceId, EmployeeId = @EmployeeId, BeginDate = @BeginDate Where Id = @Id", new { entity });
+                    _con.Execute("UPDATE ProducedServices SET OrganizationId = @OrganizationId, ServiceId = @ServiceId, EmployeeId = @EmployeeId, BeginDate = @BeginDate WHERE Id = @Id", new { entity });
                     _con.Close();
                 }
                 catch (Exception ex)
@@ -103,7 +105,7 @@ namespace Reestr.DAL.Repositories
                 try
                 {
                     _con.Open();
-                    _con.Execute("Update ProducedServices Set EndDate = GETDATE() Where Id = @Id", new { id });
+                    _con.Execute("UPDATE ProducedServices SET EndDate = GETDATE() WHERE Id = @Id", new { id });
                     _con.Close();
                 }
                 catch (Exception ex)

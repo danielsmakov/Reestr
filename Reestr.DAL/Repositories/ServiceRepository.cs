@@ -22,7 +22,7 @@ namespace Reestr.DAL.Repositories
                 try
                 {
                     _con.Open();
-                    Service service = _con.QuerySingle<Service>("Select * From Services Where Id = @Id",
+                    Service service = _con.QuerySingle<Service>("SELECT * FROM Services WHERE Id = @Id",
                         new
                         {
                             id = id
@@ -37,8 +37,10 @@ namespace Reestr.DAL.Repositories
                 }
             }
         }
-        public List<Service> List(OrganizationQuery query)
+        public List<Service> List(IQuery queryModel)
         {
+            var query = queryModel as ServiceQuery;
+
             using (var _con = new SqlConnection(connectString))
             {
                 try
@@ -49,10 +51,12 @@ namespace Reestr.DAL.Repositories
                     if (query.IsDeleted) where += " AND EndDate is not null ";
                     if (!string.IsNullOrEmpty(query.Name)) where += " AND Name like '%@Name%'";
 
-                    List<Service> orgs = _con.Query<Service>($"Select * From Services {where}",
+                    List<Service> orgs = _con.Query<Service>($"SELECT * FROM Services {where} OFFSET (@Offset) ROWS FETCH NEXT @Limit ROWS ONLY",
                         new
                         {
-                            name = query.Name
+                            Name = query.Name,
+                            Offset = query.Offset,
+                            Limit = query.Limit
                         }
                         ).ToList();
                     _con.Close();
@@ -71,7 +75,7 @@ namespace Reestr.DAL.Repositories
                 try
                 {
                     _con.Open();
-                    _con.Execute("Insert Into Services (Id, Name, Code, Price, BeginDate, EndDate) Values (@Id, @Name, @Code, @Price, @BeginDate, @EndDate)", new { entity });
+                    _con.Execute("INSERT IntINTO Services (Id, Name, Code, Price, BeginDate) VALUES (@Id, @Name, @Code, @Price, @BeginDate)", new { entity });
                     _con.Close();
                 }
                 catch (Exception ex)
@@ -87,7 +91,7 @@ namespace Reestr.DAL.Repositories
                 try
                 {
                     _con.Open();
-                    _con.Execute("Update Services Set Name = @Name, Code = @Code, Price = @Price, BeginDate = @BeginDate Where Id = @Id", new { entity });
+                    _con.Execute("UPDATE Services SET Name = @Name, Code = @Code, Price = @Price, BeginDate = @BeginDate WHERE Id = @Id", new { entity });
                     _con.Close();
                 }
                 catch (Exception ex)
@@ -103,7 +107,7 @@ namespace Reestr.DAL.Repositories
                 try
                 {
                     _con.Open();
-                    _con.Execute("Update Services Set EndDate = GETDATE() Where Id = @Id", new { id });
+                    _con.Execute("UPDATE Services SET EndDate = GETDATE() WHERE Id = @Id", new { id });
                     _con.Close();
                 }
                 catch (Exception ex)

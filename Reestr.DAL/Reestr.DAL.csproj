@@ -76,7 +76,12 @@
     <Compile Include="Interfaces\IRepository.cs" />
     <Compile Include="Interfaces\IUnitOfWork.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Queries\EmployeeReestrQuery.cs" />
     <Compile Include="Queries\OrganizationQuery.cs" />
+    <Compile Include="Queries\ProducedServiceQuery.cs" />
+    <Compile Include="Queries\PaginationQuery.cs" />
+    <Compile Include="Queries\ServiceQuery.cs" />
+    <Compile Include="Queries\ServiceReestrQuery.cs" />
     <Compile Include="Repositories\EmployeeReestrRepository.cs" />
     <Compile Include="Repositories\OrganizationRepository.cs" />
     <Compile Include="Repositories\ProducedServiceRepository.cs" />

@@ -7,9 +7,10 @@ using System.Threading.Tasks;
 
 namespace Reestr.DAL.Queries
 {
-    public class OrganizationQuery : PaginationQuery, IQuery 
+    public class ServiceReestrQuery : PaginationQuery, IQuery
     {
-        public string Name { get; set; }
+        public string OrganizationName { get; set; }
+        public string ServiceName { get; set; }
         public bool IsDeleted { get; set; }
     }
 }
