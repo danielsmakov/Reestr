@@ -14,5 +14,6 @@ namespace Reestr.BLL.Interfaces
         void Insert(T DTO);
         void Update(T DTO);
         void Delete(int id);
+        void Dispose();
     }
 }

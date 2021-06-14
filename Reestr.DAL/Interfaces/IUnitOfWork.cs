@@ -11,7 +11,7 @@ namespace Reestr.DAL.Interfaces
     {
         IRepository<Organization> Organizations { get; }
         IRepository<Service> Services { get; }
-        IRepository<ServiceReestr> ServicesReestres { get; }
+        IRepository<ServiceReestr> ServiceReestres { get; }
         IRepository<EmployeeReestr> EmployeeReestres { get; }
         IRepository<ProducedService> ProducedServices { get; }
     }

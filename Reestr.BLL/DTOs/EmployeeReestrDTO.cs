@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Reestr.BLL.DTOs
 {
-    class EmployeeReestrDTO
+    public class EmployeeReestrDTO
     {
         public int Id { get; set; }
 
