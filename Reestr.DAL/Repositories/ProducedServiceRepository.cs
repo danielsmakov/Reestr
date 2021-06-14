@@ -14,7 +14,7 @@ namespace Reestr.DAL.Repositories
 {
     class ProducedServiceRepository : IRepository<ProducedService>
     {
-        string connectString = ConfigurationManager.ConnectionStrings["RegistryDBConnection"].ConnectionString;
+        readonly string connectString = ConfigurationManager.ConnectionStrings["RegistryDBConnection"].ConnectionString;
         public ProducedService Get(int id)
         {
             using (SqlConnection _con = new SqlConnection(connectString))

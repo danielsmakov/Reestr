@@ -14,7 +14,7 @@ namespace Reestr.DAL.Repositories
 {
     class EmployeeReestrRepository : IRepository<EmployeeReestr>
     {
-        string connectString = ConfigurationManager.ConnectionStrings["RegistryDBConnection"].ConnectionString;
+        readonly string connectString = ConfigurationManager.ConnectionStrings["RegistryDBConnection"].ConnectionString;
         public EmployeeReestr Get(int id)
         {
             using (SqlConnection _con = new SqlConnection(connectString))

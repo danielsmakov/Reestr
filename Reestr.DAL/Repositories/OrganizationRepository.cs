@@ -14,7 +14,7 @@ namespace Reestr.DAL.Repositories
 {
     public class OrganizationRepository : IRepository<Organization>
     {
-        string connectString = ConfigurationManager.ConnectionStrings["RegistryDBConnection"].ConnectionString;
+        readonly string connectString = ConfigurationManager.ConnectionStrings["RegistryDBConnection"].ConnectionString;
         public Organization Get(int id)
         {
             using (SqlConnection _con = new SqlConnection(connectString))
