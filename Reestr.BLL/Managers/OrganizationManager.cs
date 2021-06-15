@@ -11,9 +11,10 @@ using Reestr.DAL.Entities;
 
 namespace Reestr.BLL.Managers
 {
-    public class OrganizationManager : IManager<OrganizationDTO>
+    public class OrganizationManager
     {
         private IUnitOfWork Database { get; set; }
+        private AutoMapperConfigurator MapperConfiguration { get; } = new AutoMapperConfigurator();
         public OrganizationManager(IUnitOfWork unitOfWork)
         {
             Database = unitOfWork;
@@ -24,8 +25,7 @@ namespace Reestr.BLL.Managers
             {
                 var organization = Database.Organizations.Get(id);
 
-                var mapper = new MapperConfiguration(cfg => cfg.CreateMap<Organization, OrganizationDTO>()).CreateMapper();
-                return mapper.Map<Organization, OrganizationDTO>(organization);
+                return MapperConfiguration.Mapper.Map<Organization, OrganizationDTO>(organization);
             }
             catch(Exception ex)
             {
@@ -38,8 +38,7 @@ namespace Reestr.BLL.Managers
             {
                 var organizations = Database.Organizations.List(query);
 
-                var mapper = new MapperConfiguration(cfg => cfg.CreateMap<Organization, OrganizationDTO>()).CreateMapper();
-                return mapper.Map<List<Organization>, List<OrganizationDTO>>(organizations);
+                return MapperConfiguration.Mapper.Map<List<Organization>, List<OrganizationDTO>>(organizations);
             }
             catch(Exception ex)
             {
@@ -50,8 +49,7 @@ namespace Reestr.BLL.Managers
         {
             try
             {
-                var mapper = new MapperConfiguration(cfg => cfg.CreateMap<OrganizationDTO, Organization>()).CreateMapper();
-                var organization = mapper.Map<OrganizationDTO, Organization>(organizationDTO);
+                var organization = MapperConfiguration.Mapper.Map<OrganizationDTO, Organization>(organizationDTO);
 
                 Database.Organizations.Insert(organization);
             }
@@ -64,8 +62,7 @@ namespace Reestr.BLL.Managers
         {
             try
             {
-                var mapper = new MapperConfiguration(cfg => cfg.CreateMap<OrganizationDTO, Organization>()).CreateMapper();
-                var organization = mapper.Map<OrganizationDTO, Organization>(organizationDTO);
+                var organization = MapperConfiguration.Mapper.Map<OrganizationDTO, Organization>(organizationDTO);
 
                 Database.Organizations.Update(organization);
             }

@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AutoMapperConfigurator.cs" />
     <Compile Include="DTOs\EmployeeReestrDTO.cs" />
     <Compile Include="DTOs\OrganizationDTO.cs" />
     <Compile Include="DTOs\ProducedServiceDTO.cs" />
