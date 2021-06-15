@@ -50,7 +50,6 @@
     <Compile Include="DTOs\ProducedServiceDTO.cs" />
     <Compile Include="DTOs\ServiceDTO.cs" />
     <Compile Include="DTOs\ServiceReestrDTO.cs" />
-    <Compile Include="Interfaces\IManager.cs" />
     <Compile Include="Managers\OrganizationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
