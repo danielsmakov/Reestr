@@ -83,16 +83,18 @@ namespace Reestr.BLL.Managers
 
             return true;
         }
-        public void Delete(int id)
+        public bool Delete(int id)
         {
             try
             {
                 _unitOfWork.Organizations.Delete(id);
             }
-            catch(Exception ex)
+            catch
             {
-                throw ex;
+                return false;
             }
+
+            return true;
         }
         public void Dispose()
         {
@@ -104,6 +106,8 @@ namespace Reestr.BLL.Managers
         {
             if (organizationDTO.Name.Trim().Length == 0)
                 _validationDictionary.AddError("Name", "Name is required.");
+            if (organizationDTO.Name.Trim().Length > 300)
+                _validationDictionary.AddError("Name", "Name must be less than 300 symbols long.");
             if (organizationDTO.BIN.Trim().Length != 12)
                 _validationDictionary.AddError("BIN", "BIN must be exactly 12 digits long.");
             if (organizationDTO.PhoneNumber.Trim().Length != 10)
