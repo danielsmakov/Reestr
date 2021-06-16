@@ -16,6 +16,36 @@ namespace Reestr.WEB.Controllers
 {
     public class HomeController : Controller
     {
+        public class TestData
+        {
+            public List<OrganizationDTO> GetListOfOrganizationDTOs()
+            {
+                OrganizationDTO entity = new OrganizationDTO()
+                {
+                    Name = "Google",
+                    BIN = "123123123123",
+                    PhoneNumber = "7475065068",
+                    BeginDate = DateTime.Now
+                };
+                List<OrganizationDTO> organizationDTOs = new List<OrganizationDTO>();
+                for (int i = 0; i < 6; i++)
+                {
+                    organizationDTOs.Add(entity);
+                }
+                return organizationDTOs;
+            }
+            public OrganizationDTO GetOrganizationDTO()
+            {
+                OrganizationDTO organizationDTO = new OrganizationDTO()
+                {
+                    Name = "Google",
+                    BIN = "123123123123",
+                    PhoneNumber = "7475065068",
+                    BeginDate = DateTime.Now
+                };
+                return organizationDTO;
+            }
+        }
         private OrganizationManager _organizationManager;
         public HomeController()
         {
@@ -33,7 +63,7 @@ namespace Reestr.WEB.Controllers
         {
             OrganizationQuery query = new OrganizationQuery();
             query.Offset = (request.Page - 1) * request.PageSize;
-            query.Limit = request.PageSize;
+            query.Limit = 20;
             List<OrganizationDTO> organizationDTOs = _organizationManager.List(query);
             return Json(organizationDTOs.ToDataSourceResult(request), JsonRequestBehavior.AllowGet);
         }
@@ -41,7 +71,7 @@ namespace Reestr.WEB.Controllers
         {
             if (organizationDTO != null && ModelState.IsValid)
             {
-                if (_organizationManager.Insert(organizationDTO))
+                if (!_organizationManager.Insert(organizationDTO))
                     return Json(new[] { organizationDTO }.ToDataSourceResult(request, ModelState));
             }
             return Json(new[] { organizationDTO }.ToDataSourceResult(request, ModelState));

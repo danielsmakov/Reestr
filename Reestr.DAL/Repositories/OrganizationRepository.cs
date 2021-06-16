@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
+using System.Data.SqlTypes;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -76,8 +77,13 @@ namespace Reestr.DAL.Repositories
             {
                 try
                 {
+                    /*DynamicParameters param = new DynamicParameters();
+                    param.Add("@Name", entity.Name);
+                    param.Add("@BIN", entity.BIN);
+                    param.Add("@PhoneNumber", entity.PhoneNumber);
+                    param.Add("@BeginDate", entity.BeginDate);*/
                     _con.Open();
-                    _con.Execute("INSERT INTO Organizations (Id, Name, BIN, PhoneNumber, BeginDate) VALUES (@Id, @Name, @BIN, @PhoneNumber, @BeginDate)", new { entity });
+                    _con.Execute("INSERT INTO Organizations (Name, BIN, PhoneNumber, BeginDate) VALUES ( @Name, @BIN, @PhoneNumber, @BeginDate)", new { entity });
                     _con.Close();
                     return true;
                 }
