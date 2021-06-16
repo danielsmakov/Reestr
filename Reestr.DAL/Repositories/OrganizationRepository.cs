@@ -52,7 +52,8 @@ namespace Reestr.DAL.Repositories
                     if (!string.IsNullOrEmpty(query.Name)) where += " AND Name like '%@Name%'";
 
                     List<Organization> orgs = _con.Query<Organization>($"SELECT * FROM Organizations {where} " +
-                        $"OFFSET (@Offset) ROWS FETCH NEXT @Limit ROWS ONLY",
+                        $"ORDER BY (SELECT NULL)" +
+                        $"OFFSET @Offset ROWS FETCH NEXT @Limit ROWS ONLY",
                         new
                         {
                             Name = query.Name,

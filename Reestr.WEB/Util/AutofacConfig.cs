@@ -28,7 +28,7 @@ namespace Reestr.WEB.Util
             builder.RegisterType<EmployeeReestrRepository>().As<IRepository<EmployeeReestr>>();
             builder.RegisterType<ProducedServiceRepository>().As<IRepository<ProducedService>>();
 
-            builder.RegisterType<ModelStateWrapper>().As<IRepository<IValidationDictionary>>();
+            builder.RegisterType<ModelStateWrapper>().As<IValidationDictionary>();
 
             var container = builder.Build();
             DependencyResolver.SetResolver(new AutofacDependencyResolver(container));

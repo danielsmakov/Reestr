@@ -1,0 +1,32 @@
+﻿@{
+    ViewBag.Title = "Organizations";
+}
+@using Kendo.Mvc.UI
+
+<div class="container" style="margin-top: 100px">
+    @(Html.Kendo().Grid<Reestr.BLL.DTOs.OrganizationDTO>()
+        .Name("OrganizationGrid")
+        .Columns(columns =>
+        {
+            columns.Bound(o => o.Name).Width(200);
+            columns.Bound(o => o.BIN).Width(200);
+            columns.Bound(o => o.PhoneNumber).Width(200);
+            columns.Bound(o => o.BeginDate).Width(200);
+            columns.Command(command => { command.Edit(); command.Destroy(); });
+        })
+        .ToolBar(toolBar => toolBar.Create())
+        .Editable(editable => editable.Mode(GridEditMode.PopUp))
+        .Pageable()
+        .Scrollable()
+        .Sortable()
+        .DataSource(dataSource => dataSource
+            .Ajax()
+            .PageSize(20)
+            .Model(model => model.Id(o => o.Id))
+            .Read(read => read.Action("List", "Home"))
+            .Create(create => create.Action("Insert", "Home"))
+            .Update(update => update.Action("Update", "Home"))
+            .Destroy(destroy => destroy.Action("Delete", "Home"))
+        )
+    )
+</div>

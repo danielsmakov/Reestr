@@ -25,6 +25,14 @@ namespace Reestr.WEB
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/site.css"));
+            bundles.Add(new ScriptBundle("~/Kendo/js").Include(
+                "~/Scripts/kendo/2021.2.511/kendo.all.min.js",
+                "~/Scripts/kendo/2021.2.511/jszip.min.js",
+                "~/Scripts/kendo/2021.2.511/kendo.aspnetmvc.min.js"));
+            bundles.Add(new StyleBundle("~/Kendo/styles").Include(
+                "~/Content/kendo/2021.2.511/kendo.common.min.css",
+                "~/Content/kendo/2021.2.511/kendo.default.min.css"));
+            bundles.IgnoreList.Clear();
         }
     }
 }
