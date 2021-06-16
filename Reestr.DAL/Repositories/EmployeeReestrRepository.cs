@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Reestr.DAL.Repositories
 {
-    class EmployeeReestrRepository : IRepository<EmployeeReestr>
+    public class EmployeeReestrRepository : IRepository<EmployeeReestr>
     {
         readonly string connectString = ConfigurationManager.ConnectionStrings["RegistryDBConnection"].ConnectionString;
         public EmployeeReestr Get(int id)

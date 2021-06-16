@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Reestr.DAL.Repositories
 {
-    class ProducedServiceRepository : IRepository<ProducedService>
+    public class ProducedServiceRepository : IRepository<ProducedService>
     {
         readonly string connectString = ConfigurationManager.ConnectionStrings["RegistryDBConnection"].ConnectionString;
         public ProducedService Get(int id)
