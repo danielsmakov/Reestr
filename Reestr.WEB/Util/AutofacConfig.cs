@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 using Autofac;
 using Autofac.Integration.Mvc;
 using Reestr.BLL.Interfaces;
@@ -28,9 +29,6 @@ namespace Reestr.WEB.Util
             builder.RegisterType<ProducedServiceRepository>().As<IRepository<ProducedService>>();
 
             builder.RegisterType<ModelStateWrapper>().As<IRepository<IValidationDictionary>>();
-
-            /*builder.RegisterType<OrganizationService>().As<IService<OrganizationDTO>>();
-            builder.RegisterType<ServService>().As<IService<ServiceDTO>>();*/
 
             var container = builder.Build();
             DependencyResolver.SetResolver(new AutofacDependencyResolver(container));
