@@ -74,7 +74,7 @@ namespace Reestr.DAL.Repositories
                 try
                 {
                     _con.Open();
-                    _con.Execute("INSERT INTO ProducedServices (Id, OrganizationId, ServiceId, EmployeeId, BeginDate) VALUES (@Id, @OrganizationId, @ServiceId, @EmployeeId, @BeginDate)", new { entity });
+                    _con.Execute("INSERT INTO ProducedServices (Id, OrganizationId, ServiceReestrId, EmployeeId, BeginDate) VALUES (@Id, @OrganizationId, @ServiceReestrId, @EmployeeId, @BeginDate)", new { entity });
                     _con.Close();
                     return true;
                 }
@@ -91,7 +91,7 @@ namespace Reestr.DAL.Repositories
                 try
                 {
                     _con.Open();
-                    _con.Execute("UPDATE ProducedServices SET OrganizationId = @OrganizationId, ServiceId = @ServiceId, EmployeeId = @EmployeeId, BeginDate = @BeginDate WHERE Id = @Id", new { entity });
+                    _con.Execute("UPDATE ProducedServices SET OrganizationId = @OrganizationId, ServiceReestrId = @ServiceReestrId, EmployeeId = @EmployeeId, BeginDate = @BeginDate WHERE Id = @Id", new { entity });
                     _con.Close();
                     return true;
                 }

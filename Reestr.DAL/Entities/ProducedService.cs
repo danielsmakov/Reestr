@@ -18,7 +18,7 @@ namespace Reestr.DAL.Entities
         /// <summary>
         /// Id of produced service
         /// </summary>
-        public int ServiceId { get; set; }
+        public int ServiceReestrId { get; set; }
 
         /// <summary>
         /// Id of employee which produced the service
