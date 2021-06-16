@@ -8,7 +8,7 @@ using System.Web.Mvc;
 
 namespace Reestr.BLL.Validation
 {
-    public class ModelStateWrapper : IValidationDictionary
+    public class ModelStateWrapper
     {
         private ModelStateDictionary _modelState;
         public ModelStateWrapper(ModelStateDictionary modelState)

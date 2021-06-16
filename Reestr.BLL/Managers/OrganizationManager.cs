@@ -8,19 +8,21 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Reestr.DAL.Entities;
 using Reestr.BLL.Interfaces;
+using Reestr.BLL.Validation;
 
 namespace Reestr.BLL.Managers
 {
     public class OrganizationManager
     {
-        private IValidationDictionary _validationDictionary;
+        private ModelStateWrapper _validationDictionary;
         private IUnitOfWork _unitOfWork;
         private AutoMapperConfigurator MapperConfiguration { get; } = new AutoMapperConfigurator();
         public OrganizationManager(IValidationDictionary validationDictionary, IUnitOfWork unitOfWork)
         {
-            _validationDictionary = validationDictionary;
+            _validationDictionary = new ModelStateWrapper();
             _unitOfWork = unitOfWork;
         }
+
         public OrganizationDTO Get(int id)
         {
             try
@@ -34,6 +36,7 @@ namespace Reestr.BLL.Managers
                 throw ex;
             }
         }
+
         public List<OrganizationDTO> List(IQuery query)
         {
             try
@@ -47,10 +50,13 @@ namespace Reestr.BLL.Managers
                 throw ex;
             }
         }
-        public bool Insert(OrganizationDTO organizationDTO)
+
+        public CustomResponce Insert(OrganizationDTO organizationDTO)
         {
-            if (!ValidateOrganizationDTO(organizationDTO))
-                return false;
+            var isValid = Validate(organizationDTO);
+            if (!isValid.Status)
+                return isValid;
+
 
             try
             {
@@ -58,13 +64,15 @@ namespace Reestr.BLL.Managers
 
                 _unitOfWork.Organizations.Insert(organization);
             }
-            catch
+            catch (Exception ex)
             {
-                return false;
+                isValid.Status = true;
+                isValid.Message = ex.Message;
             }
 
-            return true;
+            return isValid;
         }
+
         public bool Update(OrganizationDTO organizationDTO)
         {
             if (!ValidateOrganizationDTO(organizationDTO))
@@ -72,7 +80,7 @@ namespace Reestr.BLL.Managers
 
             try
             {
-                var organization = MapperConfiguration.Mapper.Map<OrganizationDTO, Organization>(organizationDTO);
+                var organization = MapperConfiguration.Mapper.Map<Organization>(organizationDTO);
 
                 _unitOfWork.Organizations.Update(organization);
             }
@@ -83,6 +91,7 @@ namespace Reestr.BLL.Managers
 
             return true;
         }
+
         public bool Delete(int id)
         {
             try
@@ -96,6 +105,7 @@ namespace Reestr.BLL.Managers
 
             return true;
         }
+
         public void Dispose()
         {
             _unitOfWork.Dispose();
@@ -114,5 +124,32 @@ namespace Reestr.BLL.Managers
                 _validationDictionary.AddError("PhoneNumber", "You should enter 10 digits only in the Phone Number field.");
             return _validationDictionary.IsValid;
         }
+
+        public CustomResponce Validate(OrganizationDTO model)
+        {
+            var responce = new CustomResponce();
+
+            if (model == null)
+            {
+                responce.Status = 1;
+                responce.Message = "";
+            }
+
+
+            // ............
+
+
+            return responce;               
+        }
+
+        
+    }
+
+    public class CustomResponce
+    {
+        public bool Status { get; set; }
+        public string Message { get; set; }
+
+
     }
 }

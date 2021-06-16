@@ -16,9 +16,9 @@ namespace Reestr.WEB.Controllers
 {
     public class HomeController : Controller
     {
-        public class TestData
+        public static class TestData
         {
-            public List<OrganizationDTO> GetListOfOrganizationDTOs()
+            public static List<OrganizationDTO> GetListOfOrganizationDTOs()
             {
                 OrganizationDTO entity = new OrganizationDTO()
                 {
@@ -34,7 +34,7 @@ namespace Reestr.WEB.Controllers
                 }
                 return organizationDTOs;
             }
-            public OrganizationDTO GetOrganizationDTO()
+            public static OrganizationDTO GetOrganizationDTO()
             {
                 OrganizationDTO organizationDTO = new OrganizationDTO()
                 {
@@ -51,14 +51,17 @@ namespace Reestr.WEB.Controllers
         {
             _organizationManager = new OrganizationManager(new ModelStateWrapper(this.ModelState), new UnitOfWork());
         }
+
         public HomeController(OrganizationManager organizationManager)
         {
             _organizationManager = organizationManager;
         }
+
         public ActionResult Index()
         {
             return View("Organizations");
         }
+
         public ActionResult List([DataSourceRequest] DataSourceRequest request)
         {
             OrganizationQuery query = new OrganizationQuery();
@@ -67,6 +70,7 @@ namespace Reestr.WEB.Controllers
             List<OrganizationDTO> organizationDTOs = _organizationManager.List(query);
             return Json(organizationDTOs.ToDataSourceResult(request), JsonRequestBehavior.AllowGet);
         }
+
         public ActionResult Insert([DataSourceRequest] DataSourceRequest request, OrganizationDTO organizationDTO)
         {
             if (organizationDTO != null && ModelState.IsValid)
@@ -76,6 +80,7 @@ namespace Reestr.WEB.Controllers
             }
             return Json(new[] { organizationDTO }.ToDataSourceResult(request, ModelState));
         }
+
         public ActionResult Update([DataSourceRequest] DataSourceRequest request, OrganizationDTO organizationDTO)
         {
             if (organizationDTO != null && ModelState.IsValid)
@@ -86,6 +91,7 @@ namespace Reestr.WEB.Controllers
             }
             return Json(new[] { organizationDTO }.ToDataSourceResult(request, ModelState));
         }
+
         public ActionResult Delete([DataSourceRequest] DataSourceRequest request, OrganizationDTO organizationDTO)
         {
             if (organizationDTO != null)
@@ -96,5 +102,6 @@ namespace Reestr.WEB.Controllers
             }
             return Json(new[] { organizationDTO }.ToDataSourceResult(request, ModelState));
         }
+
     }
 }
