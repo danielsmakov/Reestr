@@ -73,7 +73,7 @@ namespace Reestr.WEB.Controllers
                 ViewBag.ErrorMessage = "No model found.";
                 return View("Error");
             }
-            ViewBag.SuccessMessage = $"Number of models in database is {organizationDTOs.Count}!";
+            ViewBag.SuccessMessage = $"Number of Models in Database is {organizationDTOs.Count}!";
             return View("Success");
         }
         public ActionResult Insert()
@@ -112,7 +112,18 @@ namespace Reestr.WEB.Controllers
                     return View("Error");
                 }
             }
-
+            ViewBag.SuccessMessage = $"Successfully Inserted {organizationDTO.Name} Organization to Database!";
+            return View("Success");
+        }
+        public ActionResult Delete()
+        {
+            var validationResponse = _organizationManager.Delete(4);
+            if (!validationResponse.Status)
+            {
+                ViewBag.ErrorMessage = validationResponse.ErrorMessages["Exception"];
+                return View("Error");
+            }
+            ViewBag.SuccessMessage = "Organization Is Successfully Deleted!";
             return View("Success");
         }
 

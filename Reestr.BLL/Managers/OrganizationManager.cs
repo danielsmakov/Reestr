@@ -103,6 +103,7 @@ namespace Reestr.BLL.Managers
             }
             catch (Exception ex)
             {
+                validationResponse.Status = false;
                 validationResponse.ErrorMessages.Add("Exception", ex.Message);
             }
 
