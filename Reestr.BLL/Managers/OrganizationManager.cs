@@ -118,6 +118,7 @@ namespace Reestr.BLL.Managers
             if (model == null)
             {
                 validationResponse.ErrorMessages.Add("Null", "Объект не найден.");
+                validationResponse.Status = false;
             }
 
 
