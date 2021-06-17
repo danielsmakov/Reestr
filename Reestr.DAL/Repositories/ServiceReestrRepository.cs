@@ -74,7 +74,7 @@ namespace Reestr.DAL.Repositories
                 }
             }
         }
-        public bool Insert(ServiceReestr entity)
+        public void Insert(ServiceReestr entity)
         {
             using (var _con = new SqlConnection(connectString))
             {
@@ -83,15 +83,14 @@ namespace Reestr.DAL.Repositories
                     _con.Open();
                     _con.Execute("INSERT INTO ServiceReestr (Id, OrganizationId, ServiceId, Price, BeginDate) VALUES (@Id, @OrganizationId, @ServiceId, @Price, @BeginDate)", new { entity });
                     _con.Close();
-                    return true;
                 }
-                catch
+                catch (Exception ex)
                 {
-                    return false;
+                    throw ex;
                 }
             }
         }
-        public bool Update(ServiceReestr entity)
+        public void Update(ServiceReestr entity)
         {
             using (var _con = new SqlConnection(connectString))
             {
@@ -100,15 +99,14 @@ namespace Reestr.DAL.Repositories
                     _con.Open();
                     _con.Execute("UPDATE ServiceReestr SET OrganizationId = @OrganizationId, ServiceId = @ServiceId, Price = @Price, BeginDate = @BeginDate WHERE Id = @Id", new { entity });
                     _con.Close();
-                    return true;
                 }
-                catch
+                catch (Exception ex)
                 {
-                    return false;
+                    throw ex;
                 }
             }
         }
-        public bool Delete(int id)
+        public void Delete(int id)
         {
             using (var _con = new SqlConnection(connectString))
             {
@@ -117,11 +115,10 @@ namespace Reestr.DAL.Repositories
                     _con.Open();
                     _con.Execute("UPDATE ServiceReestr SET EndDate = GETDATE() WHERE Id = @Id", new { id });
                     _con.Close();
-                    return true;
                 }
-                catch
+                catch (Exception ex)
                 {
-                    return false;
+                    throw ex;
                 }
             }
         }

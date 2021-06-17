@@ -14,12 +14,10 @@ namespace Reestr.BLL.Managers
 {
     public class OrganizationManager
     {
-        private ModelStateWrapper _validationDictionary;
         private IUnitOfWork _unitOfWork;
         private AutoMapperConfigurator MapperConfiguration { get; } = new AutoMapperConfigurator();
-        public OrganizationManager(IValidationDictionary validationDictionary, IUnitOfWork unitOfWork)
+        public OrganizationManager(IUnitOfWork unitOfWork)
         {
-            _validationDictionary = new ModelStateWrapper();
             _unitOfWork = unitOfWork;
         }
 
@@ -125,31 +123,29 @@ namespace Reestr.BLL.Managers
             return _validationDictionary.IsValid;
         }
 
-        public CustomResponce Validate(OrganizationDTO model)
+        public ValidationResponse Validate(OrganizationDTO model)
         {
-            var responce = new CustomResponce();
+            var response = new ValidationResponse();
 
             if (model == null)
             {
-                responce.Status = 1;
-                responce.Message = "";
+                response.Status = true;
+                response.Message = "";
             }
 
 
             // ............
 
 
-            return responce;               
+            return response;               
         }
 
         
     }
 
-    public class CustomResponce
+    public class ValidationResponse
     {
         public bool Status { get; set; }
         public string Message { get; set; }
-
-
     }
 }

@@ -67,7 +67,7 @@ namespace Reestr.DAL.Repositories
                 }
             }
         }
-        public bool Insert(ProducedService entity)
+        public void Insert(ProducedService entity)
         {
             using (var _con = new SqlConnection(connectString))
             {
@@ -76,15 +76,14 @@ namespace Reestr.DAL.Repositories
                     _con.Open();
                     _con.Execute("INSERT INTO ProducedServices (Id, OrganizationId, ServiceReestrId, EmployeeId, BeginDate) VALUES (@Id, @OrganizationId, @ServiceReestrId, @EmployeeId, @BeginDate)", new { entity });
                     _con.Close();
-                    return true;
                 }
-                catch
+                catch (Exception ex)
                 {
-                    return false;
+                    throw ex;
                 }
             }
         }
-        public bool Update(ProducedService entity)
+        public void Update(ProducedService entity)
         {
             using (var _con = new SqlConnection(connectString))
             {
@@ -93,15 +92,14 @@ namespace Reestr.DAL.Repositories
                     _con.Open();
                     _con.Execute("UPDATE ProducedServices SET OrganizationId = @OrganizationId, ServiceReestrId = @ServiceReestrId, EmployeeId = @EmployeeId, BeginDate = @BeginDate WHERE Id = @Id", new { entity });
                     _con.Close();
-                    return true;
                 }
-                catch
+                catch (Exception ex)
                 {
-                    return false;
+                    throw ex;
                 }
             }
         }
-        public bool Delete(int id)
+        public void Delete(int id)
         {
             using (var _con = new SqlConnection(connectString))
             {
@@ -110,11 +108,10 @@ namespace Reestr.DAL.Repositories
                     _con.Open();
                     _con.Execute("UPDATE ProducedServices SET EndDate = GETDATE() WHERE Id = @Id", new { id });
                     _con.Close();
-                    return true;
                 }
-                catch
+                catch (Exception ex)
                 {
-                    return false;
+                    throw ex;
                 }
             }
         }

@@ -11,9 +11,9 @@ namespace Reestr.DAL.Interfaces
     {
         T Get(int id);
         List<T> List(IQuery query);
-        bool Insert(T entity);
-        bool Update(T entity);
-        bool Delete(int id);
+        void Insert(T entity);
+        void Update(T entity);
+        void Delete(int id);
     }
 }
  

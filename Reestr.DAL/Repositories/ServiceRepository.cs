@@ -69,7 +69,7 @@ namespace Reestr.DAL.Repositories
                 }
             }
         }
-        public bool Insert(Service entity)
+        public void Insert(Service entity)
         {
             using (var _con = new SqlConnection(connectString))
             {
@@ -78,15 +78,14 @@ namespace Reestr.DAL.Repositories
                     _con.Open();
                     _con.Execute("INSERT IntINTO Services (Id, Name, Code, Price, BeginDate) VALUES (@Id, @Name, @Code, @Price, @BeginDate)", new { entity });
                     _con.Close();
-                    return true;
                 }
-                catch
+                catch (Exception ex)
                 {
-                    return false;
+                    throw ex;
                 }
             }
         }
-        public bool Update(Service entity)
+        public void Update(Service entity)
         {
             using (var _con = new SqlConnection(connectString))
             {
@@ -95,15 +94,14 @@ namespace Reestr.DAL.Repositories
                     _con.Open();
                     _con.Execute("UPDATE Services SET Name = @Name, Code = @Code, Price = @Price, BeginDate = @BeginDate WHERE Id = @Id", new { entity });
                     _con.Close();
-                    return true;
                 }
-                catch
+                catch (Exception ex)
                 {
-                    return false;
+                    throw ex;
                 }
             }
         }
-        public bool Delete(int id)
+        public void Delete(int id)
         {
             using (var _con = new SqlConnection(connectString))
             {
@@ -112,11 +110,10 @@ namespace Reestr.DAL.Repositories
                     _con.Open();
                     _con.Execute("UPDATE Services SET EndDate = GETDATE() WHERE Id = @Id", new { id });
                     _con.Close();
-                    return true;
                 }
-                catch
+                catch (Exception ex)
                 {
-                    return false;
+                    throw ex;
                 }
             }
         }

@@ -71,7 +71,7 @@ namespace Reestr.DAL.Repositories
                 }
             }
         }
-        public bool Insert(Organization entity)
+        public void Insert(Organization entity)
         {
             using (var _con = new SqlConnection(connectString))
             {
@@ -85,15 +85,14 @@ namespace Reestr.DAL.Repositories
                     _con.Open();
                     _con.Execute("INSERT INTO Organizations (Name, BIN, PhoneNumber, BeginDate) VALUES ( @Name, @BIN, @PhoneNumber, @BeginDate)", new { entity });
                     _con.Close();
-                    return true;
                 }
-                catch
+                catch (Exception ex)
                 {
-                    return false;
+                    throw ex;
                 }
             }
         }
-        public bool Update(Organization entity)
+        public void Update(Organization entity)
         {
             using (var _con = new SqlConnection(connectString))
             {
@@ -102,15 +101,14 @@ namespace Reestr.DAL.Repositories
                     _con.Open();
                     _con.Execute("UPDATE Organizations SET Name = @Name, BIN = @BIN, PhoneNumber = @PhoneNumber, BeginDate = @BeginDate WHERE Id = @Id", new { entity });
                     _con.Close();
-                    return true;
                 }
-                catch
+                catch (Exception ex)
                 {
-                    return false;
+                    throw ex;
                 }
             }
         }
-        public bool Delete(int id)
+        public void Delete(int id)
         {
             using (var _con = new SqlConnection(connectString))
             {
@@ -119,11 +117,10 @@ namespace Reestr.DAL.Repositories
                     _con.Open();
                     _con.Execute("UPDATE Organizations SET EndDate = GETDATE() WHERE Id = @Id", new { id });
                     _con.Close();
-                    return true;
                 }
-                catch
+                catch (Exception ex)
                 {
-                    return false;
+                    throw ex;
                 }
             }
         }

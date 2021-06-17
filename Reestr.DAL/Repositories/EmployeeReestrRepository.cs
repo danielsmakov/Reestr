@@ -75,7 +75,7 @@ namespace Reestr.DAL.Repositories
                 }
             }
         }
-        public bool Insert(EmployeeReestr entity)
+        public void Insert(EmployeeReestr entity)
         {
             using (var _con = new SqlConnection(connectString))
             {
@@ -84,15 +84,14 @@ namespace Reestr.DAL.Repositories
                     _con.Open();
                     _con.Execute("INSERT INTO EmployeeReestr (Id, OrganizationId, IIN, FullName, DateOfBirth, PhoneNumber, BeginDate) VALUES (@Id, @OrganizationId, @IIN, @FullName, @DateOfBirth @PhoneNumber, @BeginDate)", new { entity });
                     _con.Close();
-                    return true;
                 }
-                catch
+                catch (Exception ex)
                 {
-                    return false;
+                    throw ex;
                 }
             }
         }
-        public bool Update(EmployeeReestr entity)
+        public void Update(EmployeeReestr entity)
         {
             using (var _con = new SqlConnection(connectString))
             {
@@ -101,15 +100,14 @@ namespace Reestr.DAL.Repositories
                     _con.Open();
                     _con.Execute("UPDATE EmployeeReestr SET OrganizationId = @OrganizationId, IIN = @IIN,, FullName = @FullName, DateOfBirth = @DateOfBirth, PhoneNumber = @PhoneNumber, BeginDate = @BeginDate WHERE Id = @Id", new { entity });
                     _con.Close();
-                    return true;
                 }
-                catch
+                catch (Exception ex)
                 {
-                    return false;
+                    throw ex;
                 }
             }
         }
-        public bool Delete(int id)
+        public void Delete(int id)
         {
             using (var _con = new SqlConnection(connectString))
             {
@@ -118,11 +116,10 @@ namespace Reestr.DAL.Repositories
                     _con.Open();
                     _con.Execute("UPDATE EmployeeReestr SETEndDate = GETDATE() WHERE Id = @Id", new { id });
                     _con.Close();
-                    return true;
                 }
-                catch
+                catch (Exception ex)
                 {
-                    return false;
+                    throw ex;
                 }
             }
         }
