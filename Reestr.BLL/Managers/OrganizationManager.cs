@@ -9,6 +9,7 @@ using AutoMapper;
 using Reestr.DAL.Entities;
 using Reestr.BLL.Interfaces;
 using Reestr.BLL.Validation;
+using Reestr.DAL.Queries;
 
 namespace Reestr.BLL.Managers
 {
@@ -49,11 +50,11 @@ namespace Reestr.BLL.Managers
             }
         }
 
-        public CustomResponce Insert(OrganizationDTO organizationDTO)
+        public ValidationResponse Insert(OrganizationDTO organizationDTO)
         {
-            var isValid = Validate(organizationDTO);
-            if (!isValid.Status)
-                return isValid;
+            var validationResponse = ValidateOrganizationDTO(organizationDTO);
+            if (!validationResponse.Status)
+                return validationResponse;
 
 
             try
@@ -64,11 +65,11 @@ namespace Reestr.BLL.Managers
             }
             catch (Exception ex)
             {
-                isValid.Status = true;
-                isValid.Message = ex.Message;
+                validationResponse.Status = false;
+                validationResponse.Message = ex.Message;
             }
 
-            return isValid;
+            return validationResponse;
         }
 
         public bool Update(OrganizationDTO organizationDTO)
@@ -110,42 +111,51 @@ namespace Reestr.BLL.Managers
         }
 
 
-        protected bool ValidateOrganizationDTO(OrganizationDTO organizationDTO)
+        public ValidationResponse ValidateOrganizationDTO(OrganizationDTO model)
         {
-            if (organizationDTO.Name.Trim().Length == 0)
-                _validationDictionary.AddError("Name", "Name is required.");
-            if (organizationDTO.Name.Trim().Length > 300)
-                _validationDictionary.AddError("Name", "Name must be less than 300 symbols long.");
-            if (organizationDTO.BIN.Trim().Length != 12)
-                _validationDictionary.AddError("BIN", "BIN must be exactly 12 digits long.");
-            if (organizationDTO.PhoneNumber.Trim().Length != 10)
-                _validationDictionary.AddError("PhoneNumber", "You should enter 10 digits only in the Phone Number field.");
-            return _validationDictionary.IsValid;
-        }
-
-        public ValidationResponse Validate(OrganizationDTO model)
-        {
-            var response = new ValidationResponse();
+            var validationResponse = new ValidationResponse();
 
             if (model == null)
             {
-                response.Status = true;
-                response.Message = "";
+                validationResponse.ErrorMessages.Add("Null", "Объект не найден.");
             }
 
 
-            // ............
+            if (model.Name.Trim().Length == 0)
+            {
+                validationResponse.ErrorMessages.Add("Name", "Имя обязательно к заполнению.");
+                validationResponse.Status = false;
+            }
+
+            if (model.Name.Trim().Length > 300)
+            {
+                validationResponse.ErrorMessages.Add("Name", "Длина имена не должна превышвать 300 символов.");
+                validationResponse.Status = false;
+            }
 
 
-            return response;               
+            if (model.BIN.Trim().Length != 12)
+            {
+                validationResponse.ErrorMessages.Add("BIN", "БИН должен содержать ровно 12 символов.");
+                validationResponse.Status = false;
+            }
+
+            OrganizationQuery query = new OrganizationQuery() { BIN = model.BIN.Trim() };
+            var organizations = _unitOfWork.Organizations.List(query);
+            if (organizations.Any())
+            {
+                validationResponse.ErrorMessages.Add("BIN", "Введенный Вами БИН уже зарегистрирован.");
+                validationResponse.Status = false;
+            }
+
+
+            if (model.PhoneNumber.Trim().Length != 10)
+            {
+                validationResponse.ErrorMessages.Add("PhoneNumber", "Телефон должен включать только 10 цифр, без какихлибо других знаков.");
+                validationResponse.Status = false;
+            }
+
+            return validationResponse;
         }
-
-        
-    }
-
-    public class ValidationResponse
-    {
-        public bool Status { get; set; }
-        public string Message { get; set; }
     }
 }

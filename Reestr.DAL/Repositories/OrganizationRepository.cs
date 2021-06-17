@@ -51,6 +51,7 @@ namespace Reestr.DAL.Repositories
                     var where = "WHERE 1=1";
                     if (query.IsDeleted) where += " AND EndDate is not null ";
                     if (!string.IsNullOrEmpty(query.Name)) where += " AND Name like '%@Name%'";
+                    if (!string.IsNullOrEmpty(query.BIN)) where += " AND BIN like '%@Bin%'";
 
                     List<Organization> orgs = _con.Query<Organization>($"SELECT * FROM Organizations {where} " +
                         $"ORDER BY (SELECT NULL)" +
@@ -59,7 +60,8 @@ namespace Reestr.DAL.Repositories
                         {
                             Name = query.Name,
                             Offset = query.Offset,
-                            Limit = query.Limit
+                            Limit = query.Limit,
+                            BIN = query.BIN
                         }
                         ).ToList();
                     _con.Close();

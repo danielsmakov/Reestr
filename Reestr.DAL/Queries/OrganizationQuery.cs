@@ -11,6 +11,8 @@ namespace Reestr.DAL.Queries
     {
         public string Name { get; set; }
 
+        public string BIN { get; set; }
+
         public bool IsDeleted { get; set; }
     }
 }

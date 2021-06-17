@@ -15,7 +15,7 @@ namespace Reestr.BLL.Managers
     {
         private IValidationDictionary _validationDictionary;
         private IUnitOfWork _unitOfWork;
-        private AutoMapperConfigurator MapperConfiguration { get; } = new AutoMapperConfigurator();
+        private IMapper Mapper { get; } = AutoMapperConfigurator.GetMapper();
         public ServiceManager(IValidationDictionary validationDictionary, IUnitOfWork unitOfWork)
         {
             _validationDictionary = validationDictionary;
@@ -28,7 +28,7 @@ namespace Reestr.BLL.Managers
             {
                 var service = _unitOfWork.Services.Get(id);
 
-                return MapperConfiguration.Mapper.Map<Service, ServiceDTO>(service);
+                return Mapper.Map<Service, ServiceDTO>(service);
             }
             catch (Exception ex)
             {
@@ -42,7 +42,7 @@ namespace Reestr.BLL.Managers
             {
                 var services = _unitOfWork.Services.List(query);
 
-                return MapperConfiguration.Mapper.Map<List<Service>, List<ServiceDTO>>(services);
+                return Mapper.Map<List<Service>, List<ServiceDTO>>(services);
             }
             catch (Exception ex)
             {
@@ -57,7 +57,7 @@ namespace Reestr.BLL.Managers
 
             try
             {
-                var service = MapperConfiguration.Mapper.Map<ServiceDTO, Service>(serviceDTO);
+                var service = Mapper.Map<ServiceDTO, Service>(serviceDTO);
 
                 _unitOfWork.Services.Insert(service);
             }
@@ -76,7 +76,7 @@ namespace Reestr.BLL.Managers
 
             try
             {
-                var service = MapperConfiguration.Mapper.Map<ServiceDTO, Service>(serviceDTO);
+                var service = Mapper.Map<ServiceDTO, Service>(serviceDTO);
 
                 _unitOfWork.Services.Update(service);
             }
