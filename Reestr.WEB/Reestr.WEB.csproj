@@ -2837,6 +2837,8 @@
     <Content Include="Scripts\kendo\2021.2.511\cultures\kendo.culture.aa-ET.min.js.map" />
     <Content Include="Scripts\kendo\2021.2.511\cultures\kendo.culture.aa-ER.min.js.map" />
     <Content Include="Scripts\kendo\2021.2.511\cultures\kendo.culture.aa-DJ.min.js.map" />
+    <Content Include="Views\Home\Error.cshtml" />
+    <Content Include="Views\Home\Success.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

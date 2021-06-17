@@ -4,7 +4,17 @@
 @model Reestr.BLL.DTOs.OrganizationDTO
 @using Kendo.Mvc.UI
 
-<div class="container" style="margin-top: 100px">
+<div>
+    <button>
+        @Html.ActionLink("Insert Organization ", "Insert", "Home");
+    </button>
+    <button>
+        @Html.ActionLink("List Organizations ", "List", "Home");
+    </button>
+
+</div>
+
+@*<div class="container" style="margin-top: 100px">
     @(Html.Kendo().Grid<Reestr.BLL.DTOs.OrganizationDTO>()
         .Name("OrganizationGrid")
         .Columns(columns =>
@@ -30,4 +40,4 @@
             .Destroy(destroy => destroy.Action("Delete", "Home"))
         )
     )
-</div>
+</div>*@

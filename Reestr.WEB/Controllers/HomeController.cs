@@ -49,7 +49,7 @@ namespace Reestr.WEB.Controllers
         private OrganizationManager _organizationManager;
         public HomeController()
         {
-            _organizationManager = new OrganizationManager(new ModelStateWrapper(this.ModelState), new UnitOfWork());
+            _organizationManager = new OrganizationManager(new UnitOfWork());
         }
 
         public HomeController(OrganizationManager organizationManager)
@@ -62,7 +62,66 @@ namespace Reestr.WEB.Controllers
             return View("Organizations");
         }
 
-        public ActionResult List([DataSourceRequest] DataSourceRequest request)
+        public ActionResult List()
+        {
+            OrganizationQuery query = new OrganizationQuery();
+            query.Offset = 0;
+            query.Limit = 20;
+            List<OrganizationDTO> organizationDTOs = _organizationManager.List(query);
+            if (organizationDTOs.Count == 0)
+            {
+                ViewBag.ErrorMessage = "No model found.";
+                return View("Error");
+            }
+            ViewBag.SuccessMessage = $"Number of models in database is {organizationDTOs.Count}!";
+            return View("Success");
+        }
+        public ActionResult Insert()
+        {
+            var organizationDTO = TestData.GetOrganizationDTO();
+            var validationResponse = _organizationManager.Insert(organizationDTO);
+            if (!validationResponse.Status)
+            {
+                if (validationResponse.ErrorMessages.ContainsKey("Null"))
+                {
+                    ViewBag.NameError = validationResponse.ErrorMessages["Null"];
+                    return View("Error");
+                }
+
+                if (validationResponse.ErrorMessages.ContainsKey("Exception"))
+                {
+                    ViewBag.NameError = validationResponse.ErrorMessages["Exception"];
+                    return View("Error");
+                }
+
+                if (validationResponse.ErrorMessages.ContainsKey("Name"))
+                {
+                    ViewBag.NameError = validationResponse.ErrorMessages["Name"];
+                    return View("Error");
+                }
+
+                if (validationResponse.ErrorMessages.ContainsKey("BIN"))
+                {
+                    ViewBag.NameError = validationResponse.ErrorMessages["BIN"];
+                    return View("Error");
+                }
+
+                if (validationResponse.ErrorMessages.ContainsKey("PhoneNumber"))
+                {
+                    ViewBag.NameError = validationResponse.ErrorMessages["PhoneNumber"];
+                    return View("Error");
+                }
+            }
+
+            return View("Success");
+        }
+
+
+
+
+
+        // Ниже методы для Kendo UI View
+        /*public ActionResult List([DataSourceRequest] DataSourceRequest request)
         {
             OrganizationQuery query = new OrganizationQuery();
             query.Offset = (request.Page - 1) * request.PageSize;
@@ -98,10 +157,10 @@ namespace Reestr.WEB.Controllers
             {
                 if (_organizationManager.Delete(organizationDTO.Id))
                     ModelState.AddModelError("Deletion", "Can not delete this record");
-                    return Json(new[] { organizationDTO }.ToDataSourceResult(request, ModelState));
+                return Json(new[] { organizationDTO }.ToDataSourceResult(request, ModelState));
             }
             return Json(new[] { organizationDTO }.ToDataSourceResult(request, ModelState));
-        }
+        }*/
 
     }
 }

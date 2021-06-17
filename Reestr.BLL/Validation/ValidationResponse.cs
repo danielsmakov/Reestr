@@ -9,9 +9,9 @@ namespace Reestr.BLL.Validation
     public class ValidationResponse
     {
 
-        public bool Status { get; set; }
+        public bool Status { get; set; } = true;
 
-        public Dictionary<string, string> ErrorMessages { get; set; }
+        public Dictionary<string, string> ErrorMessages { get; set; } = new Dictionary<string, string>();
 
     }
 }

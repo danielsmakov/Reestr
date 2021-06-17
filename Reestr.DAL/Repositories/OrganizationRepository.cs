@@ -79,13 +79,13 @@ namespace Reestr.DAL.Repositories
             {
                 try
                 {
-                    /*DynamicParameters param = new DynamicParameters();
+                    DynamicParameters param = new DynamicParameters();
                     param.Add("@Name", entity.Name);
                     param.Add("@BIN", entity.BIN);
                     param.Add("@PhoneNumber", entity.PhoneNumber);
-                    param.Add("@BeginDate", entity.BeginDate);*/
+                    param.Add("@BeginDate", entity.BeginDate);
                     _con.Open();
-                    _con.Execute("INSERT INTO Organizations (Name, BIN, PhoneNumber, BeginDate) VALUES ( @Name, @BIN, @PhoneNumber, @BeginDate)", new { entity });
+                    _con.Execute("INSERT INTO Organizations (Name, BIN, PhoneNumber, BeginDate) VALUES ( @Name, @BIN, @PhoneNumber, @BeginDate)", param);
                     _con.Close();
                 }
                 catch (Exception ex)

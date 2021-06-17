@@ -52,8 +52,8 @@ namespace Reestr.BLL.Managers
 
         public bool Insert(ServiceDTO serviceDTO)
         {
-            if (!ValidateServiceDTO(serviceDTO))
-                return false;
+            /*if (!ValidateServiceDTO(serviceDTO))
+                return false;*/
 
             try
             {
@@ -71,8 +71,8 @@ namespace Reestr.BLL.Managers
 
         public bool Update(ServiceDTO serviceDTO)
         {
-            if (!ValidateServiceDTO(serviceDTO))
-                return false;
+            /*if (!ValidateServiceDTO(serviceDTO))
+                return false;*/
 
             try
             {
@@ -108,7 +108,7 @@ namespace Reestr.BLL.Managers
         }
 
 
-        protected bool ValidateServiceDTO(ServiceDTO serviceDTO)
+        /*protected bool ValidateServiceDTO(ServiceDTO serviceDTO)
         {
             if (serviceDTO.Name.Trim().Length == 0)
                 _validationDictionary.AddError("Name", "Name is required.");
@@ -119,6 +119,6 @@ namespace Reestr.BLL.Managers
             if (serviceDTO.PhoneNumber.Trim().Length != 10)
                 _validationDictionary.AddError("PhoneNumber", "You should enter 10 digits only in the Phone Number field.");
             return _validationDictionary.IsValid;
-        }
+        }*/
     }
 }

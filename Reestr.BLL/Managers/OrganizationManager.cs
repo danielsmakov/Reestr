@@ -40,9 +40,11 @@ namespace Reestr.BLL.Managers
         {
             try
             {
-                var organizations = _unitOfWork.Organizations.List(query);
-
-                return Mapper.Map<List<OrganizationDTO>>(organizations);
+                List<Organization> organizations = _unitOfWork.Organizations.List(query);
+                /*var mapper = new MapperConfiguration(cfg => cfg.CreateMap<Organization, OrganizationDTO>()).CreateMapper();
+                List<OrganizationDTO> organizationDTOs = mapper.Map<List<Organization>, List<OrganizationDTO>>(organizations);*/
+                List<OrganizationDTO> organizationDTOs = Mapper.Map<List<Organization>, List<OrganizationDTO>>(organizations);
+                return organizationDTOs;
             }
             catch(Exception ex)
             {
@@ -56,7 +58,6 @@ namespace Reestr.BLL.Managers
             if (!validationResponse.Status)
                 return validationResponse;
 
-
             try
             {
                 var organization = Mapper.Map<Organization>(organizationDTO);
@@ -66,16 +67,17 @@ namespace Reestr.BLL.Managers
             catch (Exception ex)
             {
                 validationResponse.Status = false;
-                validationResponse.Message = ex.Message;
+                validationResponse.ErrorMessages.Add("Exception", ex.Message);
             }
 
             return validationResponse;
         }
 
-        public bool Update(OrganizationDTO organizationDTO)
+        public ValidationResponse Update(OrganizationDTO organizationDTO)
         {
-            if (!ValidateOrganizationDTO(organizationDTO))
-                return false;
+            var validationResponse = ValidateOrganizationDTO(organizationDTO);
+            if (validationResponse.ErrorMessages.Any())
+                return validationResponse;
 
             try
             {
@@ -83,26 +85,28 @@ namespace Reestr.BLL.Managers
 
                 _unitOfWork.Organizations.Update(organization);
             }
-            catch
+            catch(Exception ex)
             {
-                return false;
+                validationResponse.ErrorMessages.Add("Exception", ex.Message);
             }
 
-            return true;
+            return validationResponse;
         }
 
-        public bool Delete(int id)
+        public ValidationResponse Delete(int id)
         {
+            var validationResponse = new ValidationResponse();
+
             try
             {
                 _unitOfWork.Organizations.Delete(id);
             }
-            catch
+            catch (Exception ex)
             {
-                return false;
+                validationResponse.ErrorMessages.Add("Exception", ex.Message);
             }
 
-            return true;
+            return validationResponse;
         }
 
         public void Dispose()
@@ -141,7 +145,7 @@ namespace Reestr.BLL.Managers
                 validationResponse.Status = false;
             }
 
-            OrganizationQuery query = new OrganizationQuery() { BIN = model.BIN.Trim() };
+            OrganizationQuery query = new OrganizationQuery() { BIN = model.BIN.Trim(), Offset = 0, Limit = 20 };
             var organizations = _unitOfWork.Organizations.List(query);
             if (organizations.Any())
             {
