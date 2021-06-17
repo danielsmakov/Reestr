@@ -15,7 +15,7 @@ namespace Reestr.BLL.Managers
     public class OrganizationManager
     {
         private IUnitOfWork _unitOfWork;
-        private AutoMapperConfigurator MapperConfiguration { get; } = new AutoMapperConfigurator();
+        private IMapper Mapper { get; } = AutoMapperConfigurator.GetMapper();
         public OrganizationManager(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
@@ -27,7 +27,7 @@ namespace Reestr.BLL.Managers
             {
                 var organization = _unitOfWork.Organizations.Get(id);
 
-                return MapperConfiguration.Mapper.Map<Organization, OrganizationDTO>(organization);
+                return Mapper.Map<OrganizationDTO>(organization);
             }
             catch(Exception ex)
             {
@@ -41,7 +41,7 @@ namespace Reestr.BLL.Managers
             {
                 var organizations = _unitOfWork.Organizations.List(query);
 
-                return MapperConfiguration.Mapper.Map<List<Organization>, List<OrganizationDTO>>(organizations);
+                return Mapper.Map<List<OrganizationDTO>>(organizations);
             }
             catch(Exception ex)
             {
@@ -58,7 +58,7 @@ namespace Reestr.BLL.Managers
 
             try
             {
-                var organization = MapperConfiguration.Mapper.Map<OrganizationDTO, Organization>(organizationDTO);
+                var organization = Mapper.Map<Organization>(organizationDTO);
 
                 _unitOfWork.Organizations.Insert(organization);
             }
@@ -78,7 +78,7 @@ namespace Reestr.BLL.Managers
 
             try
             {
-                var organization = MapperConfiguration.Mapper.Map<Organization>(organizationDTO);
+                var organization = Mapper.Map<Organization>(organizationDTO);
 
                 _unitOfWork.Organizations.Update(organization);
             }
