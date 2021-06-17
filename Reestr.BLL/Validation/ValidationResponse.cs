@@ -11,7 +11,12 @@ namespace Reestr.BLL.Validation
 
         public bool Status { get; set; } = true;
 
-        public Dictionary<string, string> ErrorMessages { get; set; } = new Dictionary<string, string>();
+        public List<string> ErrorMessages { get; set; }
+        
+        public string GetAllErrors()
+        {            
+            return string.Join(", ", ErrorMessages);                            
+        }
 
     }
 }

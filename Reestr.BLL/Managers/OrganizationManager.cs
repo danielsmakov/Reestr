@@ -76,7 +76,7 @@ namespace Reestr.BLL.Managers
         public ValidationResponse Update(OrganizationDTO organizationDTO)
         {
             var validationResponse = ValidateOrganizationDTO(organizationDTO);
-            if (validationResponse.ErrorMessages.Any())
+            if (!validationResponse.Status)
                 return validationResponse;
 
             try
@@ -87,6 +87,7 @@ namespace Reestr.BLL.Managers
             }
             catch(Exception ex)
             {
+                validationResponse.Status = false;
                 validationResponse.ErrorMessages.Add("Exception", ex.Message);
             }
 
@@ -122,14 +123,15 @@ namespace Reestr.BLL.Managers
 
             if (model == null)
             {
-                validationResponse.ErrorMessages.Add("Null", "Объект не найден.");
+                validationResponse.ErrorMessages.Add("Объект не найден.");
                 validationResponse.Status = false;
+                return validationResponse;
             }
 
 
             if (model.Name.Trim().Length == 0)
             {
-                validationResponse.ErrorMessages.Add("Name", "Имя обязательно к заполнению.");
+                validationResponse.ErrorMessages.Add("Имя обязательно к заполнению.");
                 validationResponse.Status = false;
             }
 

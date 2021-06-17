@@ -39,8 +39,20 @@ namespace Reestr.WEB.Controllers
                 OrganizationDTO organizationDTO = new OrganizationDTO()
                 {
                     Name = "Google",
-                    BIN = "123123123123",
+                    BIN = "222222222222",
                     PhoneNumber = "7475065068",
+                    BeginDate = DateTime.Now
+                };
+                return organizationDTO;
+            }
+            public static OrganizationDTO GetOrganizationDTOWithId()
+            {
+                OrganizationDTO organizationDTO = new OrganizationDTO()
+                {
+                    Id = 3,
+                    Name = "Google",
+                    BIN = "333333333333",
+                    PhoneNumber = "7477777777",
                     BeginDate = DateTime.Now
                 };
                 return organizationDTO;
@@ -65,6 +77,7 @@ namespace Reestr.WEB.Controllers
         public ActionResult List()
         {
             OrganizationQuery query = new OrganizationQuery();
+            query.IsDeleted = true;
             query.Offset = 0;
             query.Limit = 20;
             List<OrganizationDTO> organizationDTOs = _organizationManager.List(query);
@@ -82,6 +95,11 @@ namespace Reestr.WEB.Controllers
             var validationResponse = _organizationManager.Insert(organizationDTO);
             if (!validationResponse.Status)
             {
+                var a = validationResponse.GetAllErrors();
+
+
+
+
                 if (validationResponse.ErrorMessages.ContainsKey("Null"))
                 {
                     ViewBag.NameError = validationResponse.ErrorMessages["Null"];
@@ -115,9 +133,48 @@ namespace Reestr.WEB.Controllers
             ViewBag.SuccessMessage = $"Successfully Inserted {organizationDTO.Name} Organization to Database!";
             return View("Success");
         }
+        public ActionResult Update()
+        {
+            var organizationDTO = TestData.GetOrganizationDTOWithId();
+            var validationResponse = _organizationManager.Update(organizationDTO);
+            if (!validationResponse.Status)
+            {
+                if (validationResponse.ErrorMessages.ContainsKey("Null"))
+                {
+                    ViewBag.NameError = validationResponse.ErrorMessages["Null"];
+                    return View("Error");
+                }
+
+                if (validationResponse.ErrorMessages.ContainsKey("Exception"))
+                {
+                    ViewBag.NameError = validationResponse.ErrorMessages["Exception"];
+                    return View("Error");
+                }
+
+                if (validationResponse.ErrorMessages.ContainsKey("Name"))
+                {
+                    ViewBag.NameError = validationResponse.ErrorMessages["Name"];
+                    return View("Error");
+                }
+
+                if (validationResponse.ErrorMessages.ContainsKey("BIN"))
+                {
+                    ViewBag.NameError = validationResponse.ErrorMessages["BIN"];
+                    return View("Error");
+                }
+
+                if (validationResponse.ErrorMessages.ContainsKey("PhoneNumber"))
+                {
+                    ViewBag.NameError = validationResponse.ErrorMessages["PhoneNumber"];
+                    return View("Error");
+                }
+            }
+            ViewBag.SuccessMessage = $"Successfully Updated {organizationDTO.Name} Organization!";
+            return View("Success");
+        }
         public ActionResult Delete()
         {
-            var validationResponse = _organizationManager.Delete(4);
+            var validationResponse = _organizationManager.Delete(7);
             if (!validationResponse.Status)
             {
                 ViewBag.ErrorMessage = validationResponse.ErrorMessages["Exception"];

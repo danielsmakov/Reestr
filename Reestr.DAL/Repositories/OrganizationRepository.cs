@@ -54,7 +54,7 @@ namespace Reestr.DAL.Repositories
                     if (!string.IsNullOrEmpty(query.BIN)) where += " AND BIN like '%@BIN%'";
 
                     List<Organization> orgs = _con.Query<Organization>($"SELECT * FROM Organizations {where} " +
-                        $"ORDER BY (SELECT NULL)" +
+                        $"ORDER BY id" +
                         $"OFFSET @Offset ROWS FETCH NEXT @Limit ROWS ONLY",
                         new
                         {
@@ -100,8 +100,14 @@ namespace Reestr.DAL.Repositories
             {
                 try
                 {
+                    DynamicParameters param = new DynamicParameters();
+                    param.Add("@Id", entity.Id);
+                    param.Add("@Name", entity.Name);
+                    param.Add("@BIN", entity.BIN);
+                    param.Add("@PhoneNumber", entity.PhoneNumber);
+                    param.Add("@BeginDate", entity.BeginDate);
                     _con.Open();
-                    _con.Execute("UPDATE Organizations SET Name = @Name, BIN = @BIN, PhoneNumber = @PhoneNumber, BeginDate = @BeginDate WHERE Id = @Id", new { entity });
+                    _con.Execute("UPDATE Organizations SET Name = @Name, BIN = @BIN, PhoneNumber = @PhoneNumber, BeginDate = @BeginDate WHERE Id = @Id", param);
                     _con.Close();
                 }
                 catch (Exception ex)
