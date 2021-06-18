@@ -48,7 +48,14 @@ namespace Reestr.DAL.Repositories
                     _con.Open();
 
                     var where = "WHERE 1=1";
-                    if (query.IsDeleted) where += " AND EndDate is not null ";
+                    if (query.IsDeleted)
+                    {
+                        where += " AND EndDate is not null ";
+                    }
+                    else
+                    {
+                        where += " AND EndDate is null ";
+                    }
                     if (!string.IsNullOrEmpty(query.OrganizationName)) where += " AND Organizations.Name like @OrganizationName";
                     if (!string.IsNullOrEmpty(query.ServiceName)) where += " AND Services.Name like @ServiceName";
 
@@ -56,7 +63,8 @@ namespace Reestr.DAL.Repositories
                         $"ServiceReestr.ServiceId, ServiceReestr.Price, ServiceReestr.BeginDate FROM ServiceReestr " +
                         $"INNER JOIN Organizations ON ServiceReestr.OrganizationId = Organizations.Id " +
                         $"INNER JOIN Services ON ServiceReestr.ServiceId = Services.Id {where} " +
-                        $"OFFSET (@Offset) ROWS FETCH NEXT @Limit ROWS ONLY",
+                        $"GROUP BY (SELECT NULL)" +
+                        $"OFFSET @Offset ROWS FETCH NEXT @Limit ROWS ONLY",
                         new
                         {
                             OrganizationName = query.OrganizationName,
@@ -80,8 +88,13 @@ namespace Reestr.DAL.Repositories
             {
                 try
                 {
+                    DynamicParameters param = new DynamicParameters();
+                    param.Add("@OrganizationId", entity.OrganizationId);
+                    param.Add("@ServiceId", entity.ServiceId);
+                    param.Add("@Price", entity.Price);
+                    param.Add("@BeginDate", entity.BeginDate);
                     _con.Open();
-                    _con.Execute("INSERT INTO ServiceReestr (Id, OrganizationId, ServiceId, Price, BeginDate) VALUES (@Id, @OrganizationId, @ServiceId, @Price, @BeginDate)", new { entity });
+                    _con.Execute("INSERT INTO ServiceReestr (OrganizationId, ServiceId, Price, BeginDate) VALUES (@OrganizationId, @ServiceId, @Price, @BeginDate)", param);
                     _con.Close();
                 }
                 catch (Exception ex)
@@ -96,8 +109,14 @@ namespace Reestr.DAL.Repositories
             {
                 try
                 {
+                    DynamicParameters param = new DynamicParameters();
+                    param.Add("@Id", entity.Id);
+                    param.Add("@OrganizationId", entity.OrganizationId);
+                    param.Add("@ServiceId", entity.ServiceId);
+                    param.Add("@Price", entity.Price);
+                    param.Add("@BeginDate", entity.BeginDate);
                     _con.Open();
-                    _con.Execute("UPDATE ServiceReestr SET OrganizationId = @OrganizationId, ServiceId = @ServiceId, Price = @Price, BeginDate = @BeginDate WHERE Id = @Id", new { entity });
+                    _con.Execute("UPDATE ServiceReestr SET OrganizationId = @OrganizationId, ServiceId = @ServiceId, Price = @Price, BeginDate = @BeginDate WHERE Id = @Id", param);
                     _con.Close();
                 }
                 catch (Exception ex)
