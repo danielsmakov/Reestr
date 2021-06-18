@@ -13,11 +13,11 @@ using Reestr.DAL.Queries;
 
 namespace Reestr.BLL.Managers
 {
-    class ServiceManager
+    public class ServiceManager
     {
         private IUnitOfWork _unitOfWork;
         private IMapper Mapper { get; } = AutoMapperConfigurator.GetMapper();
-        public ServiceManager(IValidationDictionary validationDictionary, IUnitOfWork unitOfWork)
+        public ServiceManager(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }

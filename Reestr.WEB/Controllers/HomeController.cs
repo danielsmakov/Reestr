@@ -36,8 +36,8 @@ namespace Reestr.WEB.Controllers
         {
             OrganizationQuery query = new OrganizationQuery();
             query.IsDeleted = false;
-            query.Offset = 260;
-            query.Limit = 1000;
+            query.Offset = 0;
+            query.Limit = 20;
             List<OrganizationDTO> organizationDTOs = _organizationManager.List(query);
             if (organizationDTOs.Count == 0)
             {
