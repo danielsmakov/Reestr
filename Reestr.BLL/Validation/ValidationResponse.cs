@@ -11,13 +11,6 @@ namespace Reestr.BLL.Validation
 
         public bool Status { get; set; } = true;
 
-        /*public List<string> ErrorMessages { get; set; } = new List<string>();*/
         public string ErrorMessage { get; set; } = string.Empty;
-        
-        /*public string GetAllErrors()
-        {            
-            return string.Join(", ", ErrorMessages);                            
-        }*/
-
     }
 }

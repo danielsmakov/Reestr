@@ -49,8 +49,8 @@ namespace Reestr.DAL.Repositories
 
                     var where = "WHERE 1=1";
                     if (query.IsDeleted) where += " AND EndDate is not null ";
-                    if (!string.IsNullOrEmpty(query.OrganizationName)) where += " AND Organizations.Name like '%@OrganizationName%'";
-                    if (!string.IsNullOrEmpty(query.ServiceName)) where += " AND Services.Name like '%@ServiceName%'";
+                    if (!string.IsNullOrEmpty(query.OrganizationName)) where += " AND Organizations.Name like @OrganizationName";
+                    if (!string.IsNullOrEmpty(query.ServiceName)) where += " AND Services.Name like @ServiceName";
 
                     List<ServiceReestr> orgs = _con.Query<ServiceReestr>($"SELECT ServiceReestr.Id, ServiceReestr.OrganizationId, " +
                         $"ServiceReestr.ServiceId, ServiceReestr.Price, ServiceReestr.BeginDate FROM ServiceReestr " +

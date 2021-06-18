@@ -49,7 +49,7 @@ namespace Reestr.DAL.Repositories
 
                     var where = "WHERE 1=1";
                     if (query.IsDeleted) where += " AND EndDate is not null ";
-                    if (!string.IsNullOrEmpty(query.Name)) where += " AND Name like '%@Name%'";
+                    if (!string.IsNullOrEmpty(query.Name)) where += " AND Name like @Name";
 
                     List<Service> orgs = _con.Query<Service>($"SELECT * FROM Services {where} " +
                         $"OFFSET (@Offset) ROWS FETCH NEXT @Limit ROWS ONLY",

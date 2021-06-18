@@ -38,7 +38,7 @@ namespace Reestr.WEB.Controllers
             {
                 OrganizationDTO organizationDTO = new OrganizationDTO()
                 {
-                    Name = "Google",
+                    Name = "Microsoft",
                     BIN = "222222222222",
                     PhoneNumber = "7475065068",
                     BeginDate = DateTime.Now

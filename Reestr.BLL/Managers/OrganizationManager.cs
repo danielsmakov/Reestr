@@ -127,7 +127,7 @@ namespace Reestr.BLL.Managers
             }
 
 
-            OrganizationQuery query = new OrganizationQuery() { Name = model.Name, Offset = 0, Limit = 20 };
+            OrganizationQuery query = new OrganizationQuery() { Name = model.Name, IsDeleted = true, Offset = 0, Limit = 20 };
             var organizations = _unitOfWork.Organizations.List(query);
             if (organizations.Any())
             {

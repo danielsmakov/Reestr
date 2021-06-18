@@ -50,8 +50,8 @@ namespace Reestr.DAL.Repositories
 
                     var where = "WHERE 1=1";
                     if (query.IsDeleted) where += " AND EndDate is not null ";
-                    if (!string.IsNullOrEmpty(query.Name)) where += " AND Name like '%@Name%'";
-                    if (!string.IsNullOrEmpty(query.BIN)) where += " AND BIN like '%@BIN%'";
+                    if (!string.IsNullOrEmpty(query.Name)) where += " AND Name like @Name";
+                    if (!string.IsNullOrEmpty(query.BIN)) where += " AND BIN like @BIN";
 
                     List<Organization> orgs = _con.Query<Organization>($"SELECT * FROM Organizations {where} " +
                         $"ORDER BY (SELECT NULL)" +

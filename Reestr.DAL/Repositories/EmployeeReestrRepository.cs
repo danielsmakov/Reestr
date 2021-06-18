@@ -49,8 +49,8 @@ namespace Reestr.DAL.Repositories
 
                     var where = "WHERE 1=1";
                     if (query.IsDeleted) where += " AND EndDate is not null ";
-                    if (!string.IsNullOrEmpty(query.OrganizationName)) where += " AND Organizations.Name like '%@OrganizationName%'";
-                    if (!string.IsNullOrEmpty(query.FullName)) where += " AND EmployeeReestr.FullName like '%@FullName%'";
+                    if (!string.IsNullOrEmpty(query.OrganizationName)) where += " AND Organizations.Name like @OrganizationName";
+                    if (!string.IsNullOrEmpty(query.FullName)) where += " AND EmployeeReestr.FullName like @FullName";
                      
                     List<EmployeeReestr> orgs = _con.Query<EmployeeReestr>($"SELECT EmployeeReestr.Id, EmployeeReestr.OrganizationId, " +
                         $"EmployeeReestr.IIN, EmployeeReestr.FullName, EmployeeReestr.DateOfBirth, EmployeeReestr.PhoneNumber, " +
