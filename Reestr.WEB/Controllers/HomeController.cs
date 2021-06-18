@@ -16,48 +16,6 @@ namespace Reestr.WEB.Controllers
 {
     public class HomeController : Controller
     {
-        public static class TestData
-        {
-            public static List<OrganizationDTO> GetListOfOrganizationDTOs()
-            {
-                OrganizationDTO entity = new OrganizationDTO()
-                {
-                    Name = "Google",
-                    BIN = "123123123123",
-                    PhoneNumber = "7475065068",
-                    BeginDate = DateTime.Now
-                };
-                List<OrganizationDTO> organizationDTOs = new List<OrganizationDTO>();
-                for (int i = 0; i < 6; i++)
-                {
-                    organizationDTOs.Add(entity);
-                }
-                return organizationDTOs;
-            }
-            public static OrganizationDTO GetOrganizationDTO()
-            {
-                OrganizationDTO organizationDTO = new OrganizationDTO()
-                {
-                    Name = "Oracle",
-                    BIN = "555555555555",
-                    PhoneNumber = "7475065068",
-                    BeginDate = DateTime.Now
-                };
-                return organizationDTO;
-            }
-            public static OrganizationDTO GetOrganizationDTOWithId()
-            {
-                OrganizationDTO organizationDTO = new OrganizationDTO()
-                {
-                    Id = 3,
-                    Name = "Microsoft",
-                    BIN = "333333333333",
-                    PhoneNumber = "8888888888",
-                    BeginDate = DateTime.Now
-                };
-                return organizationDTO;
-            }
-        }
         private OrganizationManager _organizationManager;
         public HomeController()
         {
@@ -77,9 +35,9 @@ namespace Reestr.WEB.Controllers
         public ActionResult List()
         {
             OrganizationQuery query = new OrganizationQuery();
-            query.IsDeleted = true;
-            query.Offset = 0;
-            query.Limit = 20;
+            query.IsDeleted = false;
+            query.Offset = 260;
+            query.Limit = 1000;
             List<OrganizationDTO> organizationDTOs = _organizationManager.List(query);
             if (organizationDTOs.Count == 0)
             {
@@ -87,20 +45,35 @@ namespace Reestr.WEB.Controllers
                 return View("Error");
             }
             ViewBag.SuccessMessage = $"Number of Models in Database is {organizationDTOs.Count}!";
-            return View("Success");
+            return View("Success", organizationDTOs);
         }
+
+
         public ActionResult Insert()
         {
-            var organizationDTO = TestData.GetOrganizationDTO();
-            var validationResponse = _organizationManager.Insert(organizationDTO);
-            if (!validationResponse.Status)
+            Random random = new Random();
+            for (int i = 3; i < 1001; i++)
             {
-                ViewBag.ErrorMessage = validationResponse.ErrorMessage;
-                return View("Error");
+                OrganizationDTO organizationDTO = new OrganizationDTO()
+                {
+                    Name = $"Google {i}",
+                    BIN = $"{random.Next(100000, 999999)}" + $"{random.Next(100000, 999999)}",
+                    PhoneNumber = $"{random.Next(10000, 99999)}" + $"{random.Next(10000, 99999)}",
+                    BeginDate = DateTime.Now
+                };
+                var validationResponse = _organizationManager.Insert(organizationDTO);
+                if (!validationResponse.Status)
+                {
+                    ViewBag.ErrorMessage = validationResponse.ErrorMessage;
+                    return View("Error");
+                }
             }
-            ViewBag.SuccessMessage = $"Successfully Inserted {organizationDTO.Name} Organization to Database!";
+            
+            ViewBag.SuccessMessage = $"Successfully Inserted All Organizations to Database!";
             return View("Success");
         }
+
+
         public ActionResult Update()
         {
             var organizationDTO = TestData.GetOrganizationDTOWithId();
@@ -113,6 +86,8 @@ namespace Reestr.WEB.Controllers
             ViewBag.SuccessMessage = $"Successfully Updated {organizationDTO.Name} Organization!";
             return View("Success");
         }
+
+
         public ActionResult Delete()
         {
             var validationResponse = _organizationManager.Delete(15);

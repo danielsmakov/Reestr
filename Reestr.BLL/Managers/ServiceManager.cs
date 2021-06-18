@@ -13,12 +13,10 @@ namespace Reestr.BLL.Managers
 {
     class ServiceManager
     {
-        private IValidationDictionary _validationDictionary;
         private IUnitOfWork _unitOfWork;
         private IMapper Mapper { get; } = AutoMapperConfigurator.GetMapper();
         public ServiceManager(IValidationDictionary validationDictionary, IUnitOfWork unitOfWork)
         {
-            _validationDictionary = validationDictionary;
             _unitOfWork = unitOfWork;
         }
 

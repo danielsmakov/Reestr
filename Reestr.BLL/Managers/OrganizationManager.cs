@@ -128,41 +128,41 @@ namespace Reestr.BLL.Managers
             }
 
 
-            OrganizationQuery query = new OrganizationQuery() { Id = model.Id, Name = model.Name, IsDeleted = false, Offset = 0, Limit = 20 };
+            OrganizationQuery query = new OrganizationQuery() { Id = model.Id, Name = model.Name, IsDeleted = false, Offset = 0, Limit = 10 };
             var organizations = _unitOfWork.Organizations.List(query);
             if (organizations.Any())
             {
-                validationResponse.ErrorMessage = "Такое имя организации уже зарегистрировано.";
+                validationResponse.ErrorMessage = "Такое название уже зарегистрировано";
                 validationResponse.Status = false;
                 return validationResponse;
             }
 
             if (model.Name.Trim().Length == 0)
             {
-                validationResponse.ErrorMessage = "Имя обязательно к заполнению.";
+                validationResponse.ErrorMessage = "Название организации обязательно к заполнению";
                 validationResponse.Status = false;
                 return validationResponse;
             }
 
             if (model.Name.Trim().Length > 300)
             {
-                validationResponse.ErrorMessage = "Длина имена не должна превышвать 300 символов.";
+                validationResponse.ErrorMessage = "Название организации не должно превышвать 300 символов";
                 validationResponse.Status = false;
                 return validationResponse;
             }
 
-            query = new OrganizationQuery() { Id = model.Id, BIN = model.BIN.Trim(), Offset = 0, Limit = 20 };
+            query = new OrganizationQuery() { Id = model.Id, BIN = model.BIN.Trim(), IsDeleted = false, Offset = 0, Limit = 10 };
             organizations = _unitOfWork.Organizations.List(query);
             if (organizations.Any())
             {
-                validationResponse.ErrorMessage = "Введенный Вами БИН уже зарегистрирован.";
+                validationResponse.ErrorMessage = "Введенный Вами БИН уже зарегистрирован";
                 validationResponse.Status = false;
                 return validationResponse;
             }
 
             if (model.BIN.Trim().Length != 12)
             {
-                validationResponse.ErrorMessage = "БИН должен содержать ровно 12 символов.";
+                validationResponse.ErrorMessage = "БИН должен содержать ровно 12 символов";
                 validationResponse.Status = false;
                 return validationResponse;
             }
@@ -170,7 +170,7 @@ namespace Reestr.BLL.Managers
 
             if (model.PhoneNumber.Trim().Length != 10)
             {
-                validationResponse.ErrorMessage = "Телефон должен включать ровно 10 цифр, без каких-либо других знаков.";
+                validationResponse.ErrorMessage = "Телефон должен включать ровно 10 цифр, без каких-либо других знаков";
                 validationResponse.Status = false;
                 return validationResponse;
             }
