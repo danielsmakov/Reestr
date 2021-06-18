@@ -9,6 +9,8 @@ namespace Reestr.DAL.Queries
 {
     public class OrganizationQuery : PaginationQuery, IQuery 
     {
+        public int Id { get; set; }
+
         public string Name { get; set; }
 
         public string BIN { get; set; }

@@ -38,8 +38,8 @@ namespace Reestr.WEB.Controllers
             {
                 OrganizationDTO organizationDTO = new OrganizationDTO()
                 {
-                    Name = "Microsoft",
-                    BIN = "222222222222",
+                    Name = "Oracle",
+                    BIN = "555555555555",
                     PhoneNumber = "7475065068",
                     BeginDate = DateTime.Now
                 };
@@ -50,9 +50,9 @@ namespace Reestr.WEB.Controllers
                 OrganizationDTO organizationDTO = new OrganizationDTO()
                 {
                     Id = 3,
-                    Name = "Google",
+                    Name = "Microsoft",
                     BIN = "333333333333",
-                    PhoneNumber = "7477777777",
+                    PhoneNumber = "8888888888",
                     BeginDate = DateTime.Now
                 };
                 return organizationDTO;
@@ -115,7 +115,7 @@ namespace Reestr.WEB.Controllers
         }
         public ActionResult Delete()
         {
-            var validationResponse = _organizationManager.Delete(7);
+            var validationResponse = _organizationManager.Delete(15);
             if (!validationResponse.Status)
             {
                 ViewBag.ErrorMessage = validationResponse.ErrorMessage;

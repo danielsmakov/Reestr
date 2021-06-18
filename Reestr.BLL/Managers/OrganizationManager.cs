@@ -56,6 +56,7 @@ namespace Reestr.BLL.Managers
             if (!validationResponse.Status)
                 return validationResponse;
 
+
             try
             {
                 var organization = Mapper.Map<Organization>(organizationDTO);
@@ -127,7 +128,7 @@ namespace Reestr.BLL.Managers
             }
 
 
-            OrganizationQuery query = new OrganizationQuery() { Name = model.Name, IsDeleted = true, Offset = 0, Limit = 20 };
+            OrganizationQuery query = new OrganizationQuery() { Id = model.Id, Name = model.Name, IsDeleted = false, Offset = 0, Limit = 20 };
             var organizations = _unitOfWork.Organizations.List(query);
             if (organizations.Any())
             {
@@ -150,15 +151,7 @@ namespace Reestr.BLL.Managers
                 return validationResponse;
             }
 
-
-            if (model.BIN.Trim().Length != 12)
-            {
-                validationResponse.ErrorMessage = "БИН должен содержать ровно 12 символов.";
-                validationResponse.Status = false;
-                return validationResponse;
-            }
-
-            query = new OrganizationQuery() { BIN = model.BIN.Trim(), Offset = 0, Limit = 20 };
+            query = new OrganizationQuery() { Id = model.Id, BIN = model.BIN.Trim(), Offset = 0, Limit = 20 };
             organizations = _unitOfWork.Organizations.List(query);
             if (organizations.Any())
             {
@@ -167,10 +160,17 @@ namespace Reestr.BLL.Managers
                 return validationResponse;
             }
 
+            if (model.BIN.Trim().Length != 12)
+            {
+                validationResponse.ErrorMessage = "БИН должен содержать ровно 12 символов.";
+                validationResponse.Status = false;
+                return validationResponse;
+            }
+
 
             if (model.PhoneNumber.Trim().Length != 10)
             {
-                validationResponse.ErrorMessage = "Телефон должен включать только 10 цифр, без какихлибо других знаков.";
+                validationResponse.ErrorMessage = "Телефон должен включать ровно 10 цифр, без каких-либо других знаков.";
                 validationResponse.Status = false;
                 return validationResponse;
             }

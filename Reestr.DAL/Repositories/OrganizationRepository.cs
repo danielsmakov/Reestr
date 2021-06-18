@@ -49,15 +49,24 @@ namespace Reestr.DAL.Repositories
                     _con.Open();
 
                     var where = "WHERE 1=1";
-                    if (query.IsDeleted) where += " AND EndDate is not null ";
+                    if (query.IsDeleted)
+                    {
+                        where += " AND EndDate is not null ";
+                    }
+                    else
+                    {
+                        where += " AND EndDate is null ";
+                    }
                     if (!string.IsNullOrEmpty(query.Name)) where += " AND Name like @Name";
                     if (!string.IsNullOrEmpty(query.BIN)) where += " AND BIN like @BIN";
+                    if (query.Id != 0) where += " AND Id NOT like @Id";
 
                     List<Organization> orgs = _con.Query<Organization>($"SELECT * FROM Organizations {where} " +
                         $"ORDER BY (SELECT NULL)" +
                         $"OFFSET @Offset ROWS FETCH NEXT @Limit ROWS ONLY",
                         new
                         {
+                            Id = query.Id,
                             Name = query.Name,
                             Offset = query.Offset,
                             Limit = query.Limit,
