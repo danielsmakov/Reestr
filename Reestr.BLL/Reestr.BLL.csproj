@@ -76,6 +76,7 @@
     <Compile Include="Interfaces\IValidationDictionary.cs" />
     <Compile Include="Managers\OrganizationManager.cs" />
     <Compile Include="Managers\ServiceManager.cs" />
+    <Compile Include="Managers\ServiceReestrManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Validation\ModelStateWrapper.cs" />
     <Compile Include="Validation\ValidationResponse.cs" />

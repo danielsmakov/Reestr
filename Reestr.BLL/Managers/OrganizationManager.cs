@@ -56,7 +56,6 @@ namespace Reestr.BLL.Managers
             if (!validationResponse.Status)
                 return validationResponse;
 
-
             try
             {
                 var organization = Mapper.Map<Organization>(organizationDTO);
