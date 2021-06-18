@@ -41,8 +41,6 @@ namespace Reestr.BLL.Managers
             try
             {
                 List<Organization> organizations = _unitOfWork.Organizations.List(query);
-                /*var mapper = new MapperConfiguration(cfg => cfg.CreateMap<Organization, OrganizationDTO>()).CreateMapper();
-                List<OrganizationDTO> organizationDTOs = mapper.Map<List<Organization>, List<OrganizationDTO>>(organizations);*/
                 List<OrganizationDTO> organizationDTOs = Mapper.Map<List<Organization>, List<OrganizationDTO>>(organizations);
                 return organizationDTOs;
             }
@@ -67,7 +65,7 @@ namespace Reestr.BLL.Managers
             catch (Exception ex)
             {
                 validationResponse.Status = false;
-                validationResponse.ErrorMessages.Add("Exception", ex.Message);
+                validationResponse.ErrorMessages.Add(ex.Message);
             }
 
             return validationResponse;
@@ -88,7 +86,7 @@ namespace Reestr.BLL.Managers
             catch(Exception ex)
             {
                 validationResponse.Status = false;
-                validationResponse.ErrorMessages.Add("Exception", ex.Message);
+                validationResponse.ErrorMessages.Add(ex.Message);
             }
 
             return validationResponse;
@@ -105,7 +103,7 @@ namespace Reestr.BLL.Managers
             catch (Exception ex)
             {
                 validationResponse.Status = false;
-                validationResponse.ErrorMessages.Add("Exception", ex.Message);
+                validationResponse.ErrorMessages.Add(ex.Message);
             }
 
             return validationResponse;
@@ -137,14 +135,14 @@ namespace Reestr.BLL.Managers
 
             if (model.Name.Trim().Length > 300)
             {
-                validationResponse.ErrorMessages.Add("Name", "Длина имена не должна превышвать 300 символов.");
+                validationResponse.ErrorMessages.Add("Длина имена не должна превышвать 300 символов.");
                 validationResponse.Status = false;
             }
 
 
             if (model.BIN.Trim().Length != 12)
             {
-                validationResponse.ErrorMessages.Add("BIN", "БИН должен содержать ровно 12 символов.");
+                validationResponse.ErrorMessages.Add("БИН должен содержать ровно 12 символов.");
                 validationResponse.Status = false;
             }
 
@@ -152,14 +150,14 @@ namespace Reestr.BLL.Managers
             var organizations = _unitOfWork.Organizations.List(query);
             if (organizations.Any())
             {
-                validationResponse.ErrorMessages.Add("BIN", "Введенный Вами БИН уже зарегистрирован.");
+                validationResponse.ErrorMessages.Add("Введенный Вами БИН уже зарегистрирован.");
                 validationResponse.Status = false;
             }
 
 
             if (model.PhoneNumber.Trim().Length != 10)
             {
-                validationResponse.ErrorMessages.Add("PhoneNumber", "Телефон должен включать только 10 цифр, без какихлибо других знаков.");
+                validationResponse.ErrorMessages.Add("Телефон должен включать только 10 цифр, без какихлибо других знаков.");
                 validationResponse.Status = false;
             }
 
