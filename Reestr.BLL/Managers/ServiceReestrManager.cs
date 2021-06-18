@@ -12,7 +12,7 @@ using Reestr.DAL.Queries;
 
 namespace Reestr.BLL.Managers
 {
-    class ServiceReestrManager
+    public class ServiceReestrManager
     {
         private IUnitOfWork _unitOfWork;
         private IMapper Mapper { get; } = AutoMapperConfigurator.GetMapper();
@@ -123,6 +123,15 @@ namespace Reestr.BLL.Managers
         public ValidationResponse ValidateServiceReestrDTO(ServiceReestrDTO model)
         {
             var validationResponse = new ValidationResponse();
+
+
+            if (model == null)
+            {
+                validationResponse.ErrorMessage = "Объект не найден.";
+                validationResponse.Status = false;
+                return validationResponse;
+            }
+
 
             if (model.Price < 0)
             {

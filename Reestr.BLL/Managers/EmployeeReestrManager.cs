@@ -12,7 +12,7 @@ using Reestr.BLL.Validation;
 
 namespace Reestr.BLL.Managers
 {
-    class EmployeeReestrManager
+    public class EmployeeReestrManager
     {
         private IUnitOfWork _unitOfWork;
         private IMapper Mapper { get; } = AutoMapperConfigurator.GetMapper();
@@ -123,6 +123,14 @@ namespace Reestr.BLL.Managers
         public ValidationResponse ValidateEmployeeReestrDTO(EmployeeReestrDTO model)
         {
             var validationResponse = new ValidationResponse();
+
+
+            if (model == null)
+            {
+                validationResponse.ErrorMessage = "Объект не найден.";
+                validationResponse.Status = false;
+                return validationResponse;
+            }
 
 
             EmployeeReestrQuery query = new EmployeeReestrQuery() { Id = model.Id, IIN = model.IIN.Trim(), IsDeleted = false, Offset = 0, Limit = 10 };

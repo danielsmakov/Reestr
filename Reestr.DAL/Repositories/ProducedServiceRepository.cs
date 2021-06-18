@@ -51,7 +51,8 @@ namespace Reestr.DAL.Repositories
                     if (query.IsDeleted) where += " AND EndDate is not null ";
 
                     List<ProducedService> orgs = _con.Query<ProducedService>($"SELECT * FROM ProducedServices {where} " +
-                        $"OFFSET (@Offset) ROWS FETCH NEXT @Limit ROWS ONLY",
+                        $"ORDER BY (SELECT NULL)" +
+                        $"OFFSET @Offset ROWS FETCH NEXT @Limit ROWS ONLY",
                         new
                         {
                             Offset = query.Offset,
@@ -73,8 +74,13 @@ namespace Reestr.DAL.Repositories
             {
                 try
                 {
+                    DynamicParameters param = new DynamicParameters();
+                    param.Add("@OrganizationId", entity.OrganizationId);
+                    param.Add("@ServiceReestrId", entity.ServiceReestrId);
+                    param.Add("@EmployeeId", entity.EmployeeId);
+                    param.Add("@BeginDate", entity.BeginDate);
                     _con.Open();
-                    _con.Execute("INSERT INTO ProducedServices (Id, OrganizationId, ServiceReestrId, EmployeeId, BeginDate) VALUES (@Id, @OrganizationId, @ServiceReestrId, @EmployeeId, @BeginDate)", new { entity });
+                    _con.Execute("INSERT INTO ProducedServices (OrganizationId, ServiceReestrId, EmployeeId, BeginDate) VALUES (@OrganizationId, @ServiceReestrId, @EmployeeId, @BeginDate)", param);
                     _con.Close();
                 }
                 catch (Exception ex)
@@ -89,8 +95,14 @@ namespace Reestr.DAL.Repositories
             {
                 try
                 {
+                    DynamicParameters param = new DynamicParameters();
+                    param.Add("@Id", entity.Id);
+                    param.Add("@OrganizationId", entity.OrganizationId);
+                    param.Add("@ServiceReestrId", entity.ServiceReestrId);
+                    param.Add("@EmployeeId", entity.EmployeeId);
+                    param.Add("@BeginDate", entity.BeginDate);
                     _con.Open();
-                    _con.Execute("UPDATE ProducedServices SET OrganizationId = @OrganizationId, ServiceReestrId = @ServiceReestrId, EmployeeId = @EmployeeId, BeginDate = @BeginDate WHERE Id = @Id", new { entity });
+                    _con.Execute("UPDATE ProducedServices SET OrganizationId = @OrganizationId, ServiceReestrId = @ServiceReestrId, EmployeeId = @EmployeeId, BeginDate = @BeginDate WHERE Id = @Id", param);
                     _con.Close();
                 }
                 catch (Exception ex)
