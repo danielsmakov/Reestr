@@ -95,40 +95,8 @@ namespace Reestr.WEB.Controllers
             var validationResponse = _organizationManager.Insert(organizationDTO);
             if (!validationResponse.Status)
             {
-                var a = validationResponse.GetAllErrors();
-
-
-
-
-                if (validationResponse.ErrorMessages.ContainsKey("Null"))
-                {
-                    ViewBag.NameError = validationResponse.ErrorMessages["Null"];
-                    return View("Error");
-                }
-
-                if (validationResponse.ErrorMessages.ContainsKey("Exception"))
-                {
-                    ViewBag.NameError = validationResponse.ErrorMessages["Exception"];
-                    return View("Error");
-                }
-
-                if (validationResponse.ErrorMessages.ContainsKey("Name"))
-                {
-                    ViewBag.NameError = validationResponse.ErrorMessages["Name"];
-                    return View("Error");
-                }
-
-                if (validationResponse.ErrorMessages.ContainsKey("BIN"))
-                {
-                    ViewBag.NameError = validationResponse.ErrorMessages["BIN"];
-                    return View("Error");
-                }
-
-                if (validationResponse.ErrorMessages.ContainsKey("PhoneNumber"))
-                {
-                    ViewBag.NameError = validationResponse.ErrorMessages["PhoneNumber"];
-                    return View("Error");
-                }
+                ViewBag.ErrorMessage = validationResponse.ErrorMessage;
+                return View("Error");
             }
             ViewBag.SuccessMessage = $"Successfully Inserted {organizationDTO.Name} Organization to Database!";
             return View("Success");
@@ -139,35 +107,8 @@ namespace Reestr.WEB.Controllers
             var validationResponse = _organizationManager.Update(organizationDTO);
             if (!validationResponse.Status)
             {
-                if (validationResponse.ErrorMessages.ContainsKey("Null"))
-                {
-                    ViewBag.NameError = validationResponse.ErrorMessages["Null"];
-                    return View("Error");
-                }
-
-                if (validationResponse.ErrorMessages.ContainsKey("Exception"))
-                {
-                    ViewBag.NameError = validationResponse.ErrorMessages["Exception"];
-                    return View("Error");
-                }
-
-                if (validationResponse.ErrorMessages.ContainsKey("Name"))
-                {
-                    ViewBag.NameError = validationResponse.ErrorMessages["Name"];
-                    return View("Error");
-                }
-
-                if (validationResponse.ErrorMessages.ContainsKey("BIN"))
-                {
-                    ViewBag.NameError = validationResponse.ErrorMessages["BIN"];
-                    return View("Error");
-                }
-
-                if (validationResponse.ErrorMessages.ContainsKey("PhoneNumber"))
-                {
-                    ViewBag.NameError = validationResponse.ErrorMessages["PhoneNumber"];
-                    return View("Error");
-                }
+                ViewBag.ErrorMessage = validationResponse.ErrorMessage;
+                return View("Error");
             }
             ViewBag.SuccessMessage = $"Successfully Updated {organizationDTO.Name} Organization!";
             return View("Success");
@@ -177,7 +118,7 @@ namespace Reestr.WEB.Controllers
             var validationResponse = _organizationManager.Delete(7);
             if (!validationResponse.Status)
             {
-                ViewBag.ErrorMessage = validationResponse.ErrorMessages["Exception"];
+                ViewBag.ErrorMessage = validationResponse.ErrorMessage;
                 return View("Error");
             }
             ViewBag.SuccessMessage = "Organization Is Successfully Deleted!";

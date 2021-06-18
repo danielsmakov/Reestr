@@ -54,7 +54,7 @@ namespace Reestr.DAL.Repositories
                     if (!string.IsNullOrEmpty(query.BIN)) where += " AND BIN like '%@BIN%'";
 
                     List<Organization> orgs = _con.Query<Organization>($"SELECT * FROM Organizations {where} " +
-                        $"ORDER BY id" +
+                        $"ORDER BY (SELECT NULL)" +
                         $"OFFSET @Offset ROWS FETCH NEXT @Limit ROWS ONLY",
                         new
                         {

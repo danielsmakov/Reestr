@@ -41,7 +41,7 @@ namespace Reestr.BLL.Managers
             try
             {
                 List<Organization> organizations = _unitOfWork.Organizations.List(query);
-                List<OrganizationDTO> organizationDTOs = Mapper.Map<List<Organization>, List<OrganizationDTO>>(organizations);
+                List<OrganizationDTO> organizationDTOs = Mapper.Map<List<OrganizationDTO>>(organizations);
                 return organizationDTOs;
             }
             catch(Exception ex)
@@ -65,7 +65,7 @@ namespace Reestr.BLL.Managers
             catch (Exception ex)
             {
                 validationResponse.Status = false;
-                validationResponse.ErrorMessages.Add(ex.Message);
+                validationResponse.ErrorMessage = ex.Message;
             }
 
             return validationResponse;
@@ -86,7 +86,7 @@ namespace Reestr.BLL.Managers
             catch(Exception ex)
             {
                 validationResponse.Status = false;
-                validationResponse.ErrorMessages.Add(ex.Message);
+                validationResponse.ErrorMessage = ex.Message;
             }
 
             return validationResponse;
@@ -103,7 +103,7 @@ namespace Reestr.BLL.Managers
             catch (Exception ex)
             {
                 validationResponse.Status = false;
-                validationResponse.ErrorMessages.Add(ex.Message);
+                validationResponse.ErrorMessage = ex.Message;
             }
 
             return validationResponse;
@@ -121,44 +121,58 @@ namespace Reestr.BLL.Managers
 
             if (model == null)
             {
-                validationResponse.ErrorMessages.Add("Объект не найден.");
+                validationResponse.ErrorMessage = "Объект не найден.";
                 validationResponse.Status = false;
                 return validationResponse;
             }
 
 
+            OrganizationQuery query = new OrganizationQuery() { Name = model.Name, Offset = 0, Limit = 20 };
+            var organizations = _unitOfWork.Organizations.List(query);
+            if (organizations.Any())
+            {
+                validationResponse.ErrorMessage = "Такое имя организации уже зарегистрировано.";
+                validationResponse.Status = false;
+                return validationResponse;
+            }
+
             if (model.Name.Trim().Length == 0)
             {
-                validationResponse.ErrorMessages.Add("Имя обязательно к заполнению.");
+                validationResponse.ErrorMessage = "Имя обязательно к заполнению.";
                 validationResponse.Status = false;
+                return validationResponse;
             }
 
             if (model.Name.Trim().Length > 300)
             {
-                validationResponse.ErrorMessages.Add("Длина имена не должна превышвать 300 символов.");
+                validationResponse.ErrorMessage = "Длина имена не должна превышвать 300 символов.";
                 validationResponse.Status = false;
+                return validationResponse;
             }
 
 
             if (model.BIN.Trim().Length != 12)
             {
-                validationResponse.ErrorMessages.Add("БИН должен содержать ровно 12 символов.");
+                validationResponse.ErrorMessage = "БИН должен содержать ровно 12 символов.";
                 validationResponse.Status = false;
+                return validationResponse;
             }
 
-            OrganizationQuery query = new OrganizationQuery() { BIN = model.BIN.Trim(), Offset = 0, Limit = 20 };
-            var organizations = _unitOfWork.Organizations.List(query);
+            query = new OrganizationQuery() { BIN = model.BIN.Trim(), Offset = 0, Limit = 20 };
+            organizations = _unitOfWork.Organizations.List(query);
             if (organizations.Any())
             {
-                validationResponse.ErrorMessages.Add("Введенный Вами БИН уже зарегистрирован.");
+                validationResponse.ErrorMessage = "Введенный Вами БИН уже зарегистрирован.";
                 validationResponse.Status = false;
+                return validationResponse;
             }
 
 
             if (model.PhoneNumber.Trim().Length != 10)
             {
-                validationResponse.ErrorMessages.Add("Телефон должен включать только 10 цифр, без какихлибо других знаков.");
+                validationResponse.ErrorMessage = "Телефон должен включать только 10 цифр, без какихлибо других знаков.";
                 validationResponse.Status = false;
+                return validationResponse;
             }
 
             return validationResponse;
