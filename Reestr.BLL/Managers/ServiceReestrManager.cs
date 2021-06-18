@@ -115,6 +115,12 @@ namespace Reestr.BLL.Managers
         }
 
 
+        public void Dispose()
+        {
+            _unitOfWork.Dispose();
+        }
+
+
         public ValidationResponse ValidateServiceReestrDTO(ServiceReestrDTO model)
         {
             var validationResponse = new ValidationResponse();

@@ -48,22 +48,34 @@ namespace Reestr.DAL.Repositories
                     _con.Open();
 
                     var where = "WHERE 1=1";
-                    if (query.IsDeleted) where += " AND EndDate is not null ";
+                    if (query.IsDeleted)
+                    {
+                        where += " AND EndDate is not null ";
+                    }
+                    else
+                    {
+                        where += " AND EndDate is null ";
+                    }
                     if (!string.IsNullOrEmpty(query.OrganizationName)) where += " AND Organizations.Name like @OrganizationName";
                     if (!string.IsNullOrEmpty(query.FullName)) where += " AND EmployeeReestr.FullName like @FullName";
-                     
+                    if (!string.IsNullOrEmpty(query.IIN)) where += " AND IIN like @IIN";
+                    if (query.Id != 0) where += " AND Id NOT like @Id";
+
                     List<EmployeeReestr> orgs = _con.Query<EmployeeReestr>($"SELECT EmployeeReestr.Id, EmployeeReestr.OrganizationId, " +
                         $"EmployeeReestr.IIN, EmployeeReestr.FullName, EmployeeReestr.DateOfBirth, EmployeeReestr.PhoneNumber, " +
                         $"EmployeeReestr.BeginDate " +
                         $"FROM Organizations " +
                         $"INNER JOIN Organizations ON EmployeeReestr.OrganizationId = Organizations.Id {where} " +
-                        $"OFFSET (@Offset) ROWS FETCH NEXT @Limit ROWS ONLY",
+                        $"ORDER BY (SELECT NULL)" +
+                        $"OFFSET @Offset ROWS FETCH NEXT @Limit ROWS ONLY",
                         new
                         {
+                            Id = query.Id,
                             OrganizationName = query.OrganizationName,
                             FullName = query.FullName,
                             Offset = query.Offset,
-                            Limit = query.Limit
+                            Limit = query.Limit,
+                            IIN = query.IIN
                         }
                         ).ToList();
                     _con.Close();
@@ -81,8 +93,15 @@ namespace Reestr.DAL.Repositories
             {
                 try
                 {
+                    DynamicParameters param = new DynamicParameters();
+                    param.Add("@OrganizationId", entity.OrganizationId);
+                    param.Add("@IIN", entity.IIN);
+                    param.Add("@FullName", entity.FullName);
+                    param.Add("@DateOfBirth", entity.DateOfBirth);
+                    param.Add("@PhoneNumber", entity.PhoneNumber);
+                    param.Add("@BeginDate", entity.BeginDate);
                     _con.Open();
-                    _con.Execute("INSERT INTO EmployeeReestr (Id, OrganizationId, IIN, FullName, DateOfBirth, PhoneNumber, BeginDate) VALUES (@Id, @OrganizationId, @IIN, @FullName, @DateOfBirth @PhoneNumber, @BeginDate)", new { entity });
+                    _con.Execute("INSERT INTO EmployeeReestr (OrganizationId, IIN, FullName, DateOfBirth, PhoneNumber, BeginDate) VALUES (@OrganizationId, @IIN, @FullName, @DateOfBirth @PhoneNumber, @BeginDate)", param);
                     _con.Close();
                 }
                 catch (Exception ex)
@@ -97,8 +116,16 @@ namespace Reestr.DAL.Repositories
             {
                 try
                 {
+                    DynamicParameters param = new DynamicParameters();
+                    param.Add("@Id", entity.Id);
+                    param.Add("@OrganizationId", entity.OrganizationId);
+                    param.Add("@IIN", entity.IIN);
+                    param.Add("@FullName", entity.FullName);
+                    param.Add("@DateOfBirth", entity.DateOfBirth);
+                    param.Add("@PhoneNumber", entity.PhoneNumber);
+                    param.Add("@BeginDate", entity.BeginDate);
                     _con.Open();
-                    _con.Execute("UPDATE EmployeeReestr SET OrganizationId = @OrganizationId, IIN = @IIN,, FullName = @FullName, DateOfBirth = @DateOfBirth, PhoneNumber = @PhoneNumber, BeginDate = @BeginDate WHERE Id = @Id", new { entity });
+                    _con.Execute("UPDATE EmployeeReestr SET OrganizationId = @OrganizationId, IIN = @IIN,, FullName = @FullName, DateOfBirth = @DateOfBirth, PhoneNumber = @PhoneNumber, BeginDate = @BeginDate WHERE Id = @Id", param);
                     _con.Close();
                 }
                 catch (Exception ex)

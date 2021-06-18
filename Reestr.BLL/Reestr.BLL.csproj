@@ -74,6 +74,7 @@
     <Compile Include="DTOs\ServiceDTO.cs" />
     <Compile Include="DTOs\ServiceReestrDTO.cs" />
     <Compile Include="Interfaces\IValidationDictionary.cs" />
+    <Compile Include="Managers\EmployeeReestrManager.cs" />
     <Compile Include="Managers\OrganizationManager.cs" />
     <Compile Include="Managers\ServiceManager.cs" />
     <Compile Include="Managers\ServiceReestrManager.cs" />
