@@ -5,7 +5,6 @@ using System.Web;
 using System.Web.Mvc;
 using Autofac;
 using Autofac.Integration.Mvc;
-using Reestr.BLL.Interfaces;
 using Reestr.BLL.Validation;
 using Reestr.DAL.Entities;
 using Reestr.DAL.Interfaces;

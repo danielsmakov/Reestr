@@ -7,9 +7,8 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using Reestr.DAL.Entities;
-using Reestr.BLL.Interfaces;
-using Reestr.BLL.Validation;
 using Reestr.DAL.Queries;
+using Reestr.BLL.Validation;
 
 namespace Reestr.BLL.Managers
 {
