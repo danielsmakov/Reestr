@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Reestr.DAL.Entities;
 using Reestr.BLL.Interfaces;
+using Reestr.BLL.Validation;
+using Reestr.DAL.Queries;
 
 namespace Reestr.BLL.Managers
 {
@@ -26,7 +28,7 @@ namespace Reestr.BLL.Managers
             {
                 var service = _unitOfWork.Services.Get(id);
 
-                return Mapper.Map<Service, ServiceDTO>(service);
+                return Mapper.Map<ServiceDTO>(service);
             }
             catch (Exception ex)
             {
@@ -38,9 +40,9 @@ namespace Reestr.BLL.Managers
         {
             try
             {
-                var services = _unitOfWork.Services.List(query);
+                List<Service> services = _unitOfWork.Services.List(query);
 
-                return Mapper.Map<List<Service>, List<ServiceDTO>>(services);
+                return Mapper.Map<List<ServiceDTO>>(services);
             }
             catch (Exception ex)
             {
@@ -48,56 +50,63 @@ namespace Reestr.BLL.Managers
             }
         }
 
-        public bool Insert(ServiceDTO serviceDTO)
+        public ValidationResponse Insert(ServiceDTO serviceDTO)
         {
-            /*if (!ValidateServiceDTO(serviceDTO))
-                return false;*/
+            var validationResponse = ValidateServiceDTO(serviceDTO);
+            if (!validationResponse.Status)
+                return validationResponse;
 
             try
             {
-                var service = Mapper.Map<ServiceDTO, Service>(serviceDTO);
+                var service = Mapper.Map<Service>(serviceDTO);
 
                 _unitOfWork.Services.Insert(service);
             }
-            catch
+            catch (Exception ex)
             {
-                return false;
+                validationResponse.Status = false;
+                validationResponse.ErrorMessage = ex.Message;
             }
 
-            return true;
+            return validationResponse;
         }
 
-        public bool Update(ServiceDTO serviceDTO)
+        public ValidationResponse Update(ServiceDTO serviceDTO)
         {
-            /*if (!ValidateServiceDTO(serviceDTO))
-                return false;*/
+            var validationResponse = ValidateServiceDTO(serviceDTO);
+            if (!validationResponse.Status)
+                return validationResponse;
 
             try
             {
-                var service = Mapper.Map<ServiceDTO, Service>(serviceDTO);
+                var service = Mapper.Map<Service>(serviceDTO);
 
                 _unitOfWork.Services.Update(service);
             }
-            catch
+            catch (Exception ex)
             {
-                return false;
+                validationResponse.Status = false;
+                validationResponse.ErrorMessage = ex.Message;
             }
 
-            return true;
+            return validationResponse;
         }
 
-        public bool Delete(int id)
+        public ValidationResponse Delete(int id)
         {
+            var validationResponse = new ValidationResponse();
+
             try
             {
                 _unitOfWork.Services.Delete(id);
             }
-            catch
+            catch (Exception ex)
             {
-                return false;
+                validationResponse.Status = false;
+                validationResponse.ErrorMessage = ex.Message;
             }
 
-            return true;
+            return validationResponse;
         }
 
         public void Dispose()
@@ -106,17 +115,66 @@ namespace Reestr.BLL.Managers
         }
 
 
-        /*protected bool ValidateServiceDTO(ServiceDTO serviceDTO)
+        public ValidationResponse ValidateServiceDTO(ServiceDTO model)
         {
-            if (serviceDTO.Name.Trim().Length == 0)
-                _validationDictionary.AddError("Name", "Name is required.");
-            if (serviceDTO.Name.Trim().Length > 300)
-                _validationDictionary.AddError("Name", "Name must be less than 300 symbols long.");
-            if (serviceDTO.BIN.Trim().Length != 12)
-                _validationDictionary.AddError("BIN", "BIN must be exactly 12 digits long.");
-            if (serviceDTO.PhoneNumber.Trim().Length != 10)
-                _validationDictionary.AddError("PhoneNumber", "You should enter 10 digits only in the Phone Number field.");
-            return _validationDictionary.IsValid;
-        }*/
+            var validationResponse = new ValidationResponse();
+
+            if (model == null)
+            {
+                validationResponse.ErrorMessage = "Объект не найден.";
+                validationResponse.Status = false;
+                return validationResponse;
+            }
+
+
+            ServiceQuery query = new ServiceQuery() { Id = model.Id, Name = model.Name, IsDeleted = false, Offset = 0, Limit = 10 };
+            var organizations = _unitOfWork.Organizations.List(query);
+            if (organizations.Any())
+            {
+                validationResponse.ErrorMessage = "Такое название уже зарегистрировано";
+                validationResponse.Status = false;
+                return validationResponse;
+            }
+
+            if (model.Name.Trim().Length == 0)
+            {
+                validationResponse.ErrorMessage = "Название услуги обязательно к заполнению";
+                validationResponse.Status = false;
+                return validationResponse;
+            }
+
+            if (model.Name.Trim().Length > 300)
+            {
+                validationResponse.ErrorMessage = "Название услуги не должно превышвать 300 символов";
+                validationResponse.Status = false;
+                return validationResponse;
+            }
+
+            query = new ServiceQuery() { Id = model.Id, Code = model.Code.Trim(), IsDeleted = false, Offset = 0, Limit = 10 };
+            organizations = _unitOfWork.Organizations.List(query);
+            if (organizations.Any())
+            {
+                validationResponse.ErrorMessage = "Введенный Вами код уже зарегистрирован";
+                validationResponse.Status = false;
+                return validationResponse;
+            }
+
+            if (model.Code.Trim().Length != 9)
+            {
+                validationResponse.ErrorMessage = "Код должен содержать ровно 9 символов";
+                validationResponse.Status = false;
+                return validationResponse;
+            }
+
+
+            if (model.Price < 0)
+            {
+                validationResponse.ErrorMessage = "Цена услуги не может быть отрицательной";
+                validationResponse.Status = false;
+                return validationResponse;
+            }
+
+            return validationResponse;
+        }
     }
 }

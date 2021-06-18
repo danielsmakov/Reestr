@@ -41,8 +41,8 @@ namespace Reestr.BLL.Managers
             try
             {
                 List<Organization> organizations = _unitOfWork.Organizations.List(query);
-                List<OrganizationDTO> organizationDTOs = Mapper.Map<List<OrganizationDTO>>(organizations);
-                return organizationDTOs;
+
+                return Mapper.Map<List<OrganizationDTO>>(organizations);
             }
             catch(Exception ex)
             {

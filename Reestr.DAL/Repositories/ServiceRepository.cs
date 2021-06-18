@@ -48,16 +48,28 @@ namespace Reestr.DAL.Repositories
                     _con.Open();
 
                     var where = "WHERE 1=1";
-                    if (query.IsDeleted) where += " AND EndDate is not null ";
+                    if (query.IsDeleted)
+                    {
+                        where += " AND EndDate is not null ";
+                    }
+                    else
+                    {
+                        where += " AND EndDate is null ";
+                    }
                     if (!string.IsNullOrEmpty(query.Name)) where += " AND Name like @Name";
+                    if (!string.IsNullOrEmpty(query.Code)) where += " AND Code like @Code";
+                    if (query.Id != 0) where += " AND Id NOT like @Id";
 
                     List<Service> orgs = _con.Query<Service>($"SELECT * FROM Services {where} " +
-                        $"OFFSET (@Offset) ROWS FETCH NEXT @Limit ROWS ONLY",
+                        $"ORDER BY (SELECT NULL)" +
+                        $"OFFSET @Offset ROWS FETCH NEXT @Limit ROWS ONLY",
                         new
                         {
+                            Id = query.Id,
                             Name = query.Name,
                             Offset = query.Offset,
-                            Limit = query.Limit
+                            Limit = query.Limit,
+                            Code = query.Code
                         }
                         ).ToList();
                     _con.Close();
@@ -75,8 +87,13 @@ namespace Reestr.DAL.Repositories
             {
                 try
                 {
+                    DynamicParameters param = new DynamicParameters();
+                    param.Add("@Name", entity.Name);
+                    param.Add("@Code", entity.Code);
+                    param.Add("@Price", entity.Price);
+                    param.Add("@BeginDate", entity.BeginDate);
                     _con.Open();
-                    _con.Execute("INSERT IntINTO Services (Id, Name, Code, Price, BeginDate) VALUES (@Id, @Name, @Code, @Price, @BeginDate)", new { entity });
+                    _con.Execute("INSERT INTO Services (Name, Code, Price, BeginDate) VALUES (@Name, @Code, @Price, @BeginDate)", param);
                     _con.Close();
                 }
                 catch (Exception ex)
@@ -91,8 +108,14 @@ namespace Reestr.DAL.Repositories
             {
                 try
                 {
+                    DynamicParameters param = new DynamicParameters();
+                    param.Add("@Id", entity.Id);
+                    param.Add("@Name", entity.Name);
+                    param.Add("@Code", entity.Code);
+                    param.Add("@Price", entity.Price);
+                    param.Add("@BeginDate", entity.BeginDate);
                     _con.Open();
-                    _con.Execute("UPDATE Services SET Name = @Name, Code = @Code, Price = @Price, BeginDate = @BeginDate WHERE Id = @Id", new { entity });
+                    _con.Execute("UPDATE Services SET Name = @Name, Code = @Code, Price = @Price, BeginDate = @BeginDate WHERE Id = @Id", param);
                     _con.Close();
                 }
                 catch (Exception ex)
