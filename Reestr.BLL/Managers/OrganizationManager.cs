@@ -27,9 +27,9 @@ namespace Reestr.BLL.Managers
             {
                 if (id <= 0)
                     throw new Exception("Id cannot be less or equal 0");
-                var organization = _unitOfWork.Organizations.Get(id);
+                var organizationEntity = _unitOfWork.Organizations.Get(id);
 
-                return Mapper.Map<OrganizationDTO>(organization);
+                return Mapper.Map<OrganizationDTO>(organizationEntity);
             }
             catch(Exception ex)
             {
@@ -41,9 +41,9 @@ namespace Reestr.BLL.Managers
         {
             try
             {
-                List<Organization> organizations = _unitOfWork.Organizations.List(query);
+                List<Organization> organizationEntities = _unitOfWork.Organizations.List(query);
 
-                return Mapper.Map<List<OrganizationDTO>>(organizations);
+                return Mapper.Map<List<OrganizationDTO>>(organizationEntities);
             }
             catch(Exception ex)
             {
@@ -59,9 +59,9 @@ namespace Reestr.BLL.Managers
 
             try
             {
-                var organization = Mapper.Map<Organization>(organizationDTO);
+                var organizationEntity = Mapper.Map<Organization>(organizationDTO);
 
-                _unitOfWork.Organizations.Insert(organization);
+                _unitOfWork.Organizations.Insert(organizationEntity);
             }
             catch (Exception ex)
             {
@@ -80,9 +80,9 @@ namespace Reestr.BLL.Managers
 
             try
             {
-                var organization = Mapper.Map<Organization>(organizationDTO);
+                var organizationEntity = Mapper.Map<Organization>(organizationDTO);
 
-                _unitOfWork.Organizations.Update(organization);
+                _unitOfWork.Organizations.Update(organizationEntity);
             }
             catch(Exception ex)
             {
@@ -145,8 +145,8 @@ namespace Reestr.BLL.Managers
             }
 
             OrganizationQuery query = new OrganizationQuery() { Id = model.Id, Name = model.Name, IsDeleted = false, Offset = 0, Limit = 10 };
-            var organizations = _unitOfWork.Organizations.List(query);
-            if (organizations.Any())
+            var organizationEntities = _unitOfWork.Organizations.List(query);
+            if (organizationEntities.Any())
             {
                 validationResponse.ErrorMessage = "Такое название уже зарегистрировано";
                 validationResponse.Status = false;
@@ -155,8 +155,8 @@ namespace Reestr.BLL.Managers
 
 
             query = new OrganizationQuery() { Id = model.Id, BIN = model.BIN.Trim(), IsDeleted = false, Offset = 0, Limit = 10 };
-            organizations = _unitOfWork.Organizations.List(query);
-            if (organizations.Any())
+            organizationEntities = _unitOfWork.Organizations.List(query);
+            if (organizationEntities.Any())
             {
                 validationResponse.ErrorMessage = "Введенный Вами БИН уже зарегистрирован";
                 validationResponse.Status = false;

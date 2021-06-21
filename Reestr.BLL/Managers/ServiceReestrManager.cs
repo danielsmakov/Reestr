@@ -29,9 +29,9 @@ namespace Reestr.BLL.Managers
                 if (id <= 0)
                     throw new Exception("Id cannot be less or equal 0");
 
-                var serviceReestr = _unitOfWork.ServiceReestres.Get(id);
+                var serviceReestrEntity = _unitOfWork.ServiceReestres.Get(id);
 
-                return Mapper.Map<ServiceReestrDTO>(serviceReestr);
+                return Mapper.Map<ServiceReestrDTO>(serviceReestrEntity);
             }
             catch (Exception ex)
             {
@@ -44,9 +44,9 @@ namespace Reestr.BLL.Managers
         {
             try
             {
-                List<ServiceReestr> serviceReestres = _unitOfWork.ServiceReestres.List(query);
+                List<ServiceReestr> serviceReestrEntities = _unitOfWork.ServiceReestres.List(query);
 
-                return Mapper.Map<List<ServiceReestrDTO>>(serviceReestres);
+                return Mapper.Map<List<ServiceReestrDTO>>(serviceReestrEntities);
             }
             catch (Exception ex)
             {
@@ -63,9 +63,9 @@ namespace Reestr.BLL.Managers
 
             try
             {
-                var serviceReestr = Mapper.Map<ServiceReestr>(serviceReestrDTO);
+                var serviceReestrEntity = Mapper.Map<ServiceReestr>(serviceReestrDTO);
 
-                _unitOfWork.ServiceReestres.Insert(serviceReestr);
+                _unitOfWork.ServiceReestres.Insert(serviceReestrEntity);
             }
             catch (Exception ex)
             {
@@ -85,9 +85,9 @@ namespace Reestr.BLL.Managers
 
             try
             {
-                var serviceReestr = Mapper.Map<ServiceReestr>(serviceReestrDTO);
+                var serviceReestrEntity = Mapper.Map<ServiceReestr>(serviceReestrDTO);
 
-                _unitOfWork.ServiceReestres.Update(serviceReestr);
+                _unitOfWork.ServiceReestres.Update(serviceReestrEntity);
             }
             catch (Exception ex)
             {

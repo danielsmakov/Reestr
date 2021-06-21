@@ -29,9 +29,9 @@ namespace Reestr.BLL.Managers
                 if (id <= 0)
                     throw new Exception("Id cannot be less or equal 0");
 
-                var employeeReestr = _unitOfWork.EmployeeReestres.Get(id);
+                var employeeReestrEntity = _unitOfWork.EmployeeReestres.Get(id);
 
-                return Mapper.Map<EmployeeReestrDTO>(employeeReestr);
+                return Mapper.Map<EmployeeReestrDTO>(employeeReestrEntity);
             }
             catch (Exception ex)
             {
@@ -44,9 +44,9 @@ namespace Reestr.BLL.Managers
         {
             try
             {
-                var employeeReestres = _unitOfWork.EmployeeReestres.List(query);
+                var employeeReestrEntities = _unitOfWork.EmployeeReestres.List(query);
 
-                return Mapper.Map<List<EmployeeReestrDTO>>(employeeReestres);
+                return Mapper.Map<List<EmployeeReestrDTO>>(employeeReestrEntities);
             }
             catch (Exception ex)
             {
@@ -63,9 +63,9 @@ namespace Reestr.BLL.Managers
 
             try
             {
-                var employeeReestr = Mapper.Map<EmployeeReestr>(employeeReestrDTO);
+                var employeeReestrEntity = Mapper.Map<EmployeeReestr>(employeeReestrDTO);
 
-                _unitOfWork.EmployeeReestres.Insert(employeeReestr);
+                _unitOfWork.EmployeeReestres.Insert(employeeReestrEntity);
             }
             catch (Exception ex)
             {
@@ -85,9 +85,9 @@ namespace Reestr.BLL.Managers
 
             try
             {
-                var employeeReestr = Mapper.Map<EmployeeReestr>(employeeReestrDTO);
+                var employeeReestrEntity = Mapper.Map<EmployeeReestr>(employeeReestrDTO);
 
-                _unitOfWork.EmployeeReestres.Update(employeeReestr);
+                _unitOfWork.EmployeeReestres.Update(employeeReestrEntity);
             }
             catch (Exception ex)
             {
@@ -140,8 +140,8 @@ namespace Reestr.BLL.Managers
 
 
             EmployeeReestrQuery query = new EmployeeReestrQuery() { Id = model.Id, IIN = model.IIN.Trim(), IsDeleted = false, Offset = 0, Limit = 10 };
-            List<EmployeeReestr> employeeReestres = _unitOfWork.EmployeeReestres.List(query);
-            if (employeeReestres.Any())
+            List<EmployeeReestr> employeeReestrEntities = _unitOfWork.EmployeeReestres.List(query);
+            if (employeeReestrEntities.Any())
             {
                 validationResponse.ErrorMessage = "Введенный Вами ИИН уже зарегистрирован";
                 validationResponse.Status = false;
@@ -157,8 +157,8 @@ namespace Reestr.BLL.Managers
 
 
             query = new EmployeeReestrQuery() { Id = model.Id, FullName = model.FullName, IsDeleted = false, Offset = 0, Limit = 10 };
-            employeeReestres = _unitOfWork.EmployeeReestres.List(query);
-            if (employeeReestres.Any())
+            employeeReestrEntities = _unitOfWork.EmployeeReestres.List(query);
+            if (employeeReestrEntities.Any())
             {
                 validationResponse.ErrorMessage = "Такое ФИО уже зарегистрировано";
                 validationResponse.Status = false;

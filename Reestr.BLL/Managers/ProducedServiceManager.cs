@@ -29,9 +29,9 @@ namespace Reestr.BLL.Managers
                 if (id <= 0)
                     throw new Exception("Id cannot be less or equal 0");
 
-                var producedService = _unitOfWork.ProducedServices.Get(id);
+                var producedServiceEntity = _unitOfWork.ProducedServices.Get(id);
 
-                return Mapper.Map<ProducedServiceDTO>(producedService);
+                return Mapper.Map<ProducedServiceDTO>(producedServiceEntity);
             }
             catch (Exception ex)
             {
@@ -44,9 +44,9 @@ namespace Reestr.BLL.Managers
         {
             try
             {
-                var producedServices = _unitOfWork.ProducedServices.List(query);
+                var producedServiceEntities = _unitOfWork.ProducedServices.List(query);
 
-                return Mapper.Map<List<ProducedServiceDTO>>(producedServices);
+                return Mapper.Map<List<ProducedServiceDTO>>(producedServiceEntities);
             }
             catch (Exception ex)
             {
@@ -60,9 +60,9 @@ namespace Reestr.BLL.Managers
             var validationResponse = new ValidationResponse();
             try
             {
-                var producedService = Mapper.Map<ProducedService>(producedServiceDTO);
+                var producedServiceEntity = Mapper.Map<ProducedService>(producedServiceDTO);
 
-                _unitOfWork.ProducedServices.Insert(producedService);
+                _unitOfWork.ProducedServices.Insert(producedServiceEntity);
             }
             catch (Exception ex)
             {
@@ -79,9 +79,9 @@ namespace Reestr.BLL.Managers
             var validationResponse = new ValidationResponse();
             try
             {
-                var producedService = Mapper.Map<ProducedService>(producedServiceDTO);
+                var producedServiceEntity = Mapper.Map<ProducedService>(producedServiceDTO);
 
-                _unitOfWork.ProducedServices.Update(producedService);
+                _unitOfWork.ProducedServices.Update(producedServiceEntity);
             }
             catch (Exception ex)
             {

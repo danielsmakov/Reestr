@@ -28,9 +28,9 @@ namespace Reestr.BLL.Managers
                 if (id <= 0)
                     throw new Exception("Id cannot be less or equal 0");
 
-                var service = _unitOfWork.Services.Get(id);
+                var serviceEntity = _unitOfWork.Services.Get(id);
 
-                return Mapper.Map<ServiceDTO>(service);
+                return Mapper.Map<ServiceDTO>(serviceEntity);
             }
             catch (Exception ex)
             {
@@ -42,9 +42,9 @@ namespace Reestr.BLL.Managers
         {
             try
             {
-                List<Service> services = _unitOfWork.Services.List(query);
+                List<Service> serviceEntities = _unitOfWork.Services.List(query);
 
-                return Mapper.Map<List<ServiceDTO>>(services);
+                return Mapper.Map<List<ServiceDTO>>(serviceEntities);
             }
             catch (Exception ex)
             {
@@ -60,9 +60,9 @@ namespace Reestr.BLL.Managers
 
             try
             {
-                var service = Mapper.Map<Service>(serviceDTO);
+                var serviceEntity = Mapper.Map<Service>(serviceDTO);
 
-                _unitOfWork.Services.Insert(service);
+                _unitOfWork.Services.Insert(serviceEntity);
             }
             catch (Exception ex)
             {
@@ -81,9 +81,9 @@ namespace Reestr.BLL.Managers
 
             try
             {
-                var service = Mapper.Map<Service>(serviceDTO);
+                var serviceEntity = Mapper.Map<Service>(serviceDTO);
 
-                _unitOfWork.Services.Update(service);
+                _unitOfWork.Services.Update(serviceEntity);
             }
             catch (Exception ex)
             {
@@ -133,8 +133,8 @@ namespace Reestr.BLL.Managers
 
 
             ServiceQuery query = new ServiceQuery() { Id = model.Id, Name = model.Name, IsDeleted = false, Offset = 0, Limit = 10 };
-            var organizations = _unitOfWork.Organizations.List(query);
-            if (organizations.Any())
+            var serviceEntities = _unitOfWork.Organizations.List(query);
+            if (serviceEntities.Any())
             {
                 validationResponse.ErrorMessage = "Такое название уже зарегистрировано";
                 validationResponse.Status = false;
@@ -156,8 +156,8 @@ namespace Reestr.BLL.Managers
             }
 
             query = new ServiceQuery() { Id = model.Id, Code = model.Code.Trim(), IsDeleted = false, Offset = 0, Limit = 10 };
-            organizations = _unitOfWork.Organizations.List(query);
-            if (organizations.Any())
+            serviceEntities = _unitOfWork.Organizations.List(query);
+            if (serviceEntities.Any())
             {
                 validationResponse.ErrorMessage = "Введенный Вами код уже зарегистрирован";
                 validationResponse.Status = false;
