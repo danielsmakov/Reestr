@@ -14,72 +14,72 @@ using System.Web.ModelBinding;
 
 namespace Reestr.WEB.Controllers
 {
-    public class ServiceController : Controller
+    public class EmployeeReestrController : Controller
     {
-        private ServiceManager _serviceManager;
-        public ServiceController()
+        private EmployeeReestrManager _employeeReestrManager;
+        public EmployeeReestrController()
         {
-            _serviceManager = new ServiceManager(new UnitOfWork());
+            _employeeReestrManager = new EmployeeReestrManager(new UnitOfWork());
         }
 
 
-        public ServiceController(ServiceManager serviceManager)
+        public EmployeeReestrController(EmployeeReestrManager employeeReestrManager)
         {
-            _serviceManager = serviceManager;
+            _employeeReestrManager = employeeReestrManager;
         }
 
 
         public ActionResult Index()
         {
-            return View("Services");
+            return View("EmployeeReestr");
         }
 
 
         public ActionResult List()
         {
-            ServiceQuery query = new ServiceQuery();
+            EmployeeReestrQuery query = new EmployeeReestrQuery();
             query.Offset = 0;
             query.Limit = 20;
-            List<ServiceDTO> serviceDTOs = _serviceManager.List(query);
+            List<EmployeeReestrDTO> employeeReestrDTOs = _employeeReestrManager.List(query);
 
-            return Json(serviceDTOs, JsonRequestBehavior.AllowGet);
+            return Json(employeeReestrDTOs, JsonRequestBehavior.AllowGet);
         }
 
 
-        public ActionResult Insert(ServiceDTO serviceDTO)
+        public ActionResult Insert(EmployeeReestrDTO employeeReestrDTO)
         {
             if (ModelState.IsValid)
             {
-                var validationResponse = _serviceManager.Insert(serviceDTO);
+                var validationResponse = _employeeReestrManager.Insert(employeeReestrDTO);
                 // TODO: отправить ошибки из validationResponse в UI
             }
 
 
             // TODO: узнать, в каком виде отправлять ответ из метода Insert
-            return Json(new[] { serviceDTO });
+            return Json(new[] { employeeReestrDTO });
         }
 
 
-        public ActionResult Update(ServiceDTO serviceDTO)
+        public ActionResult Update(EmployeeReestrDTO employeeReestrDTO)
         {
             if (ModelState.IsValid)
             {
-                var validationResponse = _serviceManager.Update(serviceDTO);
+                var validationResponse = _employeeReestrManager.Update(employeeReestrDTO);
                 // TODO: отправить ошибки из validationResponse в UI
             }
 
             // TODO: узнать, в каком виде отправлять ответ из метода Update
-            return Json(new[] { serviceDTO });
+            return Json(new[] { employeeReestrDTO });
         }
 
 
-        public ActionResult Delete(ServiceDTO serviceDTO)
+        public ActionResult Delete(EmployeeReestrDTO employeeReestrDTO)
         {
-            var validationResponse = _serviceManager.Delete(serviceDTO.Id);
+            var validationResponse = _employeeReestrManager.Delete(employeeReestrDTO.Id);
             // TODO: отправить ошибки из validationResponse в UI
 
             // TODO: узнать, в каком виде отправлять ответ из метода Delete
-            return Json(new[] { serviceDTO });
+            return Json(new[] { employeeReestrDTO });
         }
     }
 }

@@ -157,7 +157,9 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
-    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\EmployeeReestrController.cs" />
+    <Compile Include="Controllers\OrganizationController.cs" />
+    <Compile Include="Controllers\ProducedServiceController.cs" />
     <Compile Include="Controllers\ServiceController.cs" />
     <Compile Include="Controllers\ServiceReestrController.cs" />
     <Compile Include="Global.asax.cs">
@@ -1750,7 +1752,7 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\Organizations.cshtml" />
+    <Content Include="Views\Organization\Organizations.cshtml" />
     <Content Include="Scripts\kendo\2021.2.511\messages\kendo.messages.zh-TW.min.js.map" />
     <Content Include="Scripts\kendo\2021.2.511\messages\kendo.messages.zh-HK.min.js.map" />
     <Content Include="Scripts\kendo\2021.2.511\messages\kendo.messages.zh-CN.min.js.map" />
@@ -2839,12 +2841,14 @@
     <Content Include="Scripts\kendo\2021.2.511\cultures\kendo.culture.aa-ET.min.js.map" />
     <Content Include="Scripts\kendo\2021.2.511\cultures\kendo.culture.aa-ER.min.js.map" />
     <Content Include="Scripts\kendo\2021.2.511\cultures\kendo.culture.aa-DJ.min.js.map" />
-    <Content Include="Views\Home\Error.cshtml" />
-    <Content Include="Views\Home\Success.cshtml" />
+    <Content Include="Views\Organization\Error.cshtml" />
+    <Content Include="Views\Organization\Success.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Models\" />
+    <Folder Include="Views\EmployeeReestr\" />
+    <Folder Include="Views\ProducedService\" />
     <Folder Include="Views\ServiceReestr\" />
     <Folder Include="Views\Service\" />
   </ItemGroup>

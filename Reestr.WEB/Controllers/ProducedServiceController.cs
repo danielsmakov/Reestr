@@ -14,72 +14,72 @@ using System.Web.ModelBinding;
 
 namespace Reestr.WEB.Controllers
 {
-    public class ServiceController : Controller
+    public class ProducedServiceController : Controller
     {
-        private ServiceManager _serviceManager;
-        public ServiceController()
+        private ProducedServiceManager _producedServiceManager;
+        public ProducedServiceController()
         {
-            _serviceManager = new ServiceManager(new UnitOfWork());
+            _producedServiceManager = new ProducedServiceManager(new UnitOfWork());
         }
 
 
-        public ServiceController(ServiceManager serviceManager)
+        public ProducedServiceController(ProducedServiceManager producedServiceManager)
         {
-            _serviceManager = serviceManager;
+            _producedServiceManager = producedServiceManager;
         }
 
 
         public ActionResult Index()
         {
-            return View("Services");
+            return View("ProducedService");
         }
 
 
         public ActionResult List()
         {
-            ServiceQuery query = new ServiceQuery();
+            ProducedServiceQuery query = new ProducedServiceQuery();
             query.Offset = 0;
             query.Limit = 20;
-            List<ServiceDTO> serviceDTOs = _serviceManager.List(query);
+            List<ProducedServiceDTO> producedServiceDTOs = _producedServiceManager.List(query);
 
-            return Json(serviceDTOs, JsonRequestBehavior.AllowGet);
+            return Json(producedServiceDTOs, JsonRequestBehavior.AllowGet);
         }
 
 
-        public ActionResult Insert(ServiceDTO serviceDTO)
+        public ActionResult Insert(ProducedServiceDTO producedServiceDTO)
         {
             if (ModelState.IsValid)
             {
-                var validationResponse = _serviceManager.Insert(serviceDTO);
+                var validationResponse = _producedServiceManager.Insert(producedServiceDTO);
                 // TODO: отправить ошибки из validationResponse в UI
             }
 
 
             // TODO: узнать, в каком виде отправлять ответ из метода Insert
-            return Json(new[] { serviceDTO });
+            return Json(new[] { producedServiceDTO });
         }
 
 
-        public ActionResult Update(ServiceDTO serviceDTO)
+        public ActionResult Update(ProducedServiceDTO producedServiceDTO)
         {
             if (ModelState.IsValid)
             {
-                var validationResponse = _serviceManager.Update(serviceDTO);
+                var validationResponse = _producedServiceManager.Update(producedServiceDTO);
                 // TODO: отправить ошибки из validationResponse в UI
             }
 
             // TODO: узнать, в каком виде отправлять ответ из метода Update
-            return Json(new[] { serviceDTO });
+            return Json(new[] { producedServiceDTO });
         }
 
 
-        public ActionResult Delete(ServiceDTO serviceDTO)
+        public ActionResult Delete(ProducedServiceDTO producedServiceDTO)
         {
-            var validationResponse = _serviceManager.Delete(serviceDTO.Id);
+            var validationResponse = _producedServiceManager.Delete(producedServiceDTO.Id);
             // TODO: отправить ошибки из validationResponse в UI
 
             // TODO: узнать, в каком виде отправлять ответ из метода Delete
-            return Json(new[] { serviceDTO });
+            return Json(new[] { producedServiceDTO });
         }
     }
 }
