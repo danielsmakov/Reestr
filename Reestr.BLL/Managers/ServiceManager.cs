@@ -42,6 +42,9 @@ namespace Reestr.BLL.Managers
         {
             try
             {
+                if (query is null)
+                    throw new Exception("Query не может быть равен null");
+
                 List<Service> serviceEntities = _unitOfWork.Services.List(query);
 
                 return Mapper.Map<List<ServiceDTO>>(serviceEntities);

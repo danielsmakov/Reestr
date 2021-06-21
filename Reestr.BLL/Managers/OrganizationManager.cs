@@ -41,6 +41,9 @@ namespace Reestr.BLL.Managers
         {
             try
             {
+                if (query is null)
+                    throw new Exception("Query не может быть равен null");
+
                 List<Organization> organizationEntities = _unitOfWork.Organizations.List(query);
 
                 return Mapper.Map<List<OrganizationDTO>>(organizationEntities);

@@ -44,6 +44,9 @@ namespace Reestr.BLL.Managers
         {
             try
             {
+                if (query is null)
+                    throw new Exception("Query не может быть равен null");
+
                 var employeeReestrEntities = _unitOfWork.EmployeeReestres.List(query);
 
                 return Mapper.Map<List<EmployeeReestrDTO>>(employeeReestrEntities);
