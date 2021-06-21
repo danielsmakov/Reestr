@@ -40,31 +40,33 @@ namespace Reestr.WEB.Controllers
             query.Limit = 20;
             List<OrganizationDTO> organizationDTOs = _organizationManager.List(query);
 
-            return Json(organizationDTOs, JsonRequestBehavior.AllowGet);
+            return Json(organizationDTOs);
         }
 
-
+        [HttpPost]
         public ActionResult Insert(OrganizationDTO organizationDTO)
         {
-            if (ModelState.IsValid)
+            var validationResponse = _organizationManager.Insert(organizationDTO);
+            /*if (ModelState.IsValid)
             {
-                var validationResponse = _organizationManager.Insert(organizationDTO);
-            }
+                
+            }*/
 
 
-            return Json(new[] { organizationDTO });
+            return Json(validationResponse);
         }
 
 
         public ActionResult Update(OrganizationDTO organizationDTO)
         {
+            var validationResponse = _organizationManager.Update(organizationDTO);
             if (ModelState.IsValid)
             {
-                var validationResponse = _organizationManager.Update(organizationDTO);
+                
             }
 
 
-            return Json(new[] { organizationDTO });
+            return Json(validationResponse);
         }
 
 

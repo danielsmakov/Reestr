@@ -10,7 +10,7 @@ namespace Reestr.BLL.DTOs
 {
     public class OrganizationDTO
     {
-        [Required]
+        
         public int Id { get; set; }
 
         [Required]

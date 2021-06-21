@@ -25,6 +25,8 @@ namespace Reestr.BLL.Managers
         {
             try
             {
+                if (id <= 0)
+                    throw new Exception("Id cannot be less or equal 0");
                 var organization = _unitOfWork.Organizations.Get(id);
 
                 return Mapper.Map<OrganizationDTO>(organization);
@@ -97,6 +99,8 @@ namespace Reestr.BLL.Managers
 
             try
             {
+                if (id <= 0)
+                    throw new Exception("Id cannot be less or equal 0");
                 _unitOfWork.Organizations.Delete(id);
             }
             catch (Exception ex)
@@ -126,15 +130,6 @@ namespace Reestr.BLL.Managers
             }
 
 
-            OrganizationQuery query = new OrganizationQuery() { Id = model.Id, Name = model.Name, IsDeleted = false, Offset = 0, Limit = 10 };
-            var organizations = _unitOfWork.Organizations.List(query);
-            if (organizations.Any())
-            {
-                validationResponse.ErrorMessage = "Такое название уже зарегистрировано";
-                validationResponse.Status = false;
-                return validationResponse;
-            }
-
             if (model.Name.Trim().Length == 0)
             {
                 validationResponse.ErrorMessage = "Название организации обязательно к заполнению";
@@ -148,6 +143,16 @@ namespace Reestr.BLL.Managers
                 validationResponse.Status = false;
                 return validationResponse;
             }
+
+            OrganizationQuery query = new OrganizationQuery() { Id = model.Id, Name = model.Name, IsDeleted = false, Offset = 0, Limit = 10 };
+            var organizations = _unitOfWork.Organizations.List(query);
+            if (organizations.Any())
+            {
+                validationResponse.ErrorMessage = "Такое название уже зарегистрировано";
+                validationResponse.Status = false;
+                return validationResponse;
+            }
+
 
             query = new OrganizationQuery() { Id = model.Id, BIN = model.BIN.Trim(), IsDeleted = false, Offset = 0, Limit = 10 };
             organizations = _unitOfWork.Organizations.List(query);
