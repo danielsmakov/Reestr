@@ -27,10 +27,12 @@ namespace Reestr.WEB.Controllers
             _organizationManager = organizationManager;
         }
 
+
         public ActionResult Index()
         {
             return View("Organizations");
         }
+
 
         public ActionResult List()
         {
@@ -43,86 +45,31 @@ namespace Reestr.WEB.Controllers
             return Json(organizationDTOs);
         }
 
+
         [HttpPost]
         public ActionResult Insert(OrganizationDTO organizationDTO)
         {
             var validationResponse = _organizationManager.Insert(organizationDTO);
-            /*if (ModelState.IsValid)
-            {
-                
-            }*/
-
 
             return Json(validationResponse);
         }
 
 
+        [HttpPost]
         public ActionResult Update(OrganizationDTO organizationDTO)
         {
             var validationResponse = _organizationManager.Update(organizationDTO);
-            if (ModelState.IsValid)
-            {
-                
-            }
-
 
             return Json(validationResponse);
         }
 
 
+        [HttpPost]
         public ActionResult Delete(OrganizationDTO organizationDTO)
         {
             var validationResponse = _organizationManager.Delete(organizationDTO.Id);
-            
 
-            return Json(new[] { organizationDTO });
+            return Json(validationResponse);
         }
-
-
-
-
-
-        // Ниже методы для Kendo UI View
-        /*public ActionResult List([DataSourceRequest] DataSourceRequest request)
-        {
-            OrganizationQuery query = new OrganizationQuery();
-            query.Offset = (request.Page - 1) * request.PageSize;
-            query.Limit = 20;
-            List<OrganizationDTO> organizationDTOs = _organizationManager.List(query);
-            return Json(organizationDTOs.ToDataSourceResult(request), JsonRequestBehavior.AllowGet);
-        }
-
-        public ActionResult Insert([DataSourceRequest] DataSourceRequest request, OrganizationDTO organizationDTO)
-        {
-            if (organizationDTO != null && ModelState.IsValid)
-            {
-                if (!_organizationManager.Insert(organizationDTO))
-                    return Json(new[] { organizationDTO }.ToDataSourceResult(request, ModelState));
-            }
-            return Json(new[] { organizationDTO }.ToDataSourceResult(request, ModelState));
-        }
-
-        public ActionResult Update([DataSourceRequest] DataSourceRequest request, OrganizationDTO organizationDTO)
-        {
-            if (organizationDTO != null && ModelState.IsValid)
-            {
-                if (_organizationManager.Update(organizationDTO))
-                    return Json(new[] { organizationDTO }.ToDataSourceResult(request, ModelState));
-
-            }
-            return Json(new[] { organizationDTO }.ToDataSourceResult(request, ModelState));
-        }
-
-        public ActionResult Delete([DataSourceRequest] DataSourceRequest request, OrganizationDTO organizationDTO)
-        {
-            if (organizationDTO != null)
-            {
-                if (_organizationManager.Delete(organizationDTO.Id))
-                    ModelState.AddModelError("Deletion", "Can not delete this record");
-                return Json(new[] { organizationDTO }.ToDataSourceResult(request, ModelState));
-            }
-            return Json(new[] { organizationDTO }.ToDataSourceResult(request, ModelState));
-        }*/
-
     }
 }

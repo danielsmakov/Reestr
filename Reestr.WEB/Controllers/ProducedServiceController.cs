@@ -45,41 +45,28 @@ namespace Reestr.WEB.Controllers
             return Json(producedServiceDTOs, JsonRequestBehavior.AllowGet);
         }
 
-
+        [HttpPost]
         public ActionResult Insert(ProducedServiceDTO producedServiceDTO)
         {
-            if (ModelState.IsValid)
-            {
-                var validationResponse = _producedServiceManager.Insert(producedServiceDTO);
-                // TODO: отправить ошибки из validationResponse в UI
-            }
-
-
-            // TODO: узнать, в каком виде отправлять ответ из метода Insert
-            return Json(new[] { producedServiceDTO });
+            var validationResponse = _producedServiceManager.Insert(producedServiceDTO);
+            
+            return Json(validationResponse);
         }
 
-
+        [HttpPost]
         public ActionResult Update(ProducedServiceDTO producedServiceDTO)
         {
-            if (ModelState.IsValid)
-            {
-                var validationResponse = _producedServiceManager.Update(producedServiceDTO);
-                // TODO: отправить ошибки из validationResponse в UI
-            }
-
-            // TODO: узнать, в каком виде отправлять ответ из метода Update
-            return Json(new[] { producedServiceDTO });
+            var validationResponse = _producedServiceManager.Update(producedServiceDTO);
+            
+            return Json(validationResponse);
         }
 
-
+        [HttpPost]
         public ActionResult Delete(ProducedServiceDTO producedServiceDTO)
         {
             var validationResponse = _producedServiceManager.Delete(producedServiceDTO.Id);
-            // TODO: отправить ошибки из validationResponse в UI
-
-            // TODO: узнать, в каком виде отправлять ответ из метода Delete
-            return Json(new[] { producedServiceDTO });
+            
+            return Json(validationResponse);
         }
     }
 }

@@ -42,44 +42,31 @@ namespace Reestr.WEB.Controllers
             query.Limit = 20;
             List<EmployeeReestrDTO> employeeReestrDTOs = _employeeReestrManager.List(query);
 
-            return Json(employeeReestrDTOs, JsonRequestBehavior.AllowGet);
+            return Json(employeeReestrDTOs);
         }
 
-
+        [HttpPost]
         public ActionResult Insert(EmployeeReestrDTO employeeReestrDTO)
         {
-            if (ModelState.IsValid)
-            {
-                var validationResponse = _employeeReestrManager.Insert(employeeReestrDTO);
-                // TODO: отправить ошибки из validationResponse в UI
-            }
-
-
-            // TODO: узнать, в каком виде отправлять ответ из метода Insert
-            return Json(new[] { employeeReestrDTO });
+            var validationResponse = _employeeReestrManager.Insert(employeeReestrDTO);
+            
+            return Json(validationResponse);
         }
 
-
+        [HttpPost]
         public ActionResult Update(EmployeeReestrDTO employeeReestrDTO)
         {
-            if (ModelState.IsValid)
-            {
-                var validationResponse = _employeeReestrManager.Update(employeeReestrDTO);
-                // TODO: отправить ошибки из validationResponse в UI
-            }
+            var validationResponse = _employeeReestrManager.Update(employeeReestrDTO);
 
-            // TODO: узнать, в каком виде отправлять ответ из метода Update
-            return Json(new[] { employeeReestrDTO });
+            return Json(validationResponse);
         }
 
-
+        [HttpPost]
         public ActionResult Delete(EmployeeReestrDTO employeeReestrDTO)
         {
             var validationResponse = _employeeReestrManager.Delete(employeeReestrDTO.Id);
-            // TODO: отправить ошибки из validationResponse в UI
-
-            // TODO: узнать, в каком виде отправлять ответ из метода Delete
-            return Json(new[] { employeeReestrDTO });
+            
+            return Json(validationResponse);
         }
     }
 }

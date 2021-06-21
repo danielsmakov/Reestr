@@ -42,44 +42,31 @@ namespace Reestr.WEB.Controllers
             query.Limit = 20;
             List<ServiceReestrDTO> serviceReestrDTOs = _serviceReestrManager.List(query);
 
-            return Json(serviceReestrDTOs, JsonRequestBehavior.AllowGet);
+            return Json(serviceReestrDTOs);
         }
 
-
+        [HttpPost]
         public ActionResult Insert(ServiceReestrDTO serviceReestrDTO)
         {
-            if (ModelState.IsValid)
-            {
-                var validationResponse = _serviceReestrManager.Insert(serviceReestrDTO);
-                // TODO: отправить ошибки из validationResponse в UI
-            }
-
-
-            // TODO: узнать, в каком виде отправлять ответ из метода Insert
-            return Json(new[] { serviceReestrDTO });
+            var validationResponse = _serviceReestrManager.Insert(serviceReestrDTO);
+            
+            return Json(validationResponse);
         }
 
-
+        [HttpPost]
         public ActionResult Update(ServiceReestrDTO serviceReestrDTO)
         {
-            if (ModelState.IsValid)
-            {
-                var validationResponse = _serviceReestrManager.Update(serviceReestrDTO);
-                // TODO: отправить ошибки из validationResponse в UI
-            }
+            var validationResponse = _serviceReestrManager.Update(serviceReestrDTO);
 
-            // TODO: узнать, в каком виде отправлять ответ из метода Update
-            return Json(new[] { serviceReestrDTO });
+            return Json(validationResponse);
         }
 
-
+        [HttpPost]
         public ActionResult Delete(ServiceReestrDTO serviceReestrDTO)
         {
             var validationResponse = _serviceReestrManager.Delete(serviceReestrDTO.Id);
-            // TODO: отправить ошибки из validationResponse в UI
-
-            // TODO: узнать, в каком виде отправлять ответ из метода Delete
-            return Json(new[] { serviceReestrDTO });
+            
+            return Json(validationResponse);
         }
     }
 }

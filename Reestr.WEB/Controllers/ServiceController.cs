@@ -42,44 +42,31 @@ namespace Reestr.WEB.Controllers
             query.Limit = 20;
             List<ServiceDTO> serviceDTOs = _serviceManager.List(query);
 
-            return Json(serviceDTOs, JsonRequestBehavior.AllowGet);
+            return Json(serviceDTOs);
         }
 
-
+        [HttpPost]
         public ActionResult Insert(ServiceDTO serviceDTO)
         {
-            if (ModelState.IsValid)
-            {
-                var validationResponse = _serviceManager.Insert(serviceDTO);
-                // TODO: отправить ошибки из validationResponse в UI
-            }
+            var validationResponse = _serviceManager.Insert(serviceDTO);
 
-
-            // TODO: узнать, в каком виде отправлять ответ из метода Insert
-            return Json(new[] { serviceDTO });
+            return Json(validationResponse);
         }
 
-
+        [HttpPost]
         public ActionResult Update(ServiceDTO serviceDTO)
         {
-            if (ModelState.IsValid)
-            {
-                var validationResponse = _serviceManager.Update(serviceDTO);
-                // TODO: отправить ошибки из validationResponse в UI
-            }
-
-            // TODO: узнать, в каком виде отправлять ответ из метода Update
-            return Json(new[] { serviceDTO });
+            var validationResponse = _serviceManager.Update(serviceDTO);
+            
+            return Json(validationResponse);
         }
 
-
+        [HttpPost]
         public ActionResult Delete(ServiceDTO serviceDTO)
         {
             var validationResponse = _serviceManager.Delete(serviceDTO.Id);
-            // TODO: отправить ошибки из validationResponse в UI
-
-            // TODO: узнать, в каком виде отправлять ответ из метода Delete
-            return Json(new[] { serviceDTO });
+            
+            return Json(validationResponse);
         }
     }
 }
