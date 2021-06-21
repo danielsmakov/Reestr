@@ -132,14 +132,6 @@ namespace Reestr.BLL.Managers
             }
 
 
-            ServiceQuery query = new ServiceQuery() { Id = model.Id, Name = model.Name, IsDeleted = false, Offset = 0, Limit = 10 };
-            var serviceEntities = _unitOfWork.Organizations.List(query);
-            if (serviceEntities.Any())
-            {
-                validationResponse.ErrorMessage = "Такое название уже зарегистрировано";
-                validationResponse.Status = false;
-                return validationResponse;
-            }
 
             if (model.Name.Trim().Length == 0)
             {
@@ -155,6 +147,24 @@ namespace Reestr.BLL.Managers
                 return validationResponse;
             }
 
+            ServiceQuery query = new ServiceQuery() { Id = model.Id, Name = model.Name, IsDeleted = false, Offset = 0, Limit = 10 };
+            var serviceEntities = _unitOfWork.Organizations.List(query);
+            if (serviceEntities.Any())
+            {
+                validationResponse.ErrorMessage = "Такое название уже зарегистрировано";
+                validationResponse.Status = false;
+                return validationResponse;
+            }
+
+
+
+            if (model.Code.Trim().Length != 9)
+            {
+                validationResponse.ErrorMessage = "Код должен содержать ровно 9 символов";
+                validationResponse.Status = false;
+                return validationResponse;
+            }
+
             query = new ServiceQuery() { Id = model.Id, Code = model.Code.Trim(), IsDeleted = false, Offset = 0, Limit = 10 };
             serviceEntities = _unitOfWork.Organizations.List(query);
             if (serviceEntities.Any())
@@ -164,12 +174,6 @@ namespace Reestr.BLL.Managers
                 return validationResponse;
             }
 
-            if (model.Code.Trim().Length != 9)
-            {
-                validationResponse.ErrorMessage = "Код должен содержать ровно 9 символов";
-                validationResponse.Status = false;
-                return validationResponse;
-            }
 
 
             if (model.Price < 0)

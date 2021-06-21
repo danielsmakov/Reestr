@@ -139,6 +139,14 @@ namespace Reestr.BLL.Managers
             }
 
 
+            
+            if (model.IIN.Trim().Length != 12)
+            {
+                validationResponse.ErrorMessage = "ИИН должен содержать ровно 12 символов";
+                validationResponse.Status = false;
+                return validationResponse;
+            }
+
             EmployeeReestrQuery query = new EmployeeReestrQuery() { Id = model.Id, IIN = model.IIN.Trim(), IsDeleted = false, Offset = 0, Limit = 10 };
             List<EmployeeReestr> employeeReestrEntities = _unitOfWork.EmployeeReestres.List(query);
             if (employeeReestrEntities.Any())
@@ -148,22 +156,7 @@ namespace Reestr.BLL.Managers
                 return validationResponse;
             }
 
-            if (model.IIN.Trim().Length != 12)
-            {
-                validationResponse.ErrorMessage = "ИИН должен содержать ровно 12 символов";
-                validationResponse.Status = false;
-                return validationResponse;
-            }
 
-
-            query = new EmployeeReestrQuery() { Id = model.Id, FullName = model.FullName, IsDeleted = false, Offset = 0, Limit = 10 };
-            employeeReestrEntities = _unitOfWork.EmployeeReestres.List(query);
-            if (employeeReestrEntities.Any())
-            {
-                validationResponse.ErrorMessage = "Такое ФИО уже зарегистрировано";
-                validationResponse.Status = false;
-                return validationResponse;
-            }
 
             if (model.FullName.Trim().Length == 0)
             {
@@ -178,6 +171,16 @@ namespace Reestr.BLL.Managers
                 validationResponse.Status = false;
                 return validationResponse;
             }
+
+            query = new EmployeeReestrQuery() { Id = model.Id, FullName = model.FullName, IsDeleted = false, Offset = 0, Limit = 10 };
+            employeeReestrEntities = _unitOfWork.EmployeeReestres.List(query);
+            if (employeeReestrEntities.Any())
+            {
+                validationResponse.ErrorMessage = "Такое ФИО уже зарегистрировано";
+                validationResponse.Status = false;
+                return validationResponse;
+            }
+
 
 
             if (model.DateOfBirth > DateTime.Now)
@@ -196,12 +199,14 @@ namespace Reestr.BLL.Managers
             }
 
 
+
             if (model.PhoneNumber.Trim().Length != 10)
             {
                 validationResponse.ErrorMessage = "Телефон должен включать ровно 10 цифр, без каких-либо других знаков";
                 validationResponse.Status = false;
                 return validationResponse;
             }
+
 
 
             if (model.BeginDate < model.DateOfBirth)

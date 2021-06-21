@@ -130,6 +130,7 @@ namespace Reestr.BLL.Managers
             }
 
 
+
             if (model.Name.Trim().Length == 0)
             {
                 validationResponse.ErrorMessage = "Название организации обязательно к заполнению";
@@ -154,6 +155,14 @@ namespace Reestr.BLL.Managers
             }
 
 
+
+            if (model.BIN.Trim().Length != 12)
+            {
+                validationResponse.ErrorMessage = "БИН должен содержать ровно 12 символов";
+                validationResponse.Status = false;
+                return validationResponse;
+            }
+
             query = new OrganizationQuery() { Id = model.Id, BIN = model.BIN.Trim(), IsDeleted = false, Offset = 0, Limit = 10 };
             organizationEntities = _unitOfWork.Organizations.List(query);
             if (organizationEntities.Any())
@@ -163,12 +172,6 @@ namespace Reestr.BLL.Managers
                 return validationResponse;
             }
 
-            if (model.BIN.Trim().Length != 12)
-            {
-                validationResponse.ErrorMessage = "БИН должен содержать ровно 12 символов";
-                validationResponse.Status = false;
-                return validationResponse;
-            }
 
 
             if (model.PhoneNumber.Trim().Length != 10)
