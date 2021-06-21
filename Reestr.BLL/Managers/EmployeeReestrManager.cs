@@ -26,6 +26,9 @@ namespace Reestr.BLL.Managers
         {
             try
             {
+                if (id <= 0)
+                    throw new Exception("Id cannot be less or equal 0");
+
                 var employeeReestr = _unitOfWork.EmployeeReestres.Get(id);
 
                 return Mapper.Map<EmployeeReestrDTO>(employeeReestr);
@@ -102,6 +105,9 @@ namespace Reestr.BLL.Managers
 
             try
             {
+                if (id <= 0)
+                    throw new Exception("Id cannot be less or equal 0");
+
                 _unitOfWork.EmployeeReestres.Delete(id);
             }
             catch (Exception ex)

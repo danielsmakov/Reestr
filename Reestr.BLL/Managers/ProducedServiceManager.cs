@@ -26,6 +26,9 @@ namespace Reestr.BLL.Managers
         {
             try
             {
+                if (id <= 0)
+                    throw new Exception("Id cannot be less or equal 0");
+
                 var producedService = _unitOfWork.ProducedServices.Get(id);
 
                 return Mapper.Map<ProducedServiceDTO>(producedService);
@@ -96,6 +99,9 @@ namespace Reestr.BLL.Managers
 
             try
             {
+                if (id <= 0)
+                    throw new Exception("Id cannot be less or equal 0");
+
                 _unitOfWork.ProducedServices.Delete(id);
             }
             catch (Exception ex)
