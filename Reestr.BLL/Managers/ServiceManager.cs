@@ -150,6 +150,7 @@ namespace Reestr.BLL.Managers
                 return validationResponse;
             }
 
+
             ServiceQuery query = new ServiceQuery() { Id = model.Id, Name = model.Name, IsDeleted = false, Offset = 0, Limit = 10 };
             var serviceEntities = _unitOfWork.Organizations.List(query);
             if (serviceEntities.Any())
