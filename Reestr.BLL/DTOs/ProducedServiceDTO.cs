@@ -16,25 +16,25 @@ namespace Reestr.BLL.DTOs
         /// <summary>
         /// Getting from Organizations Table, ReestrDatabase 
         /// </summary>
-        [Required(ErrorMessage = "Необходимо указать организацию")]
+        [Required(ErrorMessageResourceType = typeof(Resources.Resources_ru), ErrorMessageResourceName = "Required")]
         public int OrganizationId { get; set; }
 
 
         /// <summary>
         /// Getting from Servces Table, ReestrDatabase
         /// </summary>
-        [Required(ErrorMessage = "Необходимо указать услугу")]
+        [Required(ErrorMessageResourceType = typeof(Resources.Resources_ru), ErrorMessageResourceName = "Required")]
         public int ServiceReestrId { get; set; }
 
 
         /// <summary>
         /// Getting from EmplolyeeReestr Table, ReestrDatabase
         /// </summary>
-        [Required(ErrorMessage = "Необходимо указать сотрудника")]
+        [Required(ErrorMessageResourceType = typeof(Resources.Resources_ru), ErrorMessageResourceName = "Required")]
         public int EmployeeReestrId { get; set; }
 
 
-        [Required(ErrorMessage = "Необходимо указать дату начала")]
+        [Required(ErrorMessageResourceType = typeof(Resources.Resources_ru), ErrorMessageResourceName = "Required")]
         public DateTime BeginDate { get; set; }
     }
 }

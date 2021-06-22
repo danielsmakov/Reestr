@@ -18,24 +18,24 @@ namespace Reestr.BLL.DTOs
 
         /*[Required(ErrorMessage = "Не указано название организации")]*/
         [Required(ErrorMessageResourceType = typeof(Resources.Resources_ru), ErrorMessageResourceName = "Required")]
-        [StringLength(300, MinimumLength = 2, ErrorMessage = "Название организации не может быть короче 3 символов и превышать 300 ")]
+        [StringLength(300, MinimumLength = 2, ErrorMessageResourceType = typeof(Resources.Resources_ru), ErrorMessageResourceName = "NameLength")]
         public string Name { get; set; }
 
 
         /// <summary>
         /// BIN (БИН) состоит из 12 цифр и является уникальным идентификатором организации
         /// </summary>
-        [Required(ErrorMessage = "БИН не указан")]
-        [StringLength(12, ErrorMessage = "БИН должен состоять из 12 цифр")]
+        [Required(ErrorMessageResourceType = typeof(Resources.Resources_ru), ErrorMessageResourceName = "Required")]
+        [RegularExpression(@"^\d{12}", ErrorMessageResourceType = typeof(Resources.Resources_ru), ErrorMessageResourceName = "BINAndIINLength")]
         public string BIN { get; set; }
 
 
-        [Required(ErrorMessage = "Необходимо указать номер телефона")]
-        [StringLength(10, ErrorMessage = "Номер телефона должен содержать 10 цифр, начинающихся после +7/8")]
+        [Required(ErrorMessageResourceType = typeof(Resources.Resources_ru), ErrorMessageResourceName = "Required")]
+        [RegularExpression(@"^\d{10}", ErrorMessageResourceType = typeof(Resources.Resources_ru), ErrorMessageResourceName = "PhoneNumberLength")]
         public string PhoneNumber { get; set; }
 
 
-        [Required(ErrorMessage = "Необходимо указать дату начала")]
+        [Required(ErrorMessageResourceType = typeof(Resources.Resources_ru), ErrorMessageResourceName = "Required")]
         public DateTime BeginDate { get; set; }
 
     }

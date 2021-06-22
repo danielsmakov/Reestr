@@ -16,36 +16,36 @@ namespace Reestr.BLL.DTOs
         /// <summary>
         /// Id Организации к которой прикреплён сотрудник
         /// </summary>
-        [Required(ErrorMessage = "Идентификатор организации не найден")]
+        [Required(ErrorMessageResourceType = typeof(Resources.Resources_ru), ErrorMessageResourceName = "Required")]
         public int OrganizationId { get; set; }
 
 
         /// <summary>
         /// IIN состоит из 12 цифр
         /// </summary>
-        [Required(ErrorMessage = "Необходимо указать ИИН")]
-        [RegularExpression(@"^\d{12}", ErrorMessage = "Необходимо указать 12 цифр ИИН")]
+        [Required(ErrorMessageResourceType = typeof(Resources.Resources_ru), ErrorMessageResourceName = "Required")]
+        [RegularExpression(@"^\d{12}", ErrorMessageResourceType = typeof(Resources.Resources_ru), ErrorMessageResourceName = "BINAndIINLength")]
         public string IIN { get; set; }
 
 
         /// <summary>
         /// FullName - Фамилия, имя и отчество
         /// </summary>
-        [Required(ErrorMessage = "Необходимо указать полные ФИО")]
-        [StringLength(150, MinimumLength = 8, ErrorMessage = "ФИО должно содержать от 8 до 150 символов")]
+        [Required(ErrorMessageResourceType = typeof(Resources.Resources_ru), ErrorMessageResourceName = "Required")]
+        [StringLength(150, MinimumLength = 8, ErrorMessageResourceType = typeof(Resources.Resources_ru), ErrorMessageResourceName = "FullNameLength")]
         public string FullName { get; set; }
 
 
-        [Required(ErrorMessage = "Необходимо указать дату рождения")]
+        [Required(ErrorMessageResourceType = typeof(Resources.Resources_ru), ErrorMessageResourceName = "Required")]
         public DateTime DateOfBirth { get; set; }
 
 
-        [Required(ErrorMessage = "Необходимо указать номер телефона")]
-        [Phone(ErrorMessage = "Номер телефона должен содержать 10 цифр, начинающихся после +7/8")]
+        [Required(ErrorMessageResourceType = typeof(Resources.Resources_ru), ErrorMessageResourceName = "Required")]
+        [RegularExpression(@"^\d{10}", ErrorMessageResourceType = typeof(Resources.Resources_ru), ErrorMessageResourceName = "PhoneNumberLength")]
         public string PhoneNumber { get; set; }
 
 
-        [Required(ErrorMessage = "Необходимо указать дату начала")]
+        [Required(ErrorMessageResourceType = typeof(Resources.Resources_ru), ErrorMessageResourceName = "Required")]
         public DateTime BeginDate { get; set; }
     }
 }
