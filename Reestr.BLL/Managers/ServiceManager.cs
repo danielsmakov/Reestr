@@ -27,7 +27,7 @@ namespace Reestr.BLL.Managers
             try
             {
                 if (id <= 0)
-                    throw new Exception("Id cannot be less or equal 0");
+                    throw new Exception("Id не может быть равен или меньше 0");
 
                 var serviceEntity = _unitOfWork.Services.Get(id);
 
@@ -105,7 +105,7 @@ namespace Reestr.BLL.Managers
             try
             {
                 if (id <= 0)
-                    throw new Exception("Id cannot be less or equal 0");
+                    throw new Exception("Id не может быть равен или меньше 0");
 
                 _unitOfWork.Services.Delete(id);
             }
@@ -229,6 +229,7 @@ namespace Reestr.BLL.Managers
                     if (model.Code != serviceEntity.Code)
                     {
                         query = new ServiceQuery() { Id = model.Id, Code = model.Code.Trim(), IsDeleted = false, Offset = 0, Limit = 10 };
+                        serviceEntities.Clear();
                         serviceEntities = _unitOfWork.Services.List(query);
                         if (serviceEntities.Any())
                         {
@@ -247,6 +248,7 @@ namespace Reestr.BLL.Managers
             if (model.Id == 0)
             {
                 query = new ServiceQuery() { Id = model.Id, Code = model.Code.Trim(), IsDeleted = false, Offset = 0, Limit = 10 };
+                serviceEntities.Clear();
                 serviceEntities = _unitOfWork.Services.List(query);
                 if (serviceEntities.Any())
                 {

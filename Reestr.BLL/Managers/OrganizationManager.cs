@@ -27,7 +27,8 @@ namespace Reestr.BLL.Managers
             try
             {
                 if (id <= 0)
-                    throw new Exception("Id cannot be less or equal 0");
+                    throw new Exception("Id не может быть равен или меньше 0");
+
                 var organizationEntity = _unitOfWork.Organizations.Get(id);
 
                 return Mapper.Map<OrganizationDTO>(organizationEntity);
@@ -104,7 +105,7 @@ namespace Reestr.BLL.Managers
             try
             {
                 if (id <= 0)
-                    throw new Exception("Id cannot be less or equal 0");
+                    throw new Exception("Id не может быть равен или меньше 0");
                 _unitOfWork.Organizations.Delete(id);
             }
             catch (Exception ex)

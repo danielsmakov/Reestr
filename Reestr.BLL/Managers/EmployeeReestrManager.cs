@@ -28,7 +28,7 @@ namespace Reestr.BLL.Managers
             try
             {
                 if (id <= 0)
-                    throw new Exception("Id cannot be less or equal 0");
+                    throw new Exception("Id не может быть равен или меньше 0");
 
                 var employeeReestrEntity = _unitOfWork.EmployeeReestres.Get(id);
 
@@ -110,7 +110,7 @@ namespace Reestr.BLL.Managers
             try
             {
                 if (id <= 0)
-                    throw new Exception("Id cannot be less or equal 0");
+                    throw new Exception("Id не может быть равен или меньше 0");
 
                 _unitOfWork.EmployeeReestres.Delete(id);
             }
@@ -179,6 +179,7 @@ namespace Reestr.BLL.Managers
                     if (model.IIN != employeeReestrEntity.IIN)
                     {
                         query = new EmployeeReestrQuery() { Id = model.Id, IIN = model.IIN.Trim(), IsDeleted = false, Offset = 0, Limit = 10 };
+                        employeeReestrEntities.Clear();
                         employeeReestrEntities = _unitOfWork.EmployeeReestres.List(query);
                         if (employeeReestrEntities.Any())
                         {
@@ -197,6 +198,7 @@ namespace Reestr.BLL.Managers
             if (model.Id == 0)
             {
                 query = new EmployeeReestrQuery() { Id = model.Id, IIN = model.IIN.Trim(), IsDeleted = false, Offset = 0, Limit = 10 };
+                employeeReestrEntities.Clear();
                 employeeReestrEntities = _unitOfWork.EmployeeReestres.List(query);
                 if (employeeReestrEntities.Any())
                 {
@@ -234,6 +236,7 @@ namespace Reestr.BLL.Managers
                     if (model.FullName != employeeReestrEntity.FullName)
                     {
                         query = new EmployeeReestrQuery() { Id = model.Id, FullName = model.FullName, IsDeleted = false, Offset = 0, Limit = 10 };
+                        employeeReestrEntities.Clear();
                         employeeReestrEntities = _unitOfWork.EmployeeReestres.List(query);
                         if (employeeReestrEntities.Any())
                         {
@@ -252,6 +255,7 @@ namespace Reestr.BLL.Managers
             if (model.Id == 0)
             {
                 query = new EmployeeReestrQuery() { Id = model.Id, FullName = model.FullName, IsDeleted = false, Offset = 0, Limit = 10 };
+                employeeReestrEntities.Clear();
                 employeeReestrEntities = _unitOfWork.EmployeeReestres.List(query);
                 if (employeeReestrEntities.Any())
                 {

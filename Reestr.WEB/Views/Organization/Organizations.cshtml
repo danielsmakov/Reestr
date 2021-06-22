@@ -4,7 +4,43 @@
 @model Reestr.BLL.DTOs.OrganizationDTO
 @using Kendo.Mvc.UI
 
-<div>
+
+<div id="example">
+    <div class="demo-section k-content">
+
+        <h4>Date Picker:</h4>
+        <input id="datepicker" value="10/10/2020" title="datepicker" />
+
+        <h4>Combo Box:</h4>
+        <input id="fabric" placeholder="Select fabric..." />
+    </div>
+    <script>
+        $(document).ready(function () {
+            $("#datepicker").kendoDatePicker();
+
+            $("#fabric").kendoComboBox({
+                dataTextField: "text",
+                dataValueField: "value",
+                dataSource: [
+                    { text: "Cotton", value: "1" },
+                    { text: "Polyester", value: "2" },
+                    { text: "Cotton/Polyester", value: "3" },
+                    { text: "Rib Knit", value: "4" },
+                ],
+                filter: "contains",
+                suggest: true,
+                index: 3
+            });
+        })
+    </script>
+</div>
+
+
+
+
+
+@* Разметка ниже использовалась для тестирования backend'а *@
+@*<div>
     <button>
         @Html.ActionLink("Insert Organization", "Insert", "Home");
     </button>
@@ -18,7 +54,7 @@
         @Html.ActionLink("Delete Organizations", "Delete", "Home");
     </button>
 
-</div>
+</div>*@
 
 @*<div class="container" style="margin-top: 100px">
     @(Html.Kendo().Grid<Reestr.BLL.DTOs.OrganizationDTO>()
