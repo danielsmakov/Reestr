@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data.SqlTypes;
 using System.Linq;
+using System.Resources;
 using System.Text;
 using System.Threading.Tasks;
+
 
 namespace Reestr.BLL.DTOs
 {
@@ -14,7 +16,8 @@ namespace Reestr.BLL.DTOs
         public int Id { get; set; }
 
 
-        [Required(ErrorMessage = "Не указано название организации")]
+        /*[Required(ErrorMessage = "Не указано название организации")]*/
+        [Required(ErrorMessageResourceType = typeof(Resources.Resources_ru), ErrorMessageResourceName = "Required")]
         [StringLength(300, MinimumLength = 2, ErrorMessage = "Название организации не может быть короче 3 символов и превышать 300 ")]
         public string Name { get; set; }
 

@@ -42,7 +42,7 @@ namespace Reestr.WEB.Controllers
             query.Limit = 20;
             List<ProducedServiceDTO> producedServiceDTOs = _producedServiceManager.List(query);
 
-            return Json(producedServiceDTOs, JsonRequestBehavior.AllowGet);
+            return Json(producedServiceDTOs);
         }
 
         [HttpPost]

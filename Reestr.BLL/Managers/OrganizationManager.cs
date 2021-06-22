@@ -124,6 +124,8 @@ namespace Reestr.BLL.Managers
         public ValidationResponse ValidateOrganizationDTO(OrganizationDTO model)
         {
             var validationResponse = new ValidationResponse();
+            OrganizationQuery query;
+            List<Organization> organizationEntities = new List<Organization>();
 
             if (model == null)
             {
@@ -132,7 +134,7 @@ namespace Reestr.BLL.Managers
                 return validationResponse;
             }
 
-
+            
 
             if (model.Name.Trim().Length == 0)
             {
@@ -148,8 +150,36 @@ namespace Reestr.BLL.Managers
                 return validationResponse;
             }
 
-            OrganizationQuery query = new OrganizationQuery() { Id = model.Id, Name = model.Name, IsDeleted = false, Offset = 0, Limit = 10 };
-            var organizationEntities = _unitOfWork.Organizations.List(query);
+            if (model.Id > 0)
+            {
+                Organization organizationEntity = _unitOfWork.Organizations.Get(model.Id);
+                try
+                {
+                    if (organizationEntity is null)
+                        throw new Exception("Объект не найден.");
+
+                    if (model.Name != organizationEntity.Name)
+                    {
+                        query = new OrganizationQuery() { Id = model.Id, Name = model.Name, IsDeleted = false, Offset = 0, Limit = 10 };
+                        organizationEntities.Clear();
+                        organizationEntities = _unitOfWork.Organizations.List(query);
+                        if (organizationEntities.Any())
+                        {
+                            validationResponse.ErrorMessage = "Такое название уже зарегистрировано";
+                            validationResponse.Status = false;
+                            return validationResponse;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+
+            query = new OrganizationQuery() { Id = model.Id, Name = model.Name, IsDeleted = false, Offset = 0, Limit = 10 };
+            organizationEntities.Clear();
+            organizationEntities = _unitOfWork.Organizations.List(query);
             if (organizationEntities.Any())
             {
                 validationResponse.ErrorMessage = "Такое название уже зарегистрировано";
@@ -166,7 +196,36 @@ namespace Reestr.BLL.Managers
                 return validationResponse;
             }
 
+            if (model.Id > 0)
+            {
+                Organization organizationEntity = _unitOfWork.Organizations.Get(model.Id);
+
+                try
+                {
+                    if (organizationEntity is null)
+                        throw new Exception("Объект не найден");
+
+                    if (model.BIN != organizationEntity.BIN)
+                    {
+                        query = new OrganizationQuery() { Id = model.Id, BIN = model.BIN.Trim(), IsDeleted = false, Offset = 0, Limit = 10 };
+                        organizationEntities.Clear();
+                        organizationEntities = _unitOfWork.Organizations.List(query);
+                        if (organizationEntities.Any())
+                        {
+                            validationResponse.ErrorMessage = "Введенный Вами БИН уже зарегистрирован";
+                            validationResponse.Status = false;
+                            return validationResponse;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+
             query = new OrganizationQuery() { Id = model.Id, BIN = model.BIN.Trim(), IsDeleted = false, Offset = 0, Limit = 10 };
+            organizationEntities.Clear();
             organizationEntities = _unitOfWork.Organizations.List(query);
             if (organizationEntities.Any())
             {
