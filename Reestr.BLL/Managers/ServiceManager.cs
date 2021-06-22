@@ -126,6 +126,8 @@ namespace Reestr.BLL.Managers
         public ValidationResponse ValidateServiceDTO(ServiceDTO model)
         {
             var validationResponse = new ValidationResponse();
+            ServiceQuery query;
+            List<Service> serviceEntities = new List<Service>();
 
             if (model == null)
             {
@@ -150,14 +152,45 @@ namespace Reestr.BLL.Managers
                 return validationResponse;
             }
 
-
-            ServiceQuery query = new ServiceQuery() { Id = model.Id, Name = model.Name, IsDeleted = false, Offset = 0, Limit = 10 };
-            var serviceEntities = _unitOfWork.Organizations.List(query);
-            if (serviceEntities.Any())
+            if (model.Id > 0)
             {
-                validationResponse.ErrorMessage = "Такое название уже зарегистрировано";
-                validationResponse.Status = false;
-                return validationResponse;
+                Service serviceEntity = _unitOfWork.Services.Get(model.Id);
+
+                try
+                {
+                    if (serviceEntity is null)
+                        throw new Exception("Объект не найден");
+
+                    if (model.Name != serviceEntity.Name)
+                    {
+                        query = new ServiceQuery() { Id = model.Id, Name = model.Name, IsDeleted = false, Offset = 0, Limit = 10 };
+                        serviceEntities.Clear();
+                        serviceEntities = _unitOfWork.Services.List(query);
+                        if (serviceEntities.Any())
+                        {
+                            validationResponse.ErrorMessage = "Такое название уже зарегистрировано";
+                            validationResponse.Status = false;
+                            return validationResponse;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+
+            if (model.Id == 0)
+            {
+                query = new ServiceQuery() { Id = model.Id, Name = model.Name, IsDeleted = false, Offset = 0, Limit = 10 };
+                serviceEntities.Clear();
+                serviceEntities = _unitOfWork.Services.List(query);
+                if (serviceEntities.Any())
+                {
+                    validationResponse.ErrorMessage = "Такое название уже зарегистрировано";
+                    validationResponse.Status = false;
+                    return validationResponse;
+                }
             }
 
 
@@ -169,13 +202,43 @@ namespace Reestr.BLL.Managers
                 return validationResponse;
             }
 
-            query = new ServiceQuery() { Id = model.Id, Code = model.Code.Trim(), IsDeleted = false, Offset = 0, Limit = 10 };
-            serviceEntities = _unitOfWork.Organizations.List(query);
-            if (serviceEntities.Any())
+            if (model.Id > 0)
             {
-                validationResponse.ErrorMessage = "Введенный Вами код уже зарегистрирован";
-                validationResponse.Status = false;
-                return validationResponse;
+                Service serviceEntity = _unitOfWork.Services.Get(model.Id);
+
+                try
+                {
+                    if (serviceEntity is null)
+                        throw new Exception("Объект не найден");
+
+                    if (model.Code != serviceEntity.Code)
+                    {
+                        query = new ServiceQuery() { Id = model.Id, Code = model.Code.Trim(), IsDeleted = false, Offset = 0, Limit = 10 };
+                        serviceEntities = _unitOfWork.Services.List(query);
+                        if (serviceEntities.Any())
+                        {
+                            validationResponse.ErrorMessage = "Введенный Вами код уже зарегистрирован";
+                            validationResponse.Status = false;
+                            return validationResponse;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+
+            if (model.Id == 0)
+            {
+                query = new ServiceQuery() { Id = model.Id, Code = model.Code.Trim(), IsDeleted = false, Offset = 0, Limit = 10 };
+                serviceEntities = _unitOfWork.Services.List(query);
+                if (serviceEntities.Any())
+                {
+                    validationResponse.ErrorMessage = "Введенный Вами код уже зарегистрирован";
+                    validationResponse.Status = false;
+                    return validationResponse;
+                }
             }
 
 

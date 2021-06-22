@@ -132,6 +132,8 @@ namespace Reestr.BLL.Managers
         public ValidationResponse ValidateEmployeeReestrDTO(EmployeeReestrDTO model)
         {
             var validationResponse = new ValidationResponse();
+            EmployeeReestrQuery query;
+            List<EmployeeReestr> employeeReestrEntities = new List<EmployeeReestr>();
 
 
             if (model == null)
@@ -145,18 +147,48 @@ namespace Reestr.BLL.Managers
             
             if (model.IIN.Trim().Length != 12)
             {
-                validationResponse.ErrorMessage = "ИИН должен содержать ровно 12 символов";
+                validationResponse.ErrorMessage = "ИИН должен содержать ровно 12 цифр";
                 validationResponse.Status = false;
                 return validationResponse;
             }
 
-            EmployeeReestrQuery query = new EmployeeReestrQuery() { Id = model.Id, IIN = model.IIN.Trim(), IsDeleted = false, Offset = 0, Limit = 10 };
-            List<EmployeeReestr> employeeReestrEntities = _unitOfWork.EmployeeReestres.List(query);
-            if (employeeReestrEntities.Any())
+            if (model.Id > 0)
             {
-                validationResponse.ErrorMessage = "Введенный Вами ИИН уже зарегистрирован";
-                validationResponse.Status = false;
-                return validationResponse;
+                EmployeeReestr employeeReestrEntity = _unitOfWork.EmployeeReestres.Get(model.Id);
+
+                try
+                {
+                    if (employeeReestrEntity is null)
+                        throw new Exception("Объект не найден");
+
+                    if (model.IIN != employeeReestrEntity.IIN)
+                    {
+                        query = new EmployeeReestrQuery() { Id = model.Id, IIN = model.IIN.Trim(), IsDeleted = false, Offset = 0, Limit = 10 };
+                        employeeReestrEntities = _unitOfWork.EmployeeReestres.List(query);
+                        if (employeeReestrEntities.Any())
+                        {
+                            validationResponse.ErrorMessage = "Введенный Вами ИИН уже зарегистрирован";
+                            validationResponse.Status = false;
+                            return validationResponse;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+            
+            if (model.Id == 0)
+            {
+                query = new EmployeeReestrQuery() { Id = model.Id, IIN = model.IIN.Trim(), IsDeleted = false, Offset = 0, Limit = 10 };
+                employeeReestrEntities = _unitOfWork.EmployeeReestres.List(query);
+                if (employeeReestrEntities.Any())
+                {
+                    validationResponse.ErrorMessage = "Введенный Вами ИИН уже зарегистрирован";
+                    validationResponse.Status = false;
+                    return validationResponse;
+                }
             }
 
 
@@ -175,15 +207,45 @@ namespace Reestr.BLL.Managers
                 return validationResponse;
             }
 
-            query = new EmployeeReestrQuery() { Id = model.Id, FullName = model.FullName, IsDeleted = false, Offset = 0, Limit = 10 };
-            employeeReestrEntities = _unitOfWork.EmployeeReestres.List(query);
-            if (employeeReestrEntities.Any())
+            if (model.Id > 0)
             {
-                validationResponse.ErrorMessage = "Такое ФИО уже зарегистрировано";
-                validationResponse.Status = false;
-                return validationResponse;
+                EmployeeReestr employeeReestrEntity = _unitOfWork.EmployeeReestres.Get(model.Id);
+
+                try
+                {
+                    if (employeeReestrEntity is null)
+                        throw new Exception("Объект не найден");
+
+                    if (model.FullName != employeeReestrEntity.FullName)
+                    {
+                        query = new EmployeeReestrQuery() { Id = model.Id, FullName = model.FullName, IsDeleted = false, Offset = 0, Limit = 10 };
+                        employeeReestrEntities = _unitOfWork.EmployeeReestres.List(query);
+                        if (employeeReestrEntities.Any())
+                        {
+                            validationResponse.ErrorMessage = "Такое ФИО уже зарегистрировано";
+                            validationResponse.Status = false;
+                            return validationResponse;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
             }
 
+            if (model.Id == 0)
+            {
+                query = new EmployeeReestrQuery() { Id = model.Id, FullName = model.FullName, IsDeleted = false, Offset = 0, Limit = 10 };
+                employeeReestrEntities = _unitOfWork.EmployeeReestres.List(query);
+                if (employeeReestrEntities.Any())
+                {
+                    validationResponse.ErrorMessage = "Такое ФИО уже зарегистрировано";
+                    validationResponse.Status = false;
+                    return validationResponse;
+                }
+            }
+            
 
 
             if (model.DateOfBirth > DateTime.Now)
