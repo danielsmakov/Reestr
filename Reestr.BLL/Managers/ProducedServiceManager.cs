@@ -9,6 +9,7 @@ using AutoMapper;
 using Reestr.DAL.Entities;
 using Reestr.BLL.Validation;
 using Reestr.DAL.Queries;
+using System.ComponentModel.DataAnnotations;
 
 namespace Reestr.BLL.Managers
 {
@@ -60,7 +61,10 @@ namespace Reestr.BLL.Managers
 
         public ValidationResponse Insert(ProducedServiceDTO producedServiceDTO)
         {
-            var validationResponse = new ValidationResponse();
+            var validationResponse = ValidateProducedServiceDTO(producedServiceDTO);
+            if (!validationResponse.Status)
+                return validationResponse;
+
             try
             {
                 var producedServiceEntity = Mapper.Map<ProducedService>(producedServiceDTO);
@@ -79,7 +83,10 @@ namespace Reestr.BLL.Managers
 
         public ValidationResponse Update(ProducedServiceDTO producedServiceDTO)
         {
-            var validationResponse = new ValidationResponse();
+            var validationResponse = ValidateProducedServiceDTO(producedServiceDTO);
+            if (!validationResponse.Status)
+                return validationResponse;
+
             try
             {
                 var producedServiceEntity = Mapper.Map<ProducedService>(producedServiceDTO);
@@ -123,15 +130,24 @@ namespace Reestr.BLL.Managers
         }
 
 
-        /*public ValidationResponse ValidateProducedServiceDTO(ProducedServiceDTO producedServiceDTO)
+        public ValidationResponse ValidateProducedServiceDTO(ProducedServiceDTO model)
         {
             var validationResponse = new ValidationResponse();
 
 
-
-
+            var results = new List<ValidationResult>();
+            var context = new System.ComponentModel.DataAnnotations.ValidationContext(model);
+            if (!Validator.TryValidateObject(model, context, results, true))
+            {
+                foreach (var error in results)
+                {
+                    validationResponse.Status = false;
+                    validationResponse.ErrorMessage = error.ErrorMessage;
+                    return validationResponse;
+                }
+            }
 
             return validationResponse;
-        }*/
+        }
     }
 }

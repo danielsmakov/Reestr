@@ -9,6 +9,7 @@ using AutoMapper;
 using Reestr.DAL.Entities;
 using Reestr.BLL.Validation;
 using Reestr.DAL.Queries;
+using System.ComponentModel.DataAnnotations;
 
 namespace Reestr.BLL.Managers
 {
@@ -134,6 +135,20 @@ namespace Reestr.BLL.Managers
                 validationResponse.ErrorMessage = "Объект не найден.";
                 validationResponse.Status = false;
                 return validationResponse;
+            }
+
+
+
+            var results = new List<ValidationResult>();
+            var context = new System.ComponentModel.DataAnnotations.ValidationContext(model);
+            if (!Validator.TryValidateObject(model, context, results, true))
+            {
+                foreach (var error in results)
+                {
+                    validationResponse.Status = false;
+                    validationResponse.ErrorMessage = error.ErrorMessage;
+                    return validationResponse;
+                }
             }
 
 

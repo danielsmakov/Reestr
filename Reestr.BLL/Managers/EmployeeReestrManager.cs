@@ -9,6 +9,7 @@ using AutoMapper;
 using Reestr.DAL.Entities;
 using Reestr.DAL.Queries;
 using Reestr.BLL.Validation;
+using System.ComponentModel.DataAnnotations;
 
 namespace Reestr.BLL.Managers
 {
@@ -144,7 +145,21 @@ namespace Reestr.BLL.Managers
             }
 
 
-            
+
+            var results = new List<ValidationResult>();
+            var context = new System.ComponentModel.DataAnnotations.ValidationContext(model);
+            if (!Validator.TryValidateObject(model, context, results, true))
+            {
+                foreach (var error in results)
+                {
+                    validationResponse.Status = false;
+                    validationResponse.ErrorMessage = error.ErrorMessage;
+                    return validationResponse;
+                }
+            }
+
+
+
             if (model.IIN.Trim().Length != 12)
             {
                 validationResponse.ErrorMessage = "ИИН должен содержать ровно 12 цифр";
