@@ -138,7 +138,7 @@ namespace Reestr.BLL.Managers
             }
 
 
-
+            // Валидация на основе атрибутов модели
             var results = new List<ValidationResult>();
             var context = new System.ComponentModel.DataAnnotations.ValidationContext(model);
             if (!Validator.TryValidateObject(model, context, results, true))

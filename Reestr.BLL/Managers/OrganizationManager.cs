@@ -136,7 +136,7 @@ namespace Reestr.BLL.Managers
             }
 
 
-
+            // Валидация на основе атрибутов модели
             var results = new List<ValidationResult>();
             var context = new System.ComponentModel.DataAnnotations.ValidationContext(model);
             if (!Validator.TryValidateObject(model, context, results, true))
@@ -150,7 +150,7 @@ namespace Reestr.BLL.Managers
             }
 
             
-
+            // Проверка названия организации на кол-во символов
             if (model.Name.Trim().Length == 0)
             {
                 validationResponse.ErrorMessage = "Название организации обязательно к заполнению";
@@ -165,7 +165,8 @@ namespace Reestr.BLL.Managers
                 return validationResponse;
             }
 
-            if (model.Id > 0)
+            
+            if (model.Id > 0) // Выявление операции Update() - Id больше дефолтного значения
             {
                 Organization organizationEntity = _unitOfWork.Organizations.Get(model.Id);
                 try
@@ -173,12 +174,15 @@ namespace Reestr.BLL.Managers
                     if (organizationEntity is null)
                         throw new Exception("Объект не найден.");
 
-                    if (model.Name != organizationEntity.Name)
+                    if (model.Name != organizationEntity.Name) // Проверяю, изменил ли пользователь название организации
                     {
+                        // Ниже делается запрос в базу на предмет уникальности названия организации
                         query = new OrganizationQuery() { Id = model.Id, Name = model.Name, IsDeleted = false, Offset = 0, Limit = 10 };
                         organizationEntities.Clear();
                         organizationEntities = _unitOfWork.Organizations.List(query);
-                        if (organizationEntities.Any())
+
+                        // если из базы пришла хоть одна запись, значит название не уникально
+                        if (organizationEntities.Any()) 
                         {
                             validationResponse.ErrorMessage = "Такое название уже зарегистрировано";
                             validationResponse.Status = false;
@@ -192,7 +196,7 @@ namespace Reestr.BLL.Managers
                 }
             }
 
-            if (model.Id == 0)
+            if (model.Id == 0) // Выявление операции Insert() - Id равен дефолтному значению
             {
                 query = new OrganizationQuery() { Id = model.Id, Name = model.Name, IsDeleted = false, Offset = 0, Limit = 10 };
                 organizationEntities.Clear();
@@ -206,7 +210,7 @@ namespace Reestr.BLL.Managers
             }
 
 
-
+            
             if (model.BIN.Trim().Length != 12)
             {
                 validationResponse.ErrorMessage = "БИН должен содержать ровно 12 символов";
@@ -214,6 +218,7 @@ namespace Reestr.BLL.Managers
                 return validationResponse;
             }
 
+            // Уникальность БИНа проверяется аналогично уникальности названия организации
             if (model.Id > 0)
             {
                 Organization organizationEntity = _unitOfWork.Organizations.Get(model.Id);
