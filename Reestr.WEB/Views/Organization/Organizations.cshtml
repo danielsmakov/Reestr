@@ -1,7 +1,7 @@
 ﻿@{
     ViewBag.Title = "Organizations";
 }
-@model Reestr.BLL.DTOs.OrganizationDTO
+@model List<Reestr.BLL.DTOs.OrganizationDTO>
 @using Kendo.Mvc.UI
 
 
@@ -15,7 +15,7 @@
         <h4>Combo Box:</h4>
         <input id="fabric" placeholder="Select fabric..." />
         
-        <h4>Разметка:</h4>
+        <h4>Реестр организаций:</h4>
         <div id="grid"></div>
     </div>
     <script>
@@ -38,41 +38,57 @@
 
 
 
-            $("#grid").kendoGrid({
-                dataSource: {
-                    type: "odata",
-                    transport: {
-                        read: "https://demos.telerik.com/kendo-ui/service/Northwind.svc/Customers"
+            var dataSource = new kendo.data.DataSource({
+                type: "odata",
+                transport: {
+                    read: {
+                        url: "/Organization/List",
+                        type: "GET",
+                        dataType: "json",
+                        contentType: "application/json; charset=utf-8"
                     },
-                    pageSize: 20
+                    parameterMap: function (options) {
+                        return JSON.stringify(options);
+                    }
                 },
-                height: 550,
-                sortable: true,
+                batch: true,
+                pageSize: 20,
+                schema: {
+                    model: {
+                        id: "Id",
+                        fields: {
+                            Id: { type: "number", editable: false, nullable: true },
+                            Name: { type: "string", validation: { required: true } },
+                            BIN: { type: "string", validation: { required: true } },
+                            PhoneNumber: { type: "string", validation: { required: true } },
+                            BeginDate: { type: "date", validation: { required: true } }
+                        }
+                    }
+                }
+            });
+
+
+
+            $("#grid").kendoGrid({
+                dataSource: dataSource,
                 pageable: {
                     refresh: true,
                     buttonCount: 5
                 },
-                columns: [{
-                    template: "<div class='customer-photo'" +
-                        "style='background-image: url(../content/web/Customers/#:data.CustomerID#.jpg);'></div>" +
-                        "<div class='customer-name'>#: ContactName #</div>",
-                    field: "Organization",
-                    title: "Организация",
-                    width: 240
-                }, {
-                    field: "BIN",
-                    title: "БИН"
-                }, {
-                    field: "PhoneNumber",
-                    title: "Номер телефона"
-                }, {
-                    field: "BeginDate",
-                    title: "Дата начала действия",
-                    width: 150
-                },
-                { command: "destroy", title: "Удалить", width: 100 },
-                { command: "edit", title: "Редактировать", width: 100 }],
+                height: 550,
+                sortable: true,
+                toolbar: ["create", "search"],
+                columns: [
+                    { field: "Id", title: "Id", width: 240, hidden: true },
+                    { field: "Name", title: "Название", width: 240 },
+                    { field: "BIN", title: "БИН", width: 120 },
+                    { field: "PhoneNumber", title: "Номер телефона", width: 120 },
+                    { field: "BeginDate", title: "Дата начала действия", format: "{0:dd/MM/yyyy}", width: 120 },
+                    { command: ["edit", "destroy"], width: 105 }],
+                editable: "popup"
             });
+
+            
         });
     </script>
 </div>

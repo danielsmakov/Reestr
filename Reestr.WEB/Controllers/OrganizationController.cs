@@ -34,7 +34,8 @@ namespace Reestr.WEB.Controllers
         }
 
 
-        public ActionResult List()
+        [HttpGet]
+        public JsonResult List([DataSourceRequest]DataSourceRequest request)
         {
             OrganizationQuery query = new OrganizationQuery();
             query.IsDeleted = false;
@@ -42,7 +43,7 @@ namespace Reestr.WEB.Controllers
             query.Limit = 20;
             List<OrganizationDTO> organizationDTOs = _organizationManager.List(query);
 
-            return Json(organizationDTOs);
+            return Json(organizationDTOs.ToDataSourceResult(request));
         }
 
 
