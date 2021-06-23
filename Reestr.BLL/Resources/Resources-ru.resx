@@ -117,6 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="BeginDate" xml:space="preserve">
+    <value>Дата начала действия</value>
+  </data>
+  <data name="BIN" xml:space="preserve">
+    <value>БИН</value>
+  </data>
   <data name="BINAndIINLength" xml:space="preserve">
     <value>Поле должно содержать 12 цифр</value>
   </data>
@@ -126,8 +132,20 @@
   <data name="FullNameLength" xml:space="preserve">
     <value>Поле должно содержать от 8 до 150 символов</value>
   </data>
+  <data name="IIN" xml:space="preserve">
+    <value>ИИН</value>
+  </data>
   <data name="NameLength" xml:space="preserve">
     <value>Поле должно содержать от 3 до 300 символов</value>
+  </data>
+  <data name="Organization" xml:space="preserve">
+    <value>Организация</value>
+  </data>
+  <data name="Organizations" xml:space="preserve">
+    <value>Организации</value>
+  </data>
+  <data name="PhoneNumber" xml:space="preserve">
+    <value>Номер телефона</value>
   </data>
   <data name="PhoneNumberLength" xml:space="preserve">
     <value>Номер телефона должен содержать 10 цифр, начинающихся после +7/8</value>
@@ -137,5 +155,11 @@
   </data>
   <data name="Required" xml:space="preserve">
     <value>Обязательное поле</value>
+  </data>
+  <data name="Service" xml:space="preserve">
+    <value>Услуга</value>
+  </data>
+  <data name="Services" xml:space="preserve">
+    <value>Услуги</value>
   </data>
 </root>

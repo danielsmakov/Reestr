@@ -5,14 +5,18 @@
 @using Kendo.Mvc.UI
 
 
+
 <div id="example">
     <div class="demo-section k-content">
-
+        
         <h4>Date Picker:</h4>
-        <input id="datepicker" value="10/10/2020" title="datepicker" />
+        <input id="datepicker" value="@DateTime.Now" title="datepicker" />
 
         <h4>Combo Box:</h4>
         <input id="fabric" placeholder="Select fabric..." />
+        
+        <h4>Разметка:</h4>
+        <div id="grid"></div>
     </div>
     <script>
         $(document).ready(function () {
@@ -31,7 +35,45 @@
                 suggest: true,
                 index: 3
             });
-        })
+
+
+
+            $("#grid").kendoGrid({
+                dataSource: {
+                    type: "odata",
+                    transport: {
+                        read: "https://demos.telerik.com/kendo-ui/service/Northwind.svc/Customers"
+                    },
+                    pageSize: 20
+                },
+                height: 550,
+                sortable: true,
+                pageable: {
+                    refresh: true,
+                    buttonCount: 5
+                },
+                columns: [{
+                    template: "<div class='customer-photo'" +
+                        "style='background-image: url(../content/web/Customers/#:data.CustomerID#.jpg);'></div>" +
+                        "<div class='customer-name'>#: ContactName #</div>",
+                    field: "Organization",
+                    title: "Организация",
+                    width: 240
+                }, {
+                    field: "BIN",
+                    title: "БИН"
+                }, {
+                    field: "PhoneNumber",
+                    title: "Номер телефона"
+                }, {
+                    field: "BeginDate",
+                    title: "Дата начала действия",
+                    width: 150
+                },
+                { command: "destroy", title: "Удалить", width: 100 },
+                { command: "edit", title: "Редактировать", width: 100 }],
+            });
+        });
     </script>
 </div>
 

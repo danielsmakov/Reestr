@@ -2843,15 +2843,15 @@
     <Content Include="Scripts\kendo\2021.2.511\cultures\kendo.culture.aa-DJ.min.js.map" />
     <Content Include="Views\Organization\Error.cshtml" />
     <Content Include="Views\Organization\Success.cshtml" />
+    <Content Include="Views\Service\Services.cshtml" />
+    <Content Include="Views\ServiceReestr\ServiceReestr.cshtml" />
+    <Content Include="Views\EmployeeReestr\EmployeeReestr.cshtml" />
+    <Content Include="Views\ProducedService\ProducedServices.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Models\" />
     <Folder Include="Resources\" />
-    <Folder Include="Views\EmployeeReestr\" />
-    <Folder Include="Views\ProducedService\" />
-    <Folder Include="Views\ServiceReestr\" />
-    <Folder Include="Views\Service\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

@@ -27,7 +27,7 @@ namespace Reestr.WEB.Controllers
             _organizationManager = organizationManager;
         }
 
-
+        [Route("/")]
         public ActionResult Index()
         {
             return View("Organizations");

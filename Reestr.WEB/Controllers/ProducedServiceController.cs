@@ -31,7 +31,7 @@ namespace Reestr.WEB.Controllers
 
         public ActionResult Index()
         {
-            return View("ProducedService");
+            return View("ProducedServices");
         }
 
 

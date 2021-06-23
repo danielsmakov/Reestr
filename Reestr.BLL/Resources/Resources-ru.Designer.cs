@@ -61,6 +61,24 @@ namespace Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Дата начала действия.
+        /// </summary>
+        public static string BeginDate {
+            get {
+                return ResourceManager.GetString("BeginDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to БИН.
+        /// </summary>
+        public static string BIN {
+            get {
+                return ResourceManager.GetString("BIN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Поле должно содержать 12 цифр.
         /// </summary>
         public static string BINAndIINLength {
@@ -88,11 +106,47 @@ namespace Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ИИН.
+        /// </summary>
+        public static string IIN {
+            get {
+                return ResourceManager.GetString("IIN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Поле должно содержать от 3 до 300 символов.
         /// </summary>
         public static string NameLength {
             get {
                 return ResourceManager.GetString("NameLength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Организация.
+        /// </summary>
+        public static string Organization {
+            get {
+                return ResourceManager.GetString("Organization", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Организации.
+        /// </summary>
+        public static string Organizations {
+            get {
+                return ResourceManager.GetString("Organizations", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Номер телефона.
+        /// </summary>
+        public static string PhoneNumber {
+            get {
+                return ResourceManager.GetString("PhoneNumber", resourceCulture);
             }
         }
         
@@ -120,6 +174,24 @@ namespace Resources {
         public static string Required {
             get {
                 return ResourceManager.GetString("Required", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Услуга.
+        /// </summary>
+        public static string Service {
+            get {
+                return ResourceManager.GetString("Service", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Услуги.
+        /// </summary>
+        public static string Services {
+            get {
+                return ResourceManager.GetString("Services", resourceCulture);
             }
         }
     }
