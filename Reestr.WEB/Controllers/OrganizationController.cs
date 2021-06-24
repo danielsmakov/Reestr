@@ -11,6 +11,7 @@ using Reestr.BLL.Validation;
 using Reestr.DAL.Queries;
 using Reestr.DAL.Repositories;
 using System.Web.ModelBinding;
+using Reestr.WEB.Models;
 
 namespace Reestr.WEB.Controllers
 {
@@ -35,15 +36,26 @@ namespace Reestr.WEB.Controllers
 
 
         [HttpGet]
-        public JsonResult List([DataSourceRequest]DataSourceRequest request)
+        public JsonResult List(OrganizationQuery query)
         {
-            OrganizationQuery query = new OrganizationQuery();
+            /*OrganizationQuery query = new OrganizationQuery();
             query.IsDeleted = false;
             query.Offset = 0;
-            query.Limit = 20;
+            query.Limit = 20;*/
+
             List<OrganizationDTO> organizationDTOs = _organizationManager.List(query);
 
-            return Json(organizationDTOs.ToDataSourceResult(request));
+            ListModel<OrganizationDTO> listModel = new ListModel<OrganizationDTO>()
+            {
+                Data = organizationDTOs,
+                Total = organizationDTOs.First().TotalRecords
+            };
+
+            return new JsonResult()
+            {
+                Data = listModel,
+                JsonRequestBehavior = JsonRequestBehavior.AllowGet
+            };
         }
 
 

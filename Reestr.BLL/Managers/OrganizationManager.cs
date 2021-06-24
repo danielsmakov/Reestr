@@ -10,6 +10,7 @@ using Reestr.DAL.Entities;
 using Reestr.BLL.Validation;
 using Reestr.DAL.Queries;
 using System.ComponentModel.DataAnnotations;
+using Reestr.DAL.Repositories;
 
 namespace Reestr.BLL.Managers
 {
@@ -41,6 +42,7 @@ namespace Reestr.BLL.Managers
 
         public List<OrganizationDTO> List(IQuery query)
         {
+            var organizationRepository = _unitOfWork.Organizations as OrganizationRepository;
             try
             {
                 if (query is null)
@@ -48,7 +50,13 @@ namespace Reestr.BLL.Managers
 
                 List<Organization> organizationEntities = _unitOfWork.Organizations.List(query);
 
-                return Mapper.Map<List<OrganizationDTO>>(organizationEntities);
+                int totalRecords = organizationRepository.CountRecords(query);
+
+                List<OrganizationDTO> organizationDTOs = Mapper.Map<List<OrganizationDTO>>(organizationEntities);
+
+                organizationDTOs.First().TotalRecords = totalRecords;
+
+                return organizationDTOs;
             }
             catch(Exception ex)
             {

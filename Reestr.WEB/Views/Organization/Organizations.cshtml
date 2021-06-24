@@ -45,19 +45,27 @@
                         url: "/Organization/List",
                         type: "GET",
                         dataType: "json",
-                        contentType: "application/json; charset=utf-8"
+                        contentType: "application/json; charset=utf-8",
+                        data: function () {
+                            return {
+                                Offset:  $('#grid').data('kendoGrid').dataSource.skip() ,
+                                Limit:  $('#grid').data('kendoGrid').dataSource.pageSize() 
+                            }
+                        }
                     },
-                    parameterMap: function (options) {
-                        return JSON.stringify(options);
-                    }
+                    
                 },
                 batch: true,
                 pageSize: 20,
+                serverPaging: true,
+                autoSync: true,
                 schema: {
+                    data: "Data",
+                    total: "Total",
                     model: {
                         id: "Id",
                         fields: {
-                            Id: { type: "number", editable: false, nullable: true },
+                            Id: { type: "number", editable: false, nullable: true, hidden: true },
                             Name: { type: "string", validation: { required: true } },
                             BIN: { type: "string", validation: { required: true } },
                             PhoneNumber: { type: "string", validation: { required: true } },
@@ -71,10 +79,7 @@
 
             $("#grid").kendoGrid({
                 dataSource: dataSource,
-                pageable: {
-                    refresh: true,
-                    buttonCount: 5
-                },
+                pageable: true,
                 height: 550,
                 sortable: true,
                 toolbar: ["create", "search"],
@@ -88,7 +93,7 @@
                 editable: "popup"
             });
 
-            
+
         });
     </script>
 </div>

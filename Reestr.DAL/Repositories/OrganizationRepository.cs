@@ -82,6 +82,39 @@ namespace Reestr.DAL.Repositories
                 }
             }
         }
+
+        public int CountRecords(IQuery queryModel)
+        {
+            var query = queryModel as OrganizationQuery;
+
+            using (var _con = new SqlConnection(connectString))
+            {
+                try
+                {
+                    _con.Open();
+
+                    var where = "WHERE 1=1";
+
+                    if (query.IsDeleted)
+                    {
+                        where += " AND EndDate is NOT NULL ";
+                    }
+                    else
+                    {
+                        where += " AND EndDate is NULL ";
+                    }
+
+                    int totalRecords = _con.QuerySingle<int>($"SELECT COUNT(*) FROM Organizations {where}");
+
+                    _con.Close();
+                    return totalRecords;
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+        }
         public void Insert(Organization entity)
         {
             using (var _con = new SqlConnection(connectString))
