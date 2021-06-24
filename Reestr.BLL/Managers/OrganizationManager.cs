@@ -158,7 +158,7 @@ namespace Reestr.BLL.Managers
                 }
             }
 
-            
+
             // Проверка названия организации на кол-во символов
             if (model.Name.Trim().Length == 0)
             {
