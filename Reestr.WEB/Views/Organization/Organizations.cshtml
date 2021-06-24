@@ -116,7 +116,7 @@
                     { field: "BIN", title: "БИН", width: 120 },
                     { field: "PhoneNumber", title: "Номер телефона", width: 120 },
                     { field: "BeginDate", title: "Дата начала действия", format: "{0:dd/MM/yyyy}", width: 120 },
-                    { command: ["edit", "destroy"], width: 105 }],
+                    { command: [{ name: "edit", text: "Редактировать" }, { name: "destroy", text: "Удалить" } ], width: 170 }],
                 editable: "popup"
             });
 
