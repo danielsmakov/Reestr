@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.SqlTypes;
 using System.Linq;
 using System.Resources;
@@ -38,7 +39,7 @@ namespace Reestr.BLL.DTOs
         [Required(ErrorMessageResourceType = typeof(Resources.Resources_ru), ErrorMessageResourceName = "Required")]
         public DateTime BeginDate { get; set; }
 
-
+        [NotMapped()]
         public int TotalRecords { get; set; }
 
     }

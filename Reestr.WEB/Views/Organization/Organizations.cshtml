@@ -45,7 +45,7 @@
                         url: "/Organization/List",
                         type: "GET",
                         dataType: "json",
-                        contentType: "application/json; charset=utf-8",
+                        contentType: "",
                         data: function () {
                             return {
                                 Offset:  $('#grid').data('kendoGrid').dataSource.skip() ,
@@ -53,7 +53,12 @@
                             }
                         }
                     },
-                    
+                    create: {
+                        url: "/Organization/Insert",
+                        type: "POST",
+                        dataType: "json",
+                        contentType: "application/json; charset=utf-8"
+                    }
                 },
                 batch: true,
                 pageSize: 20,
