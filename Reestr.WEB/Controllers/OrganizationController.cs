@@ -77,10 +77,10 @@ namespace Reestr.WEB.Controllers
         }
 
 
-        /*[HttpPost]*/
-        public ActionResult Delete(OrganizationDTO organizationDTO)
+        [HttpPost]
+        public ActionResult Delete(int id)
         {
-            var validationResponse = _organizationManager.Delete(organizationDTO.Id);
+            var validationResponse = _organizationManager.Delete(id);
 
             return Json(validationResponse);
         }

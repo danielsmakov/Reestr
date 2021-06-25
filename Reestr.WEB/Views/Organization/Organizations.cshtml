@@ -8,61 +8,13 @@
 
 <div id="example">
     <div class="demo-section k-content">
-
-        <div id="window">
-            <p>sailbfvlasbvosaibcosaibclasblvjbsalkbjjjjjjjjjvsavascasasdas</p>
-        </div>
-        <span id="undo" class="k-button hide-on-narrow">Добавить запись</span>
-
-        <h4>Combo Box:</h4>
-        <input id="fabric" placeholder="Select fabric..." />
         
         <h4>Реестр организаций:</h4>
         <div id="grid"></div>
     </div>
     <script>
+
         $(document).ready(function () {
-
-            var myWindow = $("#window"),
-                undo = $("#undo");
-
-            undo.click(function () {
-                myWindow.data("kendoWindow").open();
-                undo.fadeOut();
-            });
-
-            function onClose() {
-                undo.fadeIn();
-            };
-
-            myWindow.kendoWindow({
-                width: "600px",
-                height: "600px",
-                title: "Добавление организации",
-                visible: false,
-                actions: [
-                    "Minimize",
-                    "Maximize",
-                    "Close"
-                ],
-                close: onClose
-            }).data("kendoWindow").center();
-
-            $("#fabric").kendoComboBox({
-                dataTextField: "text",
-                dataValueField: "value",
-                dataSource: [
-                    { text: "Cotton", value: "1" },
-                    { text: "Polyester", value: "2" },
-                    { text: "Cotton/Polyester", value: "3" },
-                    { text: "Rib Knit", value: "4" },
-                ],
-                filter: "contains",
-                suggest: true,
-                index: 3
-            });
-
-
 
             var dataSource = new kendo.data.DataSource({
                 type: "odata",
@@ -91,10 +43,26 @@
                     },
                     destroy: {
                         url: "/Organization/Delete",
-                        @*type: "POST",*@
-                        contentType: "application/json",
+                        type: "POST",
                         dataType: "json"
-                    }
+                    },
+                    parameterMap: function (data, type) {
+                        if (type == "destroy") {
+                            return { Id: kendo.stringify(data.Id) };
+                        }
+                        if (type == "update") {
+                            return kendo.stringify(data);
+                        }
+                        if (type == "create") {
+                            return kendo.stringify(data);
+                        }
+                        if (type == "read") {
+                            return {
+                                Offset: $('#grid').data('kendoGrid').dataSource.skip(),
+                                Limit: $('#grid').data('kendoGrid').dataSource.pageSize()
+                            }
+                        }
+                    },
                 },
                 pageSize: 20,
                 serverPaging: true,
@@ -104,7 +72,7 @@
                     model: {
                         id: "Id",
                         fields: {
-                            Id: { type: "number", editable: false, nullable: true},
+                            Id: { type: "number", editable: false, nullable: true },
                             Name: { type: "string", validation: { required: true } },
                             BIN: { type: "string", validation: { required: true } },
                             PhoneNumber: { type: "string", validation: { required: true } },
@@ -119,6 +87,7 @@
             $("#grid").kendoGrid({
                 dataSource: dataSource,
                 pageable: true,
+@*                autobind: true,*@
                 height: 550,
                 sortable: true,
                 toolbar: [{ name: "create", text: "Добавить" }, { name: "search", text: "Поиск..." }],
@@ -131,7 +100,6 @@
                 editable: {
                     mode: "popup",
                     confirmation: "Вы уверены, что хотите удалить запись?",
-                    command: [{ name: "edit", text: { edit: "Подтвердить", cancel: "Отмена" } }],
                     window: {
                         title: "",
                         animation: true,
