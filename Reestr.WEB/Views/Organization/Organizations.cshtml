@@ -83,6 +83,17 @@
                         url: "/Organization/Insert",
                         type: "POST",
                         dataType: "json",
+                    },
+                    update: {
+                        url: "/Organization/Update",
+                        type: "POST",
+                        dataType: "json"
+                    },
+                    destroy: {
+                        url: "/Organization/Delete",
+                        @*type: "POST",*@
+                        contentType: "application/json",
+                        dataType: "json"
                     }
                 },
                 pageSize: 20,
@@ -93,7 +104,7 @@
                     model: {
                         id: "Id",
                         fields: {
-                            Id: { type: "number", editable: false, nullable: true, hidden: true },
+                            Id: { type: "number", editable: false, nullable: true},
                             Name: { type: "string", validation: { required: true } },
                             BIN: { type: "string", validation: { required: true } },
                             PhoneNumber: { type: "string", validation: { required: true } },
@@ -110,14 +121,28 @@
                 pageable: true,
                 height: 550,
                 sortable: true,
-                toolbar: ["create", "search"],
+                toolbar: [{ name: "create", text: "Добавить" }, { name: "search", text: "Поиск..." }],
                 columns: [
                     { field: "Name", title: "Название", width: 240 },
                     { field: "BIN", title: "БИН", width: 120 },
                     { field: "PhoneNumber", title: "Номер телефона", width: 120 },
                     { field: "BeginDate", title: "Дата начала действия", format: "{0:dd/MM/yyyy}", width: 120 },
-                    { command: [{ name: "edit", text: "Редактировать" }, { name: "destroy", text: "Удалить" } ], width: 170 }],
-                editable: "popup"
+                    { command: [{ name: "edit", text: "Редактировать" }, { name: "destroy", text: "Удалить" }], width: 170 }],
+                editable: {
+                    mode: "popup",
+                    confirmation: "Вы уверены, что хотите удалить запись?",
+                    command: [{ name: "edit", text: { edit: "Подтвердить", cancel: "Отмена" } }],
+                    window: {
+                        title: "",
+                        animation: true,
+                    },
+                },
+                edit: function (e) {
+                    var update = $(e.container).parent().find(".k-grid-update");
+                    var cancel = $(e.container).parent().find(".k-grid-cancel");
+                    $(update).html('<span class="k-update">Подтвердить</span>');
+                    $(cancel).html('<span class="k-cancel">Отмена</span>');
+                },	
             });
 
 

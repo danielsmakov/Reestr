@@ -77,7 +77,7 @@ namespace Reestr.WEB.Controllers
         }
 
 
-        [HttpPost]
+        /*[HttpPost]*/
         public ActionResult Delete(OrganizationDTO organizationDTO)
         {
             var validationResponse = _organizationManager.Delete(organizationDTO.Id);
