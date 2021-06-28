@@ -40,12 +40,24 @@ namespace Reestr.WEB.Controllers
         {
 
             List<OrganizationDTO> organizationDTOs = _organizationManager.List(query);
-
-            ListModel<OrganizationDTO> listModel = new ListModel<OrganizationDTO>()
+            ListModel<OrganizationDTO> listModel = new ListModel<OrganizationDTO>();
+            if (organizationDTOs.Any())
             {
-                Data = organizationDTOs,
-                Total = organizationDTOs.First().TotalRecords
-            };
+                listModel = new ListModel<OrganizationDTO>()
+                {
+                    Data = organizationDTOs,
+                    Total = organizationDTOs.First().TotalRecords
+                };
+            }
+            else
+            {
+                listModel = new ListModel<OrganizationDTO>()
+                {
+                    Data = organizationDTOs,
+                    Total = 0
+                };
+            }
+            
 
             return new JsonResult()
             {

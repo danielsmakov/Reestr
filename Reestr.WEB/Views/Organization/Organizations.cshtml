@@ -12,7 +12,12 @@
         <h4>Реестр организаций:</h4>
         <div id="grid"></div>
     </div>
-    <script>
+
+    <script type="text/x-template" id="searchbar">
+        <input type="text" name="txtsearch" id="txtsearch" class="k-textbox" placeholder="Поиск..." style="width: 270px"/>
+    </script>
+
+    <script type="text/javascript">
 
         $(document).ready(function () {
 
@@ -63,7 +68,8 @@
                                 Limit: $('#grid').data('kendoGrid').dataSource.pageSize(),
                                 @*FieldToSortBy: data.sort[0][field],
                                 DirectionOfSorting: data.sort[0][dir],*@
-                                SortingParameters: data.sort
+                                SortingParameters: data.sort,
+                                Name: $("#txtsearch").val()
                             }
                         }
                     },
@@ -74,6 +80,10 @@
                 sort: [
                     { field: "Name", dir: "asc" },
                     { field: "Name", dir: "desc" }
+                ],
+                serverFiltering: true,
+                filter: [
+                    { field: "Name", operation: "eq", }
                 ],
                 schema: {
                     data: "Data",
@@ -98,7 +108,11 @@
                 pageable: true,
                 height: 550,
                 sortable: true,
-                toolbar: [{ name: "create", text: "Добавить" }, { name: "search", text: "Поиск..." }],
+                filterable: true,
+                toolbar: [{ name: "create", text: "Добавить" }, {template: kendo.template($("#searchbar").html())}],
+                search: {
+                    fields: ["Name"],
+                },
                 columns: [
                     { field: "Name", title: "Название", width: 240 },
                     { field: "BIN", title: "БИН", width: 120, hidden: true },
@@ -119,8 +133,17 @@
                     $(update).html('<span class="k-update">Подтвердить</span>');
                     $(cancel).html('<span class="k-cancel">Отмена</span>');
                 },
-            });
+            }).data('kendoGrid');
 
+            $("body").on("keyup", "#txtsearch", function () {
+                var value = $("#txtsearch").val();
+                $("#grid").data("kendoGrid").dataSource.filter({
+                    logic: "or",
+                    filters: [
+                        {field: "Name", operator: "contains", value: value}
+                    ]
+                })
+            })
 
         });
     </script>

@@ -17,6 +17,7 @@ namespace Reestr.DAL.Queries
         public string DirectionOfSorting { get; set; }*/
 
         public Dictionary<string, string>[] SortingParameters { get; set; }
+        
 }
 
 }

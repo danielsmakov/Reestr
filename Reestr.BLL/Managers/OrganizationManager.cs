@@ -54,7 +54,10 @@ namespace Reestr.BLL.Managers
 
                 List<OrganizationDTO> organizationDTOs = Mapper.Map<List<OrganizationDTO>>(organizationEntities);
 
-                organizationDTOs.First().TotalRecords = totalRecords;
+                if (organizationDTOs.Any())
+                {
+                    organizationDTOs.First().TotalRecords = totalRecords;
+                }
 
                 return organizationDTOs;
             }
