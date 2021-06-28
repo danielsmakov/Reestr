@@ -49,6 +49,7 @@ namespace Reestr.DAL.Repositories
                     _con.Open();
 
                     var where = "WHERE 1=1";
+                    var orderBy = " ORDER BY (SELECT NULL)";
                     if (query.IsDeleted)
                     {
                         where += " AND EndDate is not null ";
@@ -60,9 +61,20 @@ namespace Reestr.DAL.Repositories
                     if (!string.IsNullOrEmpty(query.Name)) where += " AND Name like @Name";
                     if (!string.IsNullOrEmpty(query.BIN)) where += " AND BIN like @BIN";
                     if (query.Id != 0) where += " AND Id NOT like @Id";
+                    if (!(query.SortingParameters is null))
+                    {
+                        if (!string.IsNullOrEmpty(query.SortingParameters[0]["field"]))
+                        {
+                            if (!string.IsNullOrEmpty(query.SortingParameters[0]["dir"]))
+                            {
+                                orderBy = $" ORDER BY {query.SortingParameters[0]["field"]} {query.SortingParameters[0]["dir"]}";
+                            }
+                        }
+                    }
+
 
                     List<Organization> orgs = _con.Query<Organization>($"SELECT * FROM Organizations {where} " +
-                        $"ORDER BY (SELECT NULL)" +
+                        $"{orderBy} " +
                         $"OFFSET @Offset ROWS FETCH NEXT @Limit ROWS ONLY",
                         new
                         {

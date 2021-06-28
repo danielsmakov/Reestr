@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Reestr.DAL.Queries
 {
-    public class ServiceQuery : PaginationQuery, IQuery
+    public class ServiceQuery : PaginationSortingQuery, IQuery
     {
         public int Id { get; set; }
 

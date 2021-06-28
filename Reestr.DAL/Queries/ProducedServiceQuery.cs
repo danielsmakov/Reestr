@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Reestr.DAL.Queries
 {
-    public class ProducedServiceQuery : PaginationQuery, IQuery
+    public class ProducedServiceQuery : PaginationSortingQuery, IQuery
     {
         public bool IsDeleted { get; set; }
     }

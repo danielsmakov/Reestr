@@ -79,7 +79,7 @@
     <Compile Include="Queries\EmployeeReestrQuery.cs" />
     <Compile Include="Queries\OrganizationQuery.cs" />
     <Compile Include="Queries\ProducedServiceQuery.cs" />
-    <Compile Include="Queries\PaginationQuery.cs" />
+    <Compile Include="Queries\PaginationSortingQuery.cs" />
     <Compile Include="Queries\ServiceQuery.cs" />
     <Compile Include="Queries\ServiceReestrQuery.cs" />
     <Compile Include="Repositories\EmployeeReestrRepository.cs" />

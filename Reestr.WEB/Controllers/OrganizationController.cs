@@ -38,10 +38,6 @@ namespace Reestr.WEB.Controllers
         [HttpGet]
         public JsonResult List(OrganizationQuery query)
         {
-            /*OrganizationQuery query = new OrganizationQuery();
-            query.IsDeleted = false;
-            query.Offset = 0;
-            query.Limit = 20;*/
 
             List<OrganizationDTO> organizationDTOs = _organizationManager.List(query);
 

@@ -57,15 +57,24 @@
                             return kendo.stringify(data);
                         }
                         if (type == "read") {
+                            console.log(data);
                             return {
                                 Offset: $('#grid').data('kendoGrid').dataSource.skip(),
-                                Limit: $('#grid').data('kendoGrid').dataSource.pageSize()
+                                Limit: $('#grid').data('kendoGrid').dataSource.pageSize(),
+                                @*FieldToSortBy: data.sort[0][field],
+                                DirectionOfSorting: data.sort[0][dir],*@
+                                SortingParameters: data.sort
                             }
                         }
                     },
                 },
                 pageSize: 20,
                 serverPaging: true,
+                serverSorting: true,
+                sort: [
+                    { field: "Name", dir: "asc" },
+                    { field: "Name", dir: "desc" }
+                ],
                 schema: {
                     data: "Data",
                     total: "Total",
@@ -87,13 +96,12 @@
             $("#grid").kendoGrid({
                 dataSource: dataSource,
                 pageable: true,
-@*                autobind: true,*@
                 height: 550,
                 sortable: true,
                 toolbar: [{ name: "create", text: "Добавить" }, { name: "search", text: "Поиск..." }],
                 columns: [
                     { field: "Name", title: "Название", width: 240 },
-                    { field: "BIN", title: "БИН", width: 120 },
+                    { field: "BIN", title: "БИН", width: 120, hidden: true },
                     { field: "PhoneNumber", title: "Номер телефона", width: 120 },
                     { field: "BeginDate", title: "Дата начала действия", format: "{0:dd/MM/yyyy}", width: 120 },
                     { command: [{ name: "edit", text: "Редактировать" }, { name: "destroy", text: "Удалить" }], width: 170 }],
@@ -110,7 +118,7 @@
                     var cancel = $(e.container).parent().find(".k-grid-cancel");
                     $(update).html('<span class="k-update">Подтвердить</span>');
                     $(cancel).html('<span class="k-cancel">Отмена</span>');
-                },	
+                },
             });
 
 

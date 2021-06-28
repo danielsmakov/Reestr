@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Reestr.DAL.Queries
 {
-    public class ServiceReestrQuery : PaginationQuery, IQuery
+    public class ServiceReestrQuery : PaginationSortingQuery, IQuery
     {
         public string OrganizationName { get; set; }
 
