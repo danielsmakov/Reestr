@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Title = "Organizations";
+    ViewBag.Title = "Реестр организаций";
 }
 @model List<Reestr.BLL.DTOs.OrganizationDTO>
 @using Kendo.Mvc.UI
@@ -14,7 +14,9 @@
     </div>
 
     <script type="text/x-template" id="searchbar">
-        <input type="text" name="txtsearch" id="txtsearch" class="k-textbox" placeholder="Поиск..." style="width: 270px"/>
+        <input type="text" name="txtsearch" id="txtsearch" class="k-textbox" placeholder="Поиск..." style="width: 270px" />
+        <label for="isdeleted" style="margin-left: 30px">Искать удаленные записи?</label>
+        <input type="checkbox" name="isdeleted" id="isdeleted" class="k-checkbox" />
     </script>
 
     <script type="text/javascript">
@@ -29,12 +31,6 @@
                         type: "GET",
                         dataType: "json",
                         contentType: "",
-                        data: function () {
-                            return {
-                                Offset: $('#grid').data('kendoGrid').dataSource.skip(),
-                                Limit: $('#grid').data('kendoGrid').dataSource.pageSize()
-                            }
-                        }
                     },
                     create: {
                         url: "/Organization/Insert",
@@ -66,10 +62,9 @@
                             return {
                                 Offset: $('#grid').data('kendoGrid').dataSource.skip(),
                                 Limit: $('#grid').data('kendoGrid').dataSource.pageSize(),
-                                @*FieldToSortBy: data.sort[0][field],
-                                DirectionOfSorting: data.sort[0][dir],*@
                                 SortingParameters: data.sort,
-                                Name: $("#txtsearch").val()
+                                Name: $("#txtsearch").val(),
+                                IsDeleted: document.getElementById('isdeleted').checked
                             }
                         }
                     },
@@ -80,10 +75,6 @@
                 sort: [
                     { field: "Name", dir: "asc" },
                     { field: "Name", dir: "desc" }
-                ],
-                serverFiltering: true,
-                filter: [
-                    { field: "Name", operation: "eq", }
                 ],
                 schema: {
                     data: "Data",
@@ -103,13 +94,12 @@
 
 
 
-            $("#grid").kendoGrid({
+            var grid = $("#grid").kendoGrid({
                 dataSource: dataSource,
                 pageable: true,
                 height: 550,
                 sortable: true,
-                filterable: true,
-                toolbar: [{ name: "create", text: "Добавить" }, {template: kendo.template($("#searchbar").html())}],
+                toolbar: [{ name: "create", text: "Добавить" }, { template: kendo.template($("#searchbar").html()) }],
                 search: {
                     fields: ["Name"],
                 },
@@ -137,13 +127,41 @@
 
             $("body").on("keyup", "#txtsearch", function () {
                 var value = $("#txtsearch").val();
-                $("#grid").data("kendoGrid").dataSource.filter({
-                    logic: "or",
-                    filters: [
-                        {field: "Name", operator: "contains", value: value}
-                    ]
-                })
-            })
+                if (value.length < 3) {
+                    return
+                }
+                else {
+                    $("#grid").data("kendoGrid").dataSource.filter({
+                        logic: "or",
+                        filters: [
+                            { field: "Name", operator: "contains", value: value }
+                        ]
+                    })
+                }
+            });
+
+            $("body").on("click", "#isdeleted", function () {
+                if (document.getElementById('isdeleted').click) {
+                    var value = $("#isdeleted").val();
+                    $("#grid").data("kendoGrid").dataSource.filter({
+                        logic: "or",
+                        filters: [
+                            { field: "EndDate" }
+                        ]
+                    })
+                }
+                
+            });
+
+        @*var checkbox = grid.find("#isdeleted");
+            var value = $("#isdeleted").val();
+            checkbox.on("click", function () {
+                grid.data("kendoGrid").dataSource.read({ IsDeleted: value});
+            });*@
+
+            @*if (document.getElementById('isdeleted').click) {
+
+            }*@
 
         });
     </script>
