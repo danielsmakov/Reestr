@@ -11,6 +11,7 @@ using Reestr.BLL.Validation;
 using Reestr.DAL.Queries;
 using Reestr.DAL.Repositories;
 using System.Web.ModelBinding;
+using Reestr.WEB.Models;
 
 namespace Reestr.WEB.Controllers
 {
@@ -35,14 +36,34 @@ namespace Reestr.WEB.Controllers
         }
 
 
-        public ActionResult List()
+        public ActionResult List(ServiceQuery query)
         {
-            ServiceQuery query = new ServiceQuery();
-            query.Offset = 0;
-            query.Limit = 20;
-            List<ServiceDTO> serviceDTOs = _serviceManager.List(query);
 
-            return Json(serviceDTOs);
+            List<ServiceDTO> serviceDTOs = _serviceManager.List(query);
+            ListModel<ServiceDTO> listModel = new ListModel<ServiceDTO>();
+            if (serviceDTOs.Any())
+            {
+                listModel = new ListModel<ServiceDTO>()
+                {
+                    Data = serviceDTOs,
+                    Total = serviceDTOs.First().TotalRecords
+                };
+            }
+            else
+            {
+                listModel = new ListModel<ServiceDTO>()
+                {
+                    Data = serviceDTOs,
+                    Total = 0
+                };
+            }
+
+
+            return new JsonResult()
+            {
+                Data = listModel,
+                JsonRequestBehavior = JsonRequestBehavior.AllowGet
+            };
         }
 
         [HttpPost]

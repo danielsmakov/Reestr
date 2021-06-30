@@ -1,8 +1,169 @@
 ﻿
 @{
-    ViewBag.Title = "Services";
+    ViewBag.Title = "Услуги";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Services</h2>
+
+<div>
+
+    <h3>Услуги</h3>
+    <div id="grid"></div>
+
+    <script type="text/x-template" id="searchbar">
+        <input type="text" name="txtsearch" id="txtsearch" class="k-textbox" placeholder="Поиск..." style="width: 270px" />
+        <label for="isdeleted" style="margin-left: 30px">Искать удаленные записи?</label>
+        <input type="checkbox" name="isdeleted" id="isdeleted" class="k-checkbox" />
+    </script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            var dataSource = new kendo.data.DataSource({
+                type: "odata",
+                transport: {
+                    read: {
+                        url: "/Service/List",
+                        type: "GET",
+                        dataType: "json",
+                        contentType: "",
+                    },
+                    create: {
+                        url: "/Service/Insert",
+                        type: "POST",
+                        dataType: "json",
+                    },
+                    update: {
+                        url: "/Service/Update",
+                        type: "POST",
+                        dataType: "json"
+                    },
+                    destroy: {
+                        url: "/Service/Delete",
+                        type: "POST",
+                        dataType: "json"
+                    },
+                    parameterMap: function (data, type) {
+                        if (type == "destroy") {
+                            return { Id: kendo.stringify(data.Id) };
+                        }
+                        if (type == "update") {
+                            return kendo.stringify(data);
+                        }
+                        if (type == "create") {
+                            return kendo.stringify(data);
+                        }
+                        if (type == "read") {
+                            console.log(data);
+                            return {
+                                Offset: $('#grid').data('kendoGrid').dataSource.skip(),
+                                Limit: $('#grid').data('kendoGrid').dataSource.pageSize(),
+                                SortingParameters: data.sort,
+                                Name: $("#txtsearch").val(),
+                                IsDeleted: document.getElementById('isdeleted').checked
+                            }
+                        }
+                    },
+                },
+                pageSize: 20,
+                serverPaging: true,
+                serverSorting: true,
+                sort: [
+                    { field: "Name", dir: "asc" },
+                    { field: "Name", dir: "desc" }
+                ],
+                schema: {
+                    data: "Data",
+                    total: "Total",
+                    model: {
+                        id: "Id",
+                        fields: {
+                            Id: { type: "number", editable: false, nullable: true },
+                            Name: { type: "string", validation: { required: true } },
+                            Code: { type: "string", validation: { required: true } },
+                            Price: { type: "number", validation: { required: true } },
+                            BeginDate: { type: "date", validation: { required: true } }
+                        }
+                    }
+                }
+            });
+
+
+
+            var grid = $("#grid").kendoGrid({
+                dataSource: dataSource,
+                pageable: true,
+                height: 550,
+                sortable: true,
+                toolbar: [{ name: "create", text: "Добавить" }, { template: kendo.template($("#searchbar").html()) }],
+                search: {
+                    fields: ["Name"],
+                },
+                columns: [
+                    { field: "Name", title: "Название", width: 240 },
+                    { field: "Code", title: "Код", width: 120, hidden: true },
+                    { field: "Price", title: "Стоимость", width: 120 },
+                    { field: "BeginDate", title: "Дата начала действия", format: "{0:dd/MM/yyyy}", width: 120 },
+                    { command: [{ name: "edit", text: "Редактировать" }, { name: "destroy", text: "Удалить" }], width: 170 }],
+                editable: {
+                    mode: "popup",
+                    confirmation: "Вы уверены, что хотите удалить запись?",
+                    window: {
+                        title: "",
+                        animation: true,
+                    },
+                },
+                edit: function (e) {
+                    var update = $(e.container).parent().find(".k-grid-update");
+                    var cancel = $(e.container).parent().find(".k-grid-cancel");
+                    $(update).html('<span class="k-update">Подтвердить</span>');
+                    $(cancel).html('<span class="k-cancel">Отмена</span>');
+                },
+            }).data('kendoGrid');
+
+            $("body").on("keyup", "#txtsearch", function () {
+                var value = $("#txtsearch").val();
+                if (value.length < 3) {
+                    return
+                }
+                else {
+                    $("#grid").data("kendoGrid").dataSource.filter({
+                        logic: "or",
+                        filters: [
+                            { field: "Name", operator: "contains", value: value }
+                        ]
+                    })
+                }
+            });
+
+            $("body").on("click", "#isdeleted", function () {
+                if (document.getElementById('isdeleted').click) {
+                    var value = $("#isdeleted").val();
+                    $("#grid").data("kendoGrid").dataSource.filter({
+                        logic: "or",
+                        filters: [
+                            { field: "EndDate" }
+                        ]
+                    })
+                }
+
+            });
+
+        @*var checkbox = grid.find("#isdeleted");
+            var value = $("#isdeleted").val();
+            checkbox.on("click", function () {
+                grid.data("kendoGrid").dataSource.read({ IsDeleted: value});
+            });*@
+
+            @*if (document.getElementById('isdeleted').click) {
+
+            }*@
+
+        });
+    </script>
+</div>
+
+
+
 

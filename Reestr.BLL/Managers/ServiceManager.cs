@@ -10,6 +10,7 @@ using Reestr.DAL.Entities;
 using Reestr.BLL.Validation;
 using Reestr.DAL.Queries;
 using System.ComponentModel.DataAnnotations;
+using Reestr.DAL.Repositories;
 
 namespace Reestr.BLL.Managers
 {
@@ -41,6 +42,7 @@ namespace Reestr.BLL.Managers
 
         public List<ServiceDTO> List(IQuery query)
         {
+            var serviceRepository = _unitOfWork.Services as ServiceRepository;
             try
             {
                 if (query is null)
@@ -48,7 +50,16 @@ namespace Reestr.BLL.Managers
 
                 List<Service> serviceEntities = _unitOfWork.Services.List(query);
 
-                return Mapper.Map<List<ServiceDTO>>(serviceEntities);
+                int totalRecords = serviceRepository.CountRecords(query);
+
+                List<ServiceDTO> serviceDTOs = Mapper.Map<List<ServiceDTO>>(serviceEntities);
+
+                if (serviceDTOs.Any())
+                {
+                    serviceDTOs.First().TotalRecords = totalRecords;
+                }
+
+                return serviceDTOs;
             }
             catch (Exception ex)
             {

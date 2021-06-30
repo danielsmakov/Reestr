@@ -48,6 +48,7 @@ namespace Reestr.DAL.Repositories
                     _con.Open();
 
                     var where = "WHERE 1=1";
+                    var orderBy = " ORDER BY (SELECT NULL)";
                     if (query.IsDeleted)
                     {
                         where += " AND EndDate is not null ";
@@ -59,9 +60,19 @@ namespace Reestr.DAL.Repositories
                     if (!string.IsNullOrEmpty(query.Name)) where += " AND Name like @Name";
                     if (!string.IsNullOrEmpty(query.Code)) where += " AND Code like @Code";
                     if (query.Id != 0) where += " AND Id NOT like @Id";
+                    if (!(query.SortingParameters is null))
+                    {
+                        if (!string.IsNullOrEmpty(query.SortingParameters[0]["field"]))
+                        {
+                            if (!string.IsNullOrEmpty(query.SortingParameters[0]["dir"]))
+                            {
+                                orderBy = $" ORDER BY {query.SortingParameters[0]["field"]} {query.SortingParameters[0]["dir"]}";
+                            }
+                        }
+                    }
 
                     List<Service> orgs = _con.Query<Service>($"SELECT * FROM Services {where} " +
-                        $"ORDER BY (SELECT NULL)" +
+                        $"{orderBy} " +
                         $"OFFSET @Offset ROWS FETCH NEXT @Limit ROWS ONLY",
                         new
                         {
@@ -81,6 +92,40 @@ namespace Reestr.DAL.Repositories
                 }
             }
         }
+
+        public int CountRecords(IQuery queryModel)
+        {
+            var query = queryModel as ServiceQuery;
+
+            using (var _con = new SqlConnection(connectString))
+            {
+                try
+                {
+                    _con.Open();
+
+                    var where = "WHERE 1=1";
+
+                    if (query.IsDeleted)
+                    {
+                        where += " AND EndDate is NOT NULL ";
+                    }
+                    else
+                    {
+                        where += " AND EndDate is NULL ";
+                    }
+
+                    int totalRecords = _con.QuerySingle<int>($"SELECT COUNT(*) FROM Services {where}");
+
+                    _con.Close();
+                    return totalRecords;
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+        }
+
         public void Insert(Service entity)
         {
             using (var _con = new SqlConnection(connectString))
