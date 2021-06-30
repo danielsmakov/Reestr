@@ -25,7 +25,8 @@ namespace Reestr.WEB
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
-                      "~/Content/site.css"));
+                      "~/Content/site.css",
+                      "~/Content/main.css"));
             bundles.Add(new ScriptBundle("~/Kendo/js").Include(
                 "~/Scripts/kendo/2021.2.511/kendo.all.min.js",
                 "~/Scripts/kendo/2021.2.511/jszip.min.js",
