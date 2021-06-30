@@ -95,7 +95,7 @@ namespace Reestr.WEB.Controllers
 
 
         // AddOneRecord и AddRecords использовались для наполнения базы данных записями
-        public void AddOneRecord()
+        /*public void AddOneRecord()
         {
             var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
             Random random = new Random();
@@ -123,7 +123,6 @@ namespace Reestr.WEB.Controllers
                 };
                 _serviceManager.Insert(serviceDTO);
             }
-
-        }
+        }*/
     }
 }

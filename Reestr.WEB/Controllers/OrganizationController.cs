@@ -94,7 +94,8 @@ namespace Reestr.WEB.Controllers
         }
 
 
-        public void AddOneRecord()
+        // AddOneRecord и AddRecords использовались для наполнения базы данных записями
+        /*public void AddOneRecord()
         {
             Random random = new Random();
             OrganizationDTO serviceDTO = new OrganizationDTO
@@ -120,7 +121,6 @@ namespace Reestr.WEB.Controllers
                 };
                 _organizationManager.Insert(serviceDTO);
             }
-
-        }
+        }*/
     }
 }
