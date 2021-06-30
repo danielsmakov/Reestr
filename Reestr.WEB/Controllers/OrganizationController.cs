@@ -92,5 +92,35 @@ namespace Reestr.WEB.Controllers
 
             return Json(validationResponse);
         }
+
+
+        public void AddOneRecord()
+        {
+            Random random = new Random();
+            OrganizationDTO serviceDTO = new OrganizationDTO
+            {
+                Name = "Organization " + $"{1}",
+                BIN = $"{random.Next(100000, 999999)}" + $"{random.Next(100000, 999999)}",
+                PhoneNumber = $"{random.Next(10000, 99999)}" + $"{random.Next(10000, 99999)}",
+                BeginDate = DateTime.Now
+            };
+            _organizationManager.Insert(serviceDTO);
+        }
+        public void AddRecords()
+        {
+            Random random = new Random();
+            for (int i = 2; i <= 1000; i++)
+            {
+                OrganizationDTO serviceDTO = new OrganizationDTO
+                {
+                    Name = "Organization " + $"{i}",
+                    BIN = $"{random.Next(100000, 999999)}" + $"{random.Next(100000, 999999)}",
+                    PhoneNumber = $"{random.Next(10000, 99999)}" + $"{random.Next(10000, 99999)}",
+                    BeginDate = DateTime.Now
+                };
+                _organizationManager.Insert(serviceDTO);
+            }
+
+        }
     }
 }
