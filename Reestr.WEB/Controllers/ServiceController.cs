@@ -34,7 +34,7 @@ namespace Reestr.WEB.Controllers
         {
             return View("Services");
         }
-
+        
 
         public ActionResult List(ServiceQuery query)
         {
@@ -89,5 +89,41 @@ namespace Reestr.WEB.Controllers
             
             return Json(validationResponse);
         }
+
+
+
+
+
+        // AddOneRecord и AddRecords использовались для наполнения базы данных записями
+        /*public void AddOneRecord()
+        {
+            var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            Random random = new Random();
+            ServiceDTO serviceDTO = new ServiceDTO
+            {
+                Name = "Service 1",
+                Code = $"{chars[random.Next(chars.Length)]}" + $"{random.Next(10, 99)}" + "." + $"{random.Next(100, 999)}" + "." + $"{random.Next(100, 999)}",
+                Price = random.Next(100, 100000),
+                BeginDate = DateTime.Now
+            };
+            _serviceManager.Insert(serviceDTO);
+        }
+        public void AddRecords()
+        {
+            var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            Random random = new Random();
+            for (int i = 2; i <= 100; i++)
+            {
+                ServiceDTO serviceDTO = new ServiceDTO
+                {
+                    Name = "Service " + $"{i}",
+                    Code = $"{chars[random.Next(chars.Length)]}" + $"{random.Next(10, 99)}" + "." + $"{random.Next(100, 999)}" + "." + $"{random.Next(100, 999)}",
+                    Price = (decimal)random.Next(100, 100000),
+                    BeginDate = DateTime.Now
+                };
+                _serviceManager.Insert(serviceDTO);
+            }
+
+        }*/
     }
 }

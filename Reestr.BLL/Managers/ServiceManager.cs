@@ -221,9 +221,9 @@ namespace Reestr.BLL.Managers
 
 
 
-            if (model.Code.Trim().Length != 9)
+            if (model.Code.Trim().Length != 11)
             {
-                validationResponse.ErrorMessage = "Код должен содержать ровно 9 символов";
+                validationResponse.ErrorMessage = "Код должен содержать ровно 11 символов(вместе с точками)";
                 validationResponse.Status = false;
                 return validationResponse;
             }
