@@ -112,7 +112,7 @@ namespace Reestr.WEB.Controllers
         {
             var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
             Random random = new Random();
-            for (int i = 2; i <= 100; i++)
+            for (int i = 101; i <= 1000; i++)
             {
                 ServiceDTO serviceDTO = new ServiceDTO
                 {
@@ -123,7 +123,6 @@ namespace Reestr.WEB.Controllers
                 };
                 _serviceManager.Insert(serviceDTO);
             }
-
         }*/
     }
 }
