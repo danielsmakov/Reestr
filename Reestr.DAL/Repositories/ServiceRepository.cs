@@ -48,7 +48,7 @@ namespace Reestr.DAL.Repositories
                     _con.Open();
 
                     var where = "WHERE 1=1";
-                    var orderBy = " ORDER BY (SELECT NULL)";
+                    var orderBy = " ORDER BY BeginDate DESC";
                     if (query.IsDeleted)
                     {
                         where += " AND EndDate is not null ";
@@ -57,8 +57,8 @@ namespace Reestr.DAL.Repositories
                     {
                         where += " AND EndDate is null ";
                     }
-                    if (!string.IsNullOrEmpty(query.Name)) where += " AND Name like @Name";
-                    if (!string.IsNullOrEmpty(query.Code)) where += " AND Code like @Code";
+                    if (!string.IsNullOrEmpty(query.Name)) where += " AND Name LIKE @Name";
+                    if (!string.IsNullOrEmpty(query.Code)) where += " AND Code LIKE @Code";
                     if (query.Id != 0) where += " AND Id NOT like @Id";
                     if (!(query.SortingParameters is null))
                     {
@@ -73,16 +73,7 @@ namespace Reestr.DAL.Repositories
 
                     List<Service> orgs = _con.Query<Service>($"SELECT * FROM Services {where} " +
                         $"{orderBy} " +
-                        $"OFFSET @Offset ROWS FETCH NEXT @Limit ROWS ONLY",
-                        new
-                        {
-                            Id = query.Id,
-                            Name = query.Name,
-                            Offset = query.Offset,
-                            Limit = query.Limit,
-                            Code = query.Code
-                        }
-                        ).ToList();
+                        $"OFFSET @Offset ROWS FETCH NEXT @Limit ROWS ONLY", query).ToList();
                     _con.Close();
                     return orgs;
                 }
@@ -113,8 +104,11 @@ namespace Reestr.DAL.Repositories
                     {
                         where += " AND EndDate is NULL ";
                     }
+                    if (!string.IsNullOrEmpty(query.Name)) where += " AND Name LIKE @Name";
+                    if (!string.IsNullOrEmpty(query.Code)) where += " AND Code LIKE @Code";
+                    if (query.Id != 0) where += " AND Id NOT like @Id";
 
-                    int totalRecords = _con.QuerySingle<int>($"SELECT COUNT(*) FROM Services {where}");
+                    int totalRecords = _con.QuerySingle<int>($"SELECT COUNT(*) FROM Services {where}", query);
 
                     _con.Close();
                     return totalRecords;
@@ -132,13 +126,8 @@ namespace Reestr.DAL.Repositories
             {
                 try
                 {
-                    DynamicParameters param = new DynamicParameters();
-                    param.Add("@Name", entity.Name);
-                    param.Add("@Code", entity.Code);
-                    param.Add("@Price", entity.Price);
-                    param.Add("@BeginDate", entity.BeginDate);
                     _con.Open();
-                    _con.Execute("INSERT INTO Services (Name, Code, Price, BeginDate) VALUES (@Name, @Code, @Price, @BeginDate)", param);
+                    _con.Execute("INSERT INTO Services (Name, Code, Price, BeginDate) VALUES (@Name, @Code, @Price, @BeginDate)", entity);
                     _con.Close();
                 }
                 catch (Exception ex)
@@ -153,14 +142,8 @@ namespace Reestr.DAL.Repositories
             {
                 try
                 {
-                    DynamicParameters param = new DynamicParameters();
-                    param.Add("@Id", entity.Id);
-                    param.Add("@Name", entity.Name);
-                    param.Add("@Code", entity.Code);
-                    param.Add("@Price", entity.Price);
-                    param.Add("@BeginDate", entity.BeginDate);
                     _con.Open();
-                    _con.Execute("UPDATE Services SET Name = @Name, Code = @Code, Price = @Price, BeginDate = @BeginDate WHERE Id = @Id", param);
+                    _con.Execute("UPDATE Services SET Name = @Name, Code = @Code, Price = @Price, BeginDate = @BeginDate WHERE Id = @Id", entity);
                     _con.Close();
                 }
                 catch (Exception ex)

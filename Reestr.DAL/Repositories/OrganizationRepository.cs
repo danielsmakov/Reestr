@@ -49,7 +49,7 @@ namespace Reestr.DAL.Repositories
                     _con.Open();
 
                     var where = "WHERE 1=1";
-                    var orderBy = " ORDER BY (SELECT NULL)";
+                    var orderBy = " ORDER BY BeginDate DESC";
                     if (query.IsDeleted)
                     {
                         where += " AND EndDate is not null ";
@@ -58,8 +58,10 @@ namespace Reestr.DAL.Repositories
                     {
                         where += " AND EndDate is null ";
                     }
-                    if (!string.IsNullOrEmpty(query.Name)) where += " AND Name like @Name";
-                    if (!string.IsNullOrEmpty(query.BIN)) where += " AND BIN like @BIN";
+                    if (!string.IsNullOrEmpty(query.Name)) where += " AND Name LIKE @Name";
+                    /*if (!string.IsNullOrEmpty(query.NameToSearchFor)) where += " AND PATINDEX('%@NameToSearchFor%', Name) > 0";*/
+                    if (!string.IsNullOrEmpty(query.NameToSearchFor)) where += " AND Name LIKE @NameToSearchFor";
+                    if (!string.IsNullOrEmpty(query.BIN)) where += " AND BIN LIKE @BIN";
                     if (query.Id != 0) where += " AND Id NOT like @Id";
                     if (!(query.SortingParameters is null))
                     {
@@ -75,16 +77,7 @@ namespace Reestr.DAL.Repositories
 
                     List<Organization> orgs = _con.Query<Organization>($"SELECT * FROM Organizations {where} " +
                         $"{orderBy} " +
-                        $"OFFSET @Offset ROWS FETCH NEXT @Limit ROWS ONLY",
-                        new
-                        {
-                            Id = query.Id,
-                            Name = query.Name,
-                            Offset = query.Offset,
-                            Limit = query.Limit,
-                            BIN = query.BIN
-                        }
-                        ).ToList();
+                        $"OFFSET @Offset ROWS FETCH NEXT @Limit ROWS ONLY", query).ToList();
                     _con.Close();
                     return orgs;
                 }
@@ -106,17 +99,20 @@ namespace Reestr.DAL.Repositories
                     _con.Open();
 
                     var where = "WHERE 1=1";
-
                     if (query.IsDeleted)
                     {
-                        where += " AND EndDate is NOT NULL ";
+                        where += " AND EndDate is not null ";
                     }
                     else
                     {
-                        where += " AND EndDate is NULL ";
+                        where += " AND EndDate is null ";
                     }
+                    if (!string.IsNullOrEmpty(query.Name)) where += " AND Name LIKE @Name";
+                    if (!string.IsNullOrEmpty(query.NameToSearchFor)) where += " AND Name LIKE @NameToSearchFor";
+                    if (!string.IsNullOrEmpty(query.BIN)) where += " AND BIN LIKE @BIN";
+                    if (query.Id != 0) where += " AND Id NOT like @Id";
 
-                    int totalRecords = _con.QuerySingle<int>($"SELECT COUNT(*) FROM Organizations {where}");
+                    int totalRecords = _con.QuerySingle<int>($"SELECT COUNT(*) FROM Organizations {where}", query);
 
                     _con.Close();
                     return totalRecords;
@@ -133,13 +129,8 @@ namespace Reestr.DAL.Repositories
             {
                 try
                 {
-                    DynamicParameters param = new DynamicParameters();
-                    param.Add("@Name", entity.Name);
-                    param.Add("@BIN", entity.BIN);
-                    param.Add("@PhoneNumber", entity.PhoneNumber);
-                    param.Add("@BeginDate", entity.BeginDate);
                     _con.Open();
-                    _con.Execute("INSERT INTO Organizations (Name, BIN, PhoneNumber, BeginDate) VALUES ( @Name, @BIN, @PhoneNumber, @BeginDate)", param);
+                    _con.Execute("INSERT INTO Organizations (Name, BIN, PhoneNumber, BeginDate) VALUES ( @Name, @BIN, @PhoneNumber, @BeginDate)", entity);
                     _con.Close();
                 }
                 catch (Exception ex)
@@ -154,14 +145,8 @@ namespace Reestr.DAL.Repositories
             {
                 try
                 {
-                    DynamicParameters param = new DynamicParameters();
-                    param.Add("@Id", entity.Id);
-                    param.Add("@Name", entity.Name);
-                    param.Add("@BIN", entity.BIN);
-                    param.Add("@PhoneNumber", entity.PhoneNumber);
-                    param.Add("@BeginDate", entity.BeginDate);
                     _con.Open();
-                    _con.Execute("UPDATE Organizations SET Name = @Name, BIN = @BIN, PhoneNumber = @PhoneNumber, BeginDate = @BeginDate WHERE Id = @Id", param);
+                    _con.Execute("UPDATE Organizations SET Name = @Name, BIN = @BIN, PhoneNumber = @PhoneNumber, BeginDate = @BeginDate WHERE Id = @Id", entity);
                     _con.Close();
                 }
                 catch (Exception ex)
@@ -186,6 +171,5 @@ namespace Reestr.DAL.Repositories
                 }
             }
         }
-
     }
 }
