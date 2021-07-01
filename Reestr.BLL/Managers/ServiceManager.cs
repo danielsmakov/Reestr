@@ -163,21 +163,6 @@ namespace Reestr.BLL.Managers
             }
 
 
-
-            if (model.Name.Trim().Length == 0)
-            {
-                validationResponse.ErrorMessage = "Название услуги обязательно к заполнению";
-                validationResponse.Status = false;
-                return validationResponse;
-            }
-
-            if (model.Name.Trim().Length > 300)
-            {
-                validationResponse.ErrorMessage = "Название услуги не должно превышвать 300 символов";
-                validationResponse.Status = false;
-                return validationResponse;
-            }
-
             if (model.Id > 0)
             {
                 Service serviceEntity = _unitOfWork.Services.Get(model.Id);
@@ -220,14 +205,6 @@ namespace Reestr.BLL.Managers
             }
 
 
-
-            if (model.Code.Trim().Length != 11)
-            {
-                validationResponse.ErrorMessage = "Код должен содержать ровно 11 символов(вместе с точками)";
-                validationResponse.Status = false;
-                return validationResponse;
-            }
-
             if (model.Id > 0)
             {
                 Service serviceEntity = _unitOfWork.Services.Get(model.Id);
@@ -269,14 +246,6 @@ namespace Reestr.BLL.Managers
                 }
             }
 
-
-
-            if (model.Price < 0)
-            {
-                validationResponse.ErrorMessage = "Цена услуги не может быть отрицательной";
-                validationResponse.Status = false;
-                return validationResponse;
-            }
 
             return validationResponse;
         }

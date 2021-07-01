@@ -161,22 +161,6 @@ namespace Reestr.BLL.Managers
                 }
             }
 
-
-            // Проверка названия организации на кол-во символов
-            if (model.Name.Trim().Length == 0)
-            {
-                validationResponse.ErrorMessage = "Название организации обязательно к заполнению";
-                validationResponse.Status = false;
-                return validationResponse;
-            }
-
-            if (model.Name.Trim().Length > 300)
-            {
-                validationResponse.ErrorMessage = "Название организации не должно превышвать 300 символов";
-                validationResponse.Status = false;
-                return validationResponse;
-            }
-
             
             if (model.Id > 0) // Выявление операции Update() - Id больше дефолтного значения
             {
@@ -222,14 +206,6 @@ namespace Reestr.BLL.Managers
             }
 
 
-            
-            if (model.BIN.Trim().Length != 12)
-            {
-                validationResponse.ErrorMessage = "БИН должен содержать ровно 12 символов";
-                validationResponse.Status = false;
-                return validationResponse;
-            }
-
             // Уникальность БИНа проверяется аналогично уникальности названия организации
             if (model.Id > 0)
             {
@@ -269,15 +245,6 @@ namespace Reestr.BLL.Managers
                     validationResponse.Status = false;
                     return validationResponse;
                 }
-            }
-            
-
-
-            if (model.PhoneNumber.Trim().Length != 10)
-            {
-                validationResponse.ErrorMessage = "Телефон должен включать ровно 10 цифр, без каких-либо других знаков";
-                validationResponse.Status = false;
-                return validationResponse;
             }
 
             return validationResponse;
