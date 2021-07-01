@@ -58,7 +58,6 @@
                             return kendo.stringify(data);
                         }
                         if (type == "read") {
-                            console.log(data);
                             return {
                                 Offset: $('#grid').data('kendoGrid').dataSource.skip(),
                                 Limit: $('#grid').data('kendoGrid').dataSource.pageSize(),
