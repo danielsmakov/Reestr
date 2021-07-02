@@ -115,11 +115,11 @@ namespace Reestr.DAL.Repositories
                 command.Parameters.AddWithValue("@BeginDate", entity.BeginDate);
                 SqlTransaction transaction = null;
 
+                _con.Open();
+                transaction = _con.BeginTransaction();
+
                 try
                 {
-                    _con.Open();
-                    transaction = _con.BeginTransaction();
-
                     command.Transaction = transaction;
 
                     command.ExecuteNonQuery();
