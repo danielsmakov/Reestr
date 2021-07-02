@@ -12,7 +12,10 @@ namespace Reestr.DAL.Entities
 
         public int OrganizationId { get; set; }
 
+        public Organization Organization { get; set; }
         public int ServiceId { get; set; }
+
+        public Service Service { get; set; }
 
         public decimal Price { get; set; }
 

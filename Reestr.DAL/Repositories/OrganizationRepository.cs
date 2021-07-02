@@ -5,6 +5,7 @@ using Reestr.DAL.Queries;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data;
 using System.Data.SqlClient;
 using System.Data.SqlTypes;
 using System.Linq;
@@ -106,9 +107,33 @@ namespace Reestr.DAL.Repositories
         {
             using (var _con = new SqlConnection(connectString))
             {
-                _con.Open();
-                _con.Execute("INSERT INTO Organizations (Name, BIN, PhoneNumber, BeginDate) VALUES ( @Name, @BIN, @PhoneNumber, @BeginDate)", entity);
-                _con.Close();
+
+                SqlCommand command = new SqlCommand($"INSERT INTO Organizations (Name, BIN, PhoneNumber, BeginDate) VALUES ( @Name, @BIN, @PhoneNumber, @BeginDate)", _con);
+                command.Parameters.AddWithValue("@Name", entity.Name);
+                command.Parameters.AddWithValue("@BIN", entity.BIN);
+                command.Parameters.AddWithValue("@PhoneNumber", entity.PhoneNumber);
+                command.Parameters.AddWithValue("@BeginDate", entity.BeginDate);
+                SqlTransaction transaction = null;
+
+                try
+                {
+                    _con.Open();
+                    transaction = _con.BeginTransaction();
+
+                    command.Transaction = transaction;
+
+                    command.ExecuteNonQuery();
+
+                    transaction.Commit();
+                }
+                catch
+                {
+                    transaction.Rollback();
+                }
+                finally
+                {
+                    _con.Close();
+                }
             }
         }
         public void Update(Organization entity)

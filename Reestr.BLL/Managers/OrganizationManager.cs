@@ -11,9 +11,7 @@ using Reestr.BLL.Validation;
 using Reestr.DAL.Queries;
 using System.ComponentModel.DataAnnotations;
 using Reestr.DAL.Repositories;
-using System.Security.AccessControl;
-using System.Resources;
-using Reestr;
+using Resources;
 
 namespace Reestr.BLL.Managers
 {
@@ -39,7 +37,7 @@ namespace Reestr.BLL.Managers
             }
             catch(Exception)
             {
-                throw new Exception("Уважаемый пользователь, к сожалению, возникла ошибка при обращении к серверу. Приносим вам свои извинения. Пожалуйста, повторите вашу операцию позднее или обратитесь в службу поддержки.");
+                throw new Exception(Resources_ru.ErrorInRepositories);
             }
         }
 
@@ -66,7 +64,7 @@ namespace Reestr.BLL.Managers
             }
             catch(Exception)
             {
-                throw new Exception("Уважаемый пользователь, к сожалению, возникла ошибка при обращении к серверу. Приносим вам свои извинения. Пожалуйста, повторите вашу операцию позднее или обратитесь в службу поддержки.");
+                throw new Exception(Resources_ru.ErrorInRepositories);
             }
         }
 
@@ -85,7 +83,7 @@ namespace Reestr.BLL.Managers
             catch (Exception)
             {
                 validationResponse.Status = false;
-                validationResponse.ErrorMessage = "Уважаемый пользователь, к сожалению, возникла ошибка при обращении к серверу. Приносим вам свои извинения. Пожалуйста, повторите вашу операцию позднее или обратитесь в службу поддержки.";
+                validationResponse.ErrorMessage = Resources_ru.ErrorInRepositories;
             }
 
             return validationResponse;
@@ -106,7 +104,7 @@ namespace Reestr.BLL.Managers
             catch(Exception)
             {
                 validationResponse.Status = false;
-                validationResponse.ErrorMessage = "Уважаемый пользователь, к сожалению, возникла ошибка при обращении к серверу. Приносим вам свои извинения. Пожалуйста, повторите вашу операцию позднее или обратитесь в службу поддержки.";
+                validationResponse.ErrorMessage = Resources_ru.ErrorInRepositories;
             }
 
             return validationResponse;
@@ -125,7 +123,7 @@ namespace Reestr.BLL.Managers
             catch (Exception)
             {
                 validationResponse.Status = false;
-                validationResponse.ErrorMessage = "Уважаемый пользователь, к сожалению, возникла ошибка при обращении к серверу. Приносим вам свои извинения. Пожалуйста, повторите вашу операцию позднее или обратитесь в службу поддержки.";
+                validationResponse.ErrorMessage = Resources_ru.ErrorInRepositories;
             }
 
             return validationResponse;

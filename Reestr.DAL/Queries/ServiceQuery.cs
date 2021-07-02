@@ -13,6 +13,8 @@ namespace Reestr.DAL.Queries
 
         public string Name { get; set; }
 
+        public string NameToSearchFor { get; set; }
+
         public string Code { get; set; }
 
         public bool IsDeleted { get; set; }

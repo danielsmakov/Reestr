@@ -11,6 +11,7 @@ using Reestr.BLL.Validation;
 using Reestr.DAL.Queries;
 using System.ComponentModel.DataAnnotations;
 using Reestr.DAL.Repositories;
+using Resources;
 
 namespace Reestr.BLL.Managers
 {
@@ -34,9 +35,9 @@ namespace Reestr.BLL.Managers
 
                 return Mapper.Map<ServiceDTO>(serviceEntity);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw new Exception(Resources_ru.ErrorInRepositories);
             }
         }
 
@@ -61,9 +62,9 @@ namespace Reestr.BLL.Managers
 
                 return serviceDTOs;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw new Exception("К сожалению, не удалось вывести записи на страницу.");
+                throw new Exception(Resources_ru.ErrorInRepositories);
             }
         }
 
@@ -79,10 +80,10 @@ namespace Reestr.BLL.Managers
 
                 _unitOfWork.Services.Insert(serviceEntity);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 validationResponse.Status = false;
-                validationResponse.ErrorMessage = ex.Message;
+                validationResponse.ErrorMessage = Resources_ru.ErrorInRepositories;
             }
 
             return validationResponse;
@@ -100,10 +101,10 @@ namespace Reestr.BLL.Managers
 
                 _unitOfWork.Services.Update(serviceEntity);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 validationResponse.Status = false;
-                validationResponse.ErrorMessage = ex.Message;
+                validationResponse.ErrorMessage = Resources_ru.ErrorInRepositories;
             }
 
             return validationResponse;
@@ -120,10 +121,10 @@ namespace Reestr.BLL.Managers
 
                 _unitOfWork.Services.Delete(id);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 validationResponse.Status = false;
-                validationResponse.ErrorMessage = ex.Message;
+                validationResponse.ErrorMessage = Resources_ru.ErrorInRepositories;
             }
 
             return validationResponse;
