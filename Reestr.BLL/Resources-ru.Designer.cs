@@ -39,7 +39,7 @@ namespace Resources {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Reestr.BLL.Resources.Resources-ru", typeof(Resources_ru).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Reestr.BLL.Resources-ru", typeof(Resources_ru).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -93,6 +93,15 @@ namespace Resources {
         public static string CodeRegex {
             get {
                 return ResourceManager.GetString("CodeRegex", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Уважаемый пользователь, к сожалению, возникла ошибка при обращении к серверу. Приносим вам свои извинения. Пожалуйста, повторите вашу операцию позднее или обратитесь в службу поддержки..
+        /// </summary>
+        public static string ErrorInRepositories {
+            get {
+                return ResourceManager.GetString("ErrorInRepositories", resourceCulture);
             }
         }
         

@@ -129,6 +129,9 @@
   <data name="CodeRegex" xml:space="preserve">
     <value>Необходимо ввести код в формате A12.123.123 с указанием точек, первая буква в диапазоне от A до Z</value>
   </data>
+  <data name="ErrorInRepositories" xml:space="preserve">
+    <value>Уважаемый пользователь, к сожалению, возникла ошибка при обращении к серверу. Приносим вам свои извинения. Пожалуйста, повторите вашу операцию позднее или обратитесь в службу поддержки.</value>
+  </data>
   <data name="FullNameLength" xml:space="preserve">
     <value>Поле должно содержать от 8 до 150 символов</value>
   </data>

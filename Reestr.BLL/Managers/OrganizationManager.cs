@@ -11,6 +11,9 @@ using Reestr.BLL.Validation;
 using Reestr.DAL.Queries;
 using System.ComponentModel.DataAnnotations;
 using Reestr.DAL.Repositories;
+using System.Security.AccessControl;
+using System.Resources;
+using Reestr;
 
 namespace Reestr.BLL.Managers
 {
@@ -34,9 +37,9 @@ namespace Reestr.BLL.Managers
 
                 return Mapper.Map<OrganizationDTO>(organizationEntity);
             }
-            catch(Exception ex)
+            catch(Exception)
             {
-                throw ex;
+                throw new Exception("Уважаемый пользователь, к сожалению, возникла ошибка при обращении к серверу. Приносим вам свои извинения. Пожалуйста, повторите вашу операцию позднее или обратитесь в службу поддержки.");
             }
         }
 
@@ -61,9 +64,9 @@ namespace Reestr.BLL.Managers
 
                 return organizationDTOs;
             }
-            catch(Exception ex)
+            catch(Exception)
             {
-                throw ex;
+                throw new Exception("Уважаемый пользователь, к сожалению, возникла ошибка при обращении к серверу. Приносим вам свои извинения. Пожалуйста, повторите вашу операцию позднее или обратитесь в службу поддержки.");
             }
         }
 
@@ -79,10 +82,10 @@ namespace Reestr.BLL.Managers
 
                 _unitOfWork.Organizations.Insert(organizationEntity);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 validationResponse.Status = false;
-                validationResponse.ErrorMessage = ex.Message;
+                validationResponse.ErrorMessage = "Уважаемый пользователь, к сожалению, возникла ошибка при обращении к серверу. Приносим вам свои извинения. Пожалуйста, повторите вашу операцию позднее или обратитесь в службу поддержки.";
             }
 
             return validationResponse;
@@ -100,10 +103,10 @@ namespace Reestr.BLL.Managers
 
                 _unitOfWork.Organizations.Update(organizationEntity);
             }
-            catch(Exception ex)
+            catch(Exception)
             {
                 validationResponse.Status = false;
-                validationResponse.ErrorMessage = ex.Message;
+                validationResponse.ErrorMessage = "Уважаемый пользователь, к сожалению, возникла ошибка при обращении к серверу. Приносим вам свои извинения. Пожалуйста, повторите вашу операцию позднее или обратитесь в службу поддержки.";
             }
 
             return validationResponse;
@@ -119,10 +122,10 @@ namespace Reestr.BLL.Managers
                     throw new Exception("Id не может быть равен или меньше 0");
                 _unitOfWork.Organizations.Delete(id);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 validationResponse.Status = false;
-                validationResponse.ErrorMessage = ex.Message;
+                validationResponse.ErrorMessage = "Уважаемый пользователь, к сожалению, возникла ошибка при обращении к серверу. Приносим вам свои извинения. Пожалуйста, повторите вашу операцию позднее или обратитесь в службу поддержки.";
             }
 
             return validationResponse;

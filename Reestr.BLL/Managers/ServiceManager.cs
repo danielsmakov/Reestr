@@ -63,7 +63,7 @@ namespace Reestr.BLL.Managers
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw new Exception("К сожалению, не удалось вывести записи на страницу.");
             }
         }
 

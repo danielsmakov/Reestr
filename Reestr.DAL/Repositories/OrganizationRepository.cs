@@ -20,22 +20,15 @@ namespace Reestr.DAL.Repositories
         {
             using (SqlConnection _con = new SqlConnection(connectString))
             {
-                try
-                {
-                    _con.Open();
-                    Organization org = _con.QuerySingle<Organization>("SELECT * FROM Organizations WHERE Id = @Id",
-                        new
-                        {
-                            id = id
-                        }
-                        );
-                    _con.Close();
-                    return org;
-                }
-                catch (Exception ex)
-                {
-                    throw ex;
-                }
+                _con.Open();
+                Organization org = _con.QuerySingle<Organization>("SELECT * FROM Organizations WHERE Id = @Id",
+                    new
+                    {
+                        id = id
+                    }
+                    );
+                _con.Close();
+                return org;
             }
         }
         public List<Organization> List(IQuery queryModel)
@@ -44,47 +37,40 @@ namespace Reestr.DAL.Repositories
 
             using (var _con = new SqlConnection(connectString))
             {
-                try
-                {
-                    _con.Open();
+                _con.Open();
 
-                    var where = "WHERE 1=1";
-                    var orderBy = " ORDER BY BeginDate DESC";
-                    if (query.IsDeleted)
+                var where = "WHERE 1=1";
+                var orderBy = " ORDER BY BeginDate DESC";
+                if (query.IsDeleted)
+                {
+                    where += " AND EndDate is not null ";
+                }
+                else
+                {
+                    where += " AND EndDate is null ";
+                }
+                if (!string.IsNullOrEmpty(query.Name)) where += " AND Name LIKE @Name";
+                /*if (!string.IsNullOrEmpty(query.NameToSearchFor)) where += " AND PATINDEX('%@NameToSearchFor%', Name) > 0";*/
+                if (!string.IsNullOrEmpty(query.NameToSearchFor)) where += " AND Name LIKE @NameToSearchFor";
+                if (!string.IsNullOrEmpty(query.BIN)) where += " AND BIN LIKE @BIN";
+                if (query.Id != 0) where += " AND Id NOT like @Id";
+                if (!(query.SortingParameters is null))
+                {
+                    if (!string.IsNullOrEmpty(query.SortingParameters[0]["field"]))
                     {
-                        where += " AND EndDate is not null ";
-                    }
-                    else
-                    {
-                        where += " AND EndDate is null ";
-                    }
-                    if (!string.IsNullOrEmpty(query.Name)) where += " AND Name LIKE @Name";
-                    /*if (!string.IsNullOrEmpty(query.NameToSearchFor)) where += " AND PATINDEX('%@NameToSearchFor%', Name) > 0";*/
-                    if (!string.IsNullOrEmpty(query.NameToSearchFor)) where += " AND Name LIKE @NameToSearchFor";
-                    if (!string.IsNullOrEmpty(query.BIN)) where += " AND BIN LIKE @BIN";
-                    if (query.Id != 0) where += " AND Id NOT like @Id";
-                    if (!(query.SortingParameters is null))
-                    {
-                        if (!string.IsNullOrEmpty(query.SortingParameters[0]["field"]))
+                        if (!string.IsNullOrEmpty(query.SortingParameters[0]["dir"]))
                         {
-                            if (!string.IsNullOrEmpty(query.SortingParameters[0]["dir"]))
-                            {
-                                orderBy = $" ORDER BY {query.SortingParameters[0]["field"]} {query.SortingParameters[0]["dir"]}";
-                            }
+                            orderBy = $" ORDER BY {query.SortingParameters[0]["field"]} {query.SortingParameters[0]["dir"]}";
                         }
                     }
+                }
 
 
-                    List<Organization> orgs = _con.Query<Organization>($"SELECT * FROM Organizations {where} " +
-                        $"{orderBy} " +
-                        $"OFFSET @Offset ROWS FETCH NEXT @Limit ROWS ONLY", query).ToList();
-                    _con.Close();
-                    return orgs;
-                }
-                catch (Exception ex)
-                {
-                    throw ex;
-                }
+                List<Organization> orgs = _con.Query<Organization>($"SELECT * FROM Organizations {where} " +
+                    $"{orderBy} " +
+                    $"OFFSET @Offset ROWS FETCH NEXT @Limit ROWS ONLY", query).ToList();
+                _con.Close();
+                return orgs;
             }
         }
 
@@ -94,81 +80,53 @@ namespace Reestr.DAL.Repositories
 
             using (var _con = new SqlConnection(connectString))
             {
-                try
+                _con.Open();
+
+                var where = "WHERE 1=1";
+                if (query.IsDeleted)
                 {
-                    _con.Open();
-
-                    var where = "WHERE 1=1";
-                    if (query.IsDeleted)
-                    {
-                        where += " AND EndDate is not null ";
-                    }
-                    else
-                    {
-                        where += " AND EndDate is null ";
-                    }
-                    if (!string.IsNullOrEmpty(query.Name)) where += " AND Name LIKE @Name";
-                    if (!string.IsNullOrEmpty(query.NameToSearchFor)) where += " AND Name LIKE @NameToSearchFor";
-                    if (!string.IsNullOrEmpty(query.BIN)) where += " AND BIN LIKE @BIN";
-                    if (query.Id != 0) where += " AND Id NOT like @Id";
-
-                    int totalRecords = _con.QuerySingle<int>($"SELECT COUNT(*) FROM Organizations {where}", query);
-
-                    _con.Close();
-                    return totalRecords;
+                    where += " AND EndDate is not null ";
                 }
-                catch (Exception ex)
+                else
                 {
-                    throw ex;
+                    where += " AND EndDate is null ";
                 }
+                if (!string.IsNullOrEmpty(query.Name)) where += " AND Name LIKE @Name";
+                if (!string.IsNullOrEmpty(query.NameToSearchFor)) where += " AND Name LIKE @NameToSearchFor";
+                if (!string.IsNullOrEmpty(query.BIN)) where += " AND BIN LIKE @BIN";
+                if (query.Id != 0) where += " AND Id NOT like @Id";
+
+                int totalRecords = _con.QuerySingle<int>($"SELECT COUNT(*) FROM Organizations {where}", query);
+
+                _con.Close();
+                return totalRecords;
             }
         }
         public void Insert(Organization entity)
         {
             using (var _con = new SqlConnection(connectString))
             {
-                try
-                {
-                    _con.Open();
-                    _con.Execute("INSERT INTO Organizations (Name, BIN, PhoneNumber, BeginDate) VALUES ( @Name, @BIN, @PhoneNumber, @BeginDate)", entity);
-                    _con.Close();
-                }
-                catch (Exception ex)
-                {
-                    throw ex;
-                }
+                _con.Open();
+                _con.Execute("INSERT INTO Organizations (Name, BIN, PhoneNumber, BeginDate) VALUES ( @Name, @BIN, @PhoneNumber, @BeginDate)", entity);
+                _con.Close();
             }
         }
         public void Update(Organization entity)
         {
             using (var _con = new SqlConnection(connectString))
             {
-                try
-                {
-                    _con.Open();
-                    _con.Execute("UPDATE Organizations SET Name = @Name, BIN = @BIN, PhoneNumber = @PhoneNumber, BeginDate = @BeginDate WHERE Id = @Id", entity);
-                    _con.Close();
-                }
-                catch (Exception ex)
-                {
-                    throw ex;
-                }
+                _con.Open();
+                _con.Execute("UPDATE Organizations SET Name = @Name, BIN = @BIN, PhoneNumber = @PhoneNumber, BeginDate = @BeginDate WHERE Id = @Id", entity);
+                _con.Close();
             }
         }
         public void Delete(int id)
         {
             using (var _con = new SqlConnection(connectString))
             {
-                try
-                {
-                    _con.Open();
-                    _con.Execute("UPDATE Organizations SET EndDate = GETDATE() WHERE Id = @Id", new { id });
-                    _con.Close();
-                }
-                catch (Exception ex)
-                {
-                    throw ex;
-                }
+                _con.Open();
+                _con.Execute("UPDATE Organizations SET EndDate = GETDATE() WHERE Id = @Id", new { id });
+                _con.Close();
             }
         }
     }
