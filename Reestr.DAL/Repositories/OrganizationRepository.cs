@@ -52,7 +52,7 @@ namespace Reestr.DAL.Repositories
                 }
                 if (!string.IsNullOrEmpty(query.Name)) where += " AND Name LIKE @Name";
                 /*if (!string.IsNullOrEmpty(query.NameToSearchFor)) where += " AND PATINDEX('%@NameToSearchFor%', Name) > 0";*/
-                if (!string.IsNullOrEmpty(query.NameToSearchFor)) where += " AND Name LIKE @NameToSearchFor";
+                if (!string.IsNullOrEmpty(query.NameToSearchFor)) where += " AND Name LIKE '%@NameToSearchFor%'";
                 if (!string.IsNullOrEmpty(query.BIN)) where += " AND BIN LIKE @BIN";
                 if (query.Id != 0) where += " AND Id NOT like @Id";
                 if (!(query.SortingParameters is null))
@@ -108,11 +108,14 @@ namespace Reestr.DAL.Repositories
             using (var _con = new SqlConnection(connectString))
             {
 
-                SqlCommand command = new SqlCommand($"INSERT INTO Organizations (Name, BIN, PhoneNumber, BeginDate) VALUES ( @Name, @BIN, @PhoneNumber, @BeginDate)", _con);
+                /*SqlCommand command = new SqlCommand($"INSERT INTO Organizations (Name, BIN, PhoneNumber, BeginDate) VALUES ( @Name, @BIN, @PhoneNumber, @BeginDate)", _con);
                 command.Parameters.AddWithValue("@Name", entity.Name);
                 command.Parameters.AddWithValue("@BIN", entity.BIN);
                 command.Parameters.AddWithValue("@PhoneNumber", entity.PhoneNumber);
-                command.Parameters.AddWithValue("@BeginDate", entity.BeginDate);
+                command.Parameters.AddWithValue("@BeginDate", entity.BeginDate);*/
+
+                string sqlQuery = "INSERT INTO Organizations (Name, BIN, PhoneNumber, BeginDate) VALUES ( @Name, @BIN, @PhoneNumber, @BeginDate)";
+
                 SqlTransaction transaction = null;
 
                 _con.Open();
@@ -120,9 +123,7 @@ namespace Reestr.DAL.Repositories
 
                 try
                 {
-                    command.Transaction = transaction;
-
-                    command.ExecuteNonQuery();
+                    _con.Execute(sqlQuery, entity, transaction: transaction);
 
                     transaction.Commit();
                 }
