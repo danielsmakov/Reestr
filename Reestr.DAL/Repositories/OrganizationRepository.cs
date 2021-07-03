@@ -52,7 +52,7 @@ namespace Reestr.DAL.Repositories
                 }
                 if (!string.IsNullOrEmpty(query.Name)) where += " AND Name LIKE @Name";
                 /*if (!string.IsNullOrEmpty(query.NameToSearchFor)) where += " AND PATINDEX('%@NameToSearchFor%', Name) > 0";*/
-                if (!string.IsNullOrEmpty(query.NameToSearchFor)) where += " AND Name LIKE '%@NameToSearchFor%'";
+                if (!string.IsNullOrEmpty(query.NameToSearchFor)) where += $" AND Name LIKE '%{query.NameToSearchFor}%'";
                 if (!string.IsNullOrEmpty(query.BIN)) where += " AND BIN LIKE @BIN";
                 if (query.Id != 0) where += " AND Id NOT like @Id";
                 if (!(query.SortingParameters is null))
@@ -93,7 +93,7 @@ namespace Reestr.DAL.Repositories
                     where += " AND EndDate is null ";
                 }
                 if (!string.IsNullOrEmpty(query.Name)) where += " AND Name LIKE @Name";
-                if (!string.IsNullOrEmpty(query.NameToSearchFor)) where += " AND Name LIKE @NameToSearchFor";
+                if (!string.IsNullOrEmpty(query.NameToSearchFor)) where += $" AND Name LIKE '%{query.NameToSearchFor}%'";
                 if (!string.IsNullOrEmpty(query.BIN)) where += " AND BIN LIKE @BIN";
                 if (query.Id != 0) where += " AND Id NOT like @Id";
 
@@ -103,17 +103,17 @@ namespace Reestr.DAL.Repositories
                 return totalRecords;
             }
         }
+
+        private string ConfigureWhereClause(IQuery query)
+        {
+
+        }
+
+
         public void Insert(Organization entity)
         {
             using (var _con = new SqlConnection(connectString))
             {
-
-                /*SqlCommand command = new SqlCommand($"INSERT INTO Organizations (Name, BIN, PhoneNumber, BeginDate) VALUES ( @Name, @BIN, @PhoneNumber, @BeginDate)", _con);
-                command.Parameters.AddWithValue("@Name", entity.Name);
-                command.Parameters.AddWithValue("@BIN", entity.BIN);
-                command.Parameters.AddWithValue("@PhoneNumber", entity.PhoneNumber);
-                command.Parameters.AddWithValue("@BeginDate", entity.BeginDate);*/
-
                 string sqlQuery = "INSERT INTO Organizations (Name, BIN, PhoneNumber, BeginDate) VALUES ( @Name, @BIN, @PhoneNumber, @BeginDate)";
 
                 SqlTransaction transaction = null;
