@@ -19,6 +19,9 @@ namespace Reestr.BLL.DTOs
         public string Name { get; set; }
 
 
+        public string NameToSearchFor { get; set; }
+
+
         /// <summary>
         /// Code состоит из буквы от A-Z, 2 чисел, точки, 3 чисел, точки, 3 чисел (A32.123.321)
         /// </summary>

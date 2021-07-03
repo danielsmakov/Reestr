@@ -47,19 +47,9 @@ namespace Reestr.DAL.Repositories
                 {
                     _con.Open();
 
-                    var where = "WHERE 1=1";
+                    var where = ConfigureWhereClause(query);
                     var orderBy = " ORDER BY BeginDate DESC";
-                    if (query.IsDeleted)
-                    {
-                        where += " AND EndDate is not null ";
-                    }
-                    else
-                    {
-                        where += " AND EndDate is null ";
-                    }
-                    if (!string.IsNullOrEmpty(query.Name)) where += " AND Name LIKE @Name";
-                    if (!string.IsNullOrEmpty(query.Code)) where += " AND Code LIKE @Code";
-                    if (query.Id != 0) where += " AND Id NOT like @Id";
+                    
                     if (!(query.SortingParameters is null))
                     {
                         if (!string.IsNullOrEmpty(query.SortingParameters[0]["field"]))
@@ -94,19 +84,7 @@ namespace Reestr.DAL.Repositories
                 {
                     _con.Open();
 
-                    var where = "WHERE 1=1";
-
-                    if (query.IsDeleted)
-                    {
-                        where += " AND EndDate is NOT NULL ";
-                    }
-                    else
-                    {
-                        where += " AND EndDate is NULL ";
-                    }
-                    if (!string.IsNullOrEmpty(query.Name)) where += " AND Name LIKE @Name";
-                    if (!string.IsNullOrEmpty(query.Code)) where += " AND Code LIKE @Code";
-                    if (query.Id != 0) where += " AND Id NOT like @Id";
+                    var where = ConfigureWhereClause(query);
 
                     int totalRecords = _con.QuerySingle<int>($"SELECT COUNT(*) FROM Services {where}", query);
 
@@ -119,6 +97,7 @@ namespace Reestr.DAL.Repositories
                 }
             }
         }
+
 
         public void Insert(Service entity)
         {
@@ -167,6 +146,26 @@ namespace Reestr.DAL.Repositories
                     throw ex;
                 }
             }
+        }
+
+        private string ConfigureWhereClause(ServiceQuery query)
+        {
+            var where = "WHERE 1=1";
+
+            if (query.IsDeleted)
+            {
+                where += " AND EndDate is NOT NULL ";
+            }
+            else
+            {
+                where += " AND EndDate is NULL ";
+            }
+            if (!string.IsNullOrEmpty(query.Name)) where += " AND Name LIKE @Name";
+            if (!string.IsNullOrEmpty(query.NameToSearchFor)) where += $" AND Name LIKE '%{query.NameToSearchFor}%'";
+            if (!string.IsNullOrEmpty(query.Code)) where += " AND Code LIKE @Code";
+            if (query.Id != 0) where += " AND Id NOT like @Id";
+
+            return where;
         }
     }
 }

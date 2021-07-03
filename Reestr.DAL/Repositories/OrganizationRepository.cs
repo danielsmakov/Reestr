@@ -80,26 +80,6 @@ namespace Reestr.DAL.Repositories
             }
         }
 
-        private string ConfigureWhereClause(OrganizationQuery query)
-        {
-
-            var where = "WHERE 1=1";
-            if (query.IsDeleted)
-            {
-                where += " AND EndDate is not null ";
-            }
-            else
-            {
-                where += " AND EndDate is null ";
-            }
-            if (!string.IsNullOrEmpty(query.Name)) where += " AND Name LIKE @Name";
-            if (!string.IsNullOrEmpty(query.NameToSearchFor)) where += $" AND Name LIKE '%{query.NameToSearchFor}%'";
-            if (!string.IsNullOrEmpty(query.BIN)) where += " AND BIN LIKE @BIN";
-            if (query.Id != 0) where += " AND Id NOT like @Id";
-
-            return where;
-        }
-
 
         public void Insert(Organization entity)
         {
@@ -145,6 +125,26 @@ namespace Reestr.DAL.Repositories
                 _con.Execute("UPDATE Organizations SET EndDate = GETDATE() WHERE Id = @Id", new { id });
                 _con.Close();
             }
+        }
+
+        private string ConfigureWhereClause(OrganizationQuery query)
+        {
+
+            var where = "WHERE 1=1";
+            if (query.IsDeleted)
+            {
+                where += " AND EndDate is not null ";
+            }
+            else
+            {
+                where += " AND EndDate is null ";
+            }
+            if (!string.IsNullOrEmpty(query.Name)) where += " AND Name LIKE @Name";
+            if (!string.IsNullOrEmpty(query.NameToSearchFor)) where += $" AND Name LIKE '%{query.NameToSearchFor}%'";
+            if (!string.IsNullOrEmpty(query.BIN)) where += " AND BIN LIKE @BIN";
+            if (query.Id != 0) where += " AND Id NOT like @Id";
+
+            return where;
         }
     }
 }
