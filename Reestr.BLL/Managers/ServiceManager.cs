@@ -91,6 +91,7 @@ namespace Reestr.BLL.Managers
 
         public ValidationResponse Update(ServiceDTO serviceDTO)
         {
+
             var validationResponse = ValidateServiceDTO(serviceDTO);
             if (!validationResponse.Status)
                 return validationResponse;

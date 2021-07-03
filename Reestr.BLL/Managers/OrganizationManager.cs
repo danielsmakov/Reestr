@@ -70,6 +70,14 @@ namespace Reestr.BLL.Managers
 
         public ValidationResponse Insert(OrganizationDTO organizationDTO)
         {
+            if (organizationDTO is null)
+            {
+                throw new Exception("Модель не может быть равна null");
+            }
+
+            organizationDTO.BIN = MaskCharactersHandler.RemoveEveryCharacterExceptForDigits(organizationDTO.BIN);
+            organizationDTO.PhoneNumber = MaskCharactersHandler.RemoveEveryCharacterExceptForDigits(organizationDTO.PhoneNumber);
+
             var validationResponse = ValidateOrganizationDTO(organizationDTO);
             if (!validationResponse.Status)
                 return validationResponse;

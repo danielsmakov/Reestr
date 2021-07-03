@@ -119,6 +119,12 @@
                     var cancel = $(e.container).parent().find(".k-grid-cancel");
                     $(update).html('<span class="k-update">Подтвердить</span>');
                     $(cancel).html('<span class="k-cancel">Отмена</span>');
+                    $('#Code').kendoMaskedTextBox({
+                        mask: '~00.000.000',
+                        rules: {
+                            '~': /[а-яА-Я,a-zA-z]/
+                        },
+                    });
                 },
             }).data('kendoGrid');
 
