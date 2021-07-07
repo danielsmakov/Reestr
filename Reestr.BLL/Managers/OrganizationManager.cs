@@ -12,6 +12,7 @@ using Reestr.DAL.Queries;
 using System.ComponentModel.DataAnnotations;
 using Reestr.DAL.Repositories;
 using Resources;
+using log4net;
 
 namespace Reestr.BLL.Managers
 {
@@ -19,6 +20,7 @@ namespace Reestr.BLL.Managers
     {
         private IUnitOfWork _unitOfWork;
         private IMapper Mapper { get; } = AutoMapperConfigurator.GetMapper();
+        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         public OrganizationManager(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
@@ -26,6 +28,7 @@ namespace Reestr.BLL.Managers
 
         public OrganizationDTO Get(int id)
         {
+            OrganizationDTO organizationDTO = new OrganizationDTO();
             try
             {
                 if (id <= 0)
@@ -33,17 +36,24 @@ namespace Reestr.BLL.Managers
 
                 var organizationEntity = _unitOfWork.Organizations.Get(id);
 
-                return Mapper.Map<OrganizationDTO>(organizationEntity);
+                organizationDTO = Mapper.Map<OrganizationDTO>(organizationEntity);
             }
-            catch(Exception)
+            catch (ApplicationException ex)
             {
-                throw new Exception(Resources_ru.ErrorInRepositories);
+                throw ex;
             }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+            }
+
+            return organizationDTO;
         }
 
         public List<OrganizationDTO> List(IQuery query)
         {
             var organizationRepository = _unitOfWork.Organizations as OrganizationRepository;
+            List<OrganizationDTO> organizationDTOs = new List<OrganizationDTO>();
             try
             {
                 if (query is null)
@@ -53,19 +63,25 @@ namespace Reestr.BLL.Managers
 
                 int totalRecords = organizationRepository.CountRecords(query);
 
-                List<OrganizationDTO> organizationDTOs = Mapper.Map<List<OrganizationDTO>>(organizationEntities);
+                organizationDTOs = Mapper.Map<List<OrganizationDTO>>(organizationEntities);
 
                 if (organizationDTOs.Any())
                 {
                     organizationDTOs.First().TotalRecords = totalRecords;
                 }
 
-                return organizationDTOs;
+                
             }
-            catch(Exception)
+            catch (ApplicationException ex)
             {
-                throw new Exception(Resources_ru.ErrorInRepositories);
+                throw ex;
             }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+            }
+
+            return organizationDTOs;
         }
 
         public ValidationResponse Insert(OrganizationDTO organizationDTO)
@@ -88,10 +104,13 @@ namespace Reestr.BLL.Managers
 
                 _unitOfWork.Organizations.Insert(organizationEntity);
             }
-            catch (Exception)
+            catch (ApplicationException ex)
             {
-                validationResponse.Status = false;
-                validationResponse.ErrorMessage = Resources_ru.ErrorInRepositories;
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
             }
 
             return validationResponse;
@@ -109,10 +128,13 @@ namespace Reestr.BLL.Managers
 
                 _unitOfWork.Organizations.Update(organizationEntity);
             }
-            catch(Exception)
+            catch (ApplicationException ex)
             {
-                validationResponse.Status = false;
-                validationResponse.ErrorMessage = Resources_ru.ErrorInRepositories;
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
             }
 
             return validationResponse;
@@ -128,10 +150,13 @@ namespace Reestr.BLL.Managers
                     throw new Exception("Id не может быть равен или меньше 0");
                 _unitOfWork.Organizations.Delete(id);
             }
-            catch (Exception)
+            catch (ApplicationException ex)
             {
-                validationResponse.Status = false;
-                validationResponse.ErrorMessage = Resources_ru.ErrorInRepositories;
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
             }
 
             return validationResponse;

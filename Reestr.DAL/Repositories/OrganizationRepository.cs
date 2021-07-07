@@ -21,15 +21,22 @@ namespace Reestr.DAL.Repositories
         {
             using (SqlConnection _con = new SqlConnection(connectString))
             {
-                _con.Open();
-                Organization org = _con.QuerySingle<Organization>("SELECT * FROM Organizations WHERE Id = @Id",
-                    new
-                    {
-                        id = id
-                    }
-                    );
-                _con.Close();
-                return org;
+                try
+                {
+                    _con.Open();
+                    Organization org = _con.QuerySingle<Organization>("SELECT * FROM Organizations WHERE Id = @Id",
+                        new
+                        {
+                            id = id
+                        }
+                        );
+                    _con.Close();
+                    return org;
+                }
+                catch (Exception)
+                {
+                    throw new ApplicationException(Resources.Resources_ru.ErrorInRepositories);
+                }
             }
         }
         public List<Organization> List(IQuery queryModel)
@@ -38,28 +45,35 @@ namespace Reestr.DAL.Repositories
 
             using (var _con = new SqlConnection(connectString))
             {
-                _con.Open();
-
-                var where = ConfigureWhereClause(query);
-                var orderBy = " ORDER BY BeginDate DESC";
-                
-                if (!(query.SortingParameters is null))
+                try
                 {
-                    if (!string.IsNullOrEmpty(query.SortingParameters[0]["field"]))
+                    _con.Open();
+
+                    var where = ConfigureWhereClause(query);
+                    var orderBy = " ORDER BY BeginDate DESC";
+
+                    if (!(query.SortingParameters is null))
                     {
-                        if (!string.IsNullOrEmpty(query.SortingParameters[0]["dir"]))
+                        if (!string.IsNullOrEmpty(query.SortingParameters[0]["field"]))
                         {
-                            orderBy = $" ORDER BY {query.SortingParameters[0]["field"]} {query.SortingParameters[0]["dir"]}";
+                            if (!string.IsNullOrEmpty(query.SortingParameters[0]["dir"]))
+                            {
+                                orderBy = $" ORDER BY {query.SortingParameters[0]["field"]} {query.SortingParameters[0]["dir"]}";
+                            }
                         }
                     }
+
+
+                    List<Organization> orgs = _con.Query<Organization>($"SELECT * FROM Organizations {where} " +
+                        $"{orderBy} " +
+                        $"OFFSET @Offset ROWS FETCH NEXT @Limit ROWS ONLY", query).ToList();
+                    _con.Close();
+                    return orgs;
                 }
-
-
-                List<Organization> orgs = _con.Query<Organization>($"SELECT * FROM Organizations {where} " +
-                    $"{orderBy} " +
-                    $"OFFSET @Offset ROWS FETCH NEXT @Limit ROWS ONLY", query).ToList();
-                _con.Close();
-                return orgs;
+                catch (Exception)
+                {
+                    throw new ApplicationException(Resources.Resources_ru.ErrorInRepositories);
+                }
             }
         }
 
@@ -69,14 +83,21 @@ namespace Reestr.DAL.Repositories
 
             using (var _con = new SqlConnection(connectString))
             {
-                _con.Open();
+                try
+                {
+                    _con.Open();
 
-                var where = ConfigureWhereClause(query);
+                    var where = ConfigureWhereClause(query);
 
-                int totalRecords = _con.QuerySingle<int>($"SELECT COUNT(*) FROM Organizations {where}", query);
+                    int totalRecords = _con.QuerySingle<int>($"SELECT COUNT(*) FROM Organizations {where}", query);
 
-                _con.Close();
-                return totalRecords;
+                    _con.Close();
+                    return totalRecords;
+                }
+                catch (Exception)
+                {
+                    throw new ApplicationException(Resources.Resources_ru.ErrorInRepositories);
+                }
             }
         }
 
@@ -98,10 +119,11 @@ namespace Reestr.DAL.Repositories
 
                     transaction.Commit();
                 }
-                catch
+                catch (Exception)
                 {
                     transaction.Rollback();
-                }
+                    throw new ApplicationException(Resources.Resources_ru.ErrorInRepositories);
+                } 
                 finally
                 {
                     _con.Close();
@@ -112,39 +134,84 @@ namespace Reestr.DAL.Repositories
         {
             using (var _con = new SqlConnection(connectString))
             {
+                string sqlQuery = "UPDATE Organizations SET Name = @Name, BIN = @BIN, PhoneNumber = @PhoneNumber, BeginDate = @BeginDate WHERE Id = @Id";
+
+                SqlTransaction transaction = null;
+
                 _con.Open();
-                _con.Execute("UPDATE Organizations SET Name = @Name, BIN = @BIN, PhoneNumber = @PhoneNumber, BeginDate = @BeginDate WHERE Id = @Id", entity);
-                _con.Close();
+                transaction = _con.BeginTransaction();
+
+                try
+                {
+                    _con.Execute(sqlQuery, entity, transaction: transaction);
+
+                    transaction.Commit();
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                    throw new ApplicationException(Resources.Resources_ru.ErrorInRepositories);
+                }
+                finally
+                {
+                    _con.Close();
+                }
             }
         }
         public void Delete(int id)
         {
             using (var _con = new SqlConnection(connectString))
             {
+                string sqlQuery = "UPDATE Organizations SET EndDate = GETDATE() WHERE Id = @Id";
+
+                SqlTransaction transaction = null;
+
                 _con.Open();
-                _con.Execute("UPDATE Organizations SET EndDate = GETDATE() WHERE Id = @Id", new { id });
-                _con.Close();
+                transaction = _con.BeginTransaction();
+
+                try
+                {
+                    _con.Execute(sqlQuery, new { id }, transaction: transaction);
+
+                    transaction.Commit();
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                    throw new ApplicationException(Resources.Resources_ru.ErrorInRepositories);
+                }
+                finally
+                {
+                    _con.Close();
+                }
             }
         }
 
         private string ConfigureWhereClause(OrganizationQuery query)
         {
 
-            var where = "WHERE 1=1";
-            if (query.IsDeleted)
+            try
             {
-                where += " AND EndDate is not null ";
-            }
-            else
-            {
-                where += " AND EndDate is null ";
-            }
-            if (!string.IsNullOrEmpty(query.Name)) where += " AND Name LIKE @Name";
-            if (!string.IsNullOrEmpty(query.NameToSearchFor)) where += $" AND Name LIKE '%{query.NameToSearchFor}%'";
-            if (!string.IsNullOrEmpty(query.BIN)) where += " AND BIN LIKE @BIN";
-            if (query.Id != 0) where += " AND Id NOT like @Id";
+                var where = "WHERE 1=1";
+                if (query.IsDeleted)
+                {
+                    where += " AND EndDate is not null ";
+                }
+                else
+                {
+                    where += " AND EndDate is null ";
+                }
+                if (!string.IsNullOrEmpty(query.Name)) where += " AND Name LIKE @Name";
+                if (!string.IsNullOrEmpty(query.NameToSearchFor)) where += $" AND Name LIKE '%{query.NameToSearchFor}%'";
+                if (!string.IsNullOrEmpty(query.BIN)) where += " AND BIN LIKE @BIN";
+                if (query.Id != 0) where += " AND Id NOT like @Id";
 
-            return where;
+                return where;
+            }
+            catch
+            {
+                throw new ApplicationException(Resources.Resources_ru.ErrorInRepositories);
+            }
         }
     }
 }
