@@ -97,6 +97,15 @@ namespace Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Введенные Вами данные уже зарегистрированы.
+        /// </summary>
+        public static string DataUniqueness {
+            get {
+                return ResourceManager.GetString("DataUniqueness", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Уважаемый пользователь, к сожалению, возникла ошибка при обращении к серверу. Приносим вам свои извинения. Пожалуйста, повторите вашу операцию позднее или обратитесь в службу поддержки..
         /// </summary>
         public static string ErrorInRepositories {
@@ -115,6 +124,15 @@ namespace Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Id не может быть равен или меньше 0.
+        /// </summary>
+        public static string IdLessThanZero {
+            get {
+                return ResourceManager.GetString("IdLessThanZero", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ИИН.
         /// </summary>
         public static string IIN {
@@ -129,6 +147,15 @@ namespace Resources {
         public static string NameLength {
             get {
                 return ResourceManager.GetString("NameLength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Объект не найден.
+        /// </summary>
+        public static string ObjectNotFound {
+            get {
+                return ResourceManager.GetString("ObjectNotFound", resourceCulture);
             }
         }
         

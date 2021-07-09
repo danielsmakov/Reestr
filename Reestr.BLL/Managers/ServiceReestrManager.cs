@@ -33,7 +33,7 @@ namespace Reestr.BLL.Managers
             try
             {
                 if (id <= 0)
-                    throw new Exception("Id не может быть равен или меньше 0");
+                    throw new Exception(Resources_ru.IdLessThanZero);
 
                 var serviceReestrEntity = _unitOfWork.ServiceReestres.Get(id);
 
@@ -58,7 +58,7 @@ namespace Reestr.BLL.Managers
                 var serviceReestrRepository = _unitOfWork.ServiceReestres as ServiceReestrRepository;
 
                 if (query is null)
-                    throw new Exception("Query не может быть равен null");
+                    throw new Exception(Resources_ru.ObjectNotFound);
 
                 List<ServiceReestr> serviceReestrEntities = _unitOfWork.ServiceReestres.List(query);
 
@@ -144,7 +144,7 @@ namespace Reestr.BLL.Managers
             try
             {
                 if (id <= 0)
-                    throw new Exception("Id не может быть равен или меньше 0");
+                    throw new Exception(Resources_ru.IdLessThanZero);
 
                 _unitOfWork.ServiceReestres.Delete(id);
             }
@@ -175,7 +175,7 @@ namespace Reestr.BLL.Managers
 
             if (model == null)
             {
-                validationResponse.ErrorMessage = "Объект не найден.";
+                validationResponse.ErrorMessage = Resources_ru.ObjectNotFound;
                 validationResponse.Status = false;
                 return validationResponse;
             }

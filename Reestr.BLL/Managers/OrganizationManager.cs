@@ -31,7 +31,7 @@ namespace Reestr.BLL.Managers
             try
             {
                 if (id <= 0)
-                    throw new Exception("Id не может быть равен или меньше 0");
+                    throw new Exception(Resources_ru.IdLessThanZero);
 
                 var organizationEntity = _unitOfWork.Organizations.Get(id);
 
@@ -56,7 +56,7 @@ namespace Reestr.BLL.Managers
             try
             {
                 if (query is null)
-                    throw new Exception("Query не может быть равен null");
+                    throw new Exception(Resources_ru.ObjectNotFound);
 
                 List<Organization> organizationEntities = _unitOfWork.Organizations.List(query);
 
@@ -86,7 +86,7 @@ namespace Reestr.BLL.Managers
         {
             if (organizationDTO is null)
             {
-                throw new Exception("Модель не может быть равна null");
+                throw new Exception(Resources_ru.ObjectNotFound);
             }
 
             organizationDTO.BIN = MaskCharactersHandler.RemoveEveryCharacterExceptForDigits(organizationDTO.BIN);
@@ -119,7 +119,7 @@ namespace Reestr.BLL.Managers
         {
             if (organizationDTO is null)
             {
-                throw new Exception("Модель не может быть равна null");
+                throw new Exception(Resources_ru.ObjectNotFound);
             }
 
             organizationDTO.BIN = MaskCharactersHandler.RemoveEveryCharacterExceptForDigits(organizationDTO.BIN);
@@ -155,7 +155,7 @@ namespace Reestr.BLL.Managers
             try
             {
                 if (id <= 0)
-                    throw new Exception("Id не может быть равен или меньше 0");
+                    throw new Exception(Resources_ru.IdLessThanZero);
                 _unitOfWork.Organizations.Delete(id);
             }
             catch (ApplicationException)
@@ -185,7 +185,7 @@ namespace Reestr.BLL.Managers
 
             if (model == null)
             {
-                validationResponse.ErrorMessage = "Объект не найден.";
+                validationResponse.ErrorMessage = Resources_ru.ObjectNotFound;
                 validationResponse.Status = false;
                 return validationResponse;
             }
@@ -211,7 +211,7 @@ namespace Reestr.BLL.Managers
                 try
                 {
                     if (organizationEntity is null)
-                        throw new Exception("Объект не найден.");
+                        throw new Exception(Resources_ru.ObjectNotFound);
 
                     if (model.Name != organizationEntity.Name) // Проверяю, изменил ли пользователь название организации
                     {
@@ -223,7 +223,7 @@ namespace Reestr.BLL.Managers
                         // если из базы пришла хоть одна запись, значит название не уникально
                         if (organizationEntities.Any()) 
                         {
-                            validationResponse.ErrorMessage = "Такое название уже зарегистрировано";
+                            validationResponse.ErrorMessage = Resources_ru.DataUniqueness;
                             validationResponse.Status = false;
                             return validationResponse;
                         }
@@ -242,7 +242,7 @@ namespace Reestr.BLL.Managers
                 organizationEntities = _unitOfWork.Organizations.List(query);
                 if (organizationEntities.Any())
                 {
-                    validationResponse.ErrorMessage = "Такое название уже зарегистрировано";
+                    validationResponse.ErrorMessage = Resources_ru.DataUniqueness;
                     validationResponse.Status = false;
                     return validationResponse;
                 }
@@ -256,7 +256,7 @@ namespace Reestr.BLL.Managers
                 try
                 {
                     if (organizationEntity is null)
-                        throw new Exception("Объект не найден.");
+                        throw new Exception(Resources_ru.ObjectNotFound);
 
                     if (model.BIN != organizationEntity.BIN)
                     {
@@ -265,7 +265,7 @@ namespace Reestr.BLL.Managers
                         organizationEntities = _unitOfWork.Organizations.List(query);
                         if (organizationEntities.Any())
                         {
-                            validationResponse.ErrorMessage = "Введенный Вами БИН уже зарегистрирован";
+                            validationResponse.ErrorMessage = Resources_ru.DataUniqueness;
                             validationResponse.Status = false;
                             return validationResponse;
                         }
@@ -284,7 +284,7 @@ namespace Reestr.BLL.Managers
                 organizationEntities = _unitOfWork.Organizations.List(query);
                 if (organizationEntities.Any())
                 {
-                    validationResponse.ErrorMessage = "Введенный Вами БИН уже зарегистрирован";
+                    validationResponse.ErrorMessage = Resources_ru.DataUniqueness;
                     validationResponse.Status = false;
                     return validationResponse;
                 }

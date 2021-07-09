@@ -31,7 +31,7 @@ namespace Reestr.BLL.Managers
             try
             {
                 if (id <= 0)
-                    throw new Exception("Id не может быть равен или меньше 0");
+                    throw new Exception(Resources_ru.IdLessThanZero);
 
                 var serviceEntity = _unitOfWork.Services.Get(id);
 
@@ -56,7 +56,7 @@ namespace Reestr.BLL.Managers
             try
             {
                 if (query is null)
-                    throw new Exception("Query не может быть равен null");
+                    throw new Exception(Resources_ru.ObjectNotFound);
 
                 List<Service> serviceEntities = _unitOfWork.Services.List(query);
 
@@ -142,7 +142,7 @@ namespace Reestr.BLL.Managers
             try
             {
                 if (id <= 0)
-                    throw new Exception("Id не может быть равен или меньше 0");
+                    throw new Exception(Resources_ru.IdLessThanZero);
 
                 _unitOfWork.Services.Delete(id);
             }
@@ -173,7 +173,7 @@ namespace Reestr.BLL.Managers
 
             if (model == null)
             {
-                validationResponse.ErrorMessage = "Объект не найден.";
+                validationResponse.ErrorMessage = Resources_ru.ObjectNotFound;
                 validationResponse.Status = false;
                 return validationResponse;
             }
@@ -200,7 +200,7 @@ namespace Reestr.BLL.Managers
                 try
                 {
                     if (serviceEntity is null)
-                        throw new Exception("Объект не найден");
+                        throw new Exception(Resources_ru.ObjectNotFound);
 
                     if (model.Name != serviceEntity.Name)
                     {
@@ -209,7 +209,7 @@ namespace Reestr.BLL.Managers
                         serviceEntities = _unitOfWork.Services.List(query);
                         if (serviceEntities.Any())
                         {
-                            validationResponse.ErrorMessage = "Такое название уже зарегистрировано";
+                            validationResponse.ErrorMessage = Resources_ru.DataUniqueness;
                             validationResponse.Status = false;
                             return validationResponse;
                         }
@@ -228,7 +228,7 @@ namespace Reestr.BLL.Managers
                 serviceEntities = _unitOfWork.Services.List(query);
                 if (serviceEntities.Any())
                 {
-                    validationResponse.ErrorMessage = "Такое название уже зарегистрировано";
+                    validationResponse.ErrorMessage = Resources_ru.DataUniqueness;
                     validationResponse.Status = false;
                     return validationResponse;
                 }
@@ -242,7 +242,7 @@ namespace Reestr.BLL.Managers
                 try
                 {
                     if (serviceEntity is null)
-                        throw new Exception("Объект не найден");
+                        throw new Exception(Resources_ru.ObjectNotFound);
 
                     if (model.Code != serviceEntity.Code)
                     {
@@ -251,7 +251,7 @@ namespace Reestr.BLL.Managers
                         serviceEntities = _unitOfWork.Services.List(query);
                         if (serviceEntities.Any())
                         {
-                            validationResponse.ErrorMessage = "Введенный Вами код уже зарегистрирован";
+                            validationResponse.ErrorMessage = Resources_ru.DataUniqueness;
                             validationResponse.Status = false;
                             return validationResponse;
                         }
@@ -270,7 +270,7 @@ namespace Reestr.BLL.Managers
                 serviceEntities = _unitOfWork.Services.List(query);
                 if (serviceEntities.Any())
                 {
-                    validationResponse.ErrorMessage = "Введенный Вами код уже зарегистрирован";
+                    validationResponse.ErrorMessage = Resources_ru.DataUniqueness;
                     validationResponse.Status = false;
                     return validationResponse;
                 }

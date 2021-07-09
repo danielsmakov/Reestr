@@ -129,17 +129,26 @@
   <data name="CodeRegex" xml:space="preserve">
     <value>Необходимо ввести код в формате A12.123.123 с указанием точек, первая буква в диапазоне от A до Z</value>
   </data>
+  <data name="DataUniqueness" xml:space="preserve">
+    <value>Введенные Вами данные уже зарегистрированы</value>
+  </data>
   <data name="ErrorInRepositories" xml:space="preserve">
     <value>Уважаемый пользователь, к сожалению, возникла ошибка при обращении к серверу. Приносим вам свои извинения. Пожалуйста, повторите вашу операцию позднее или обратитесь в службу поддержки.</value>
   </data>
   <data name="FullNameLength" xml:space="preserve">
     <value>Поле должно содержать от 8 до 150 символов</value>
   </data>
+  <data name="IdLessThanZero" xml:space="preserve">
+    <value>Id не может быть равен или меньше 0</value>
+  </data>
   <data name="IIN" xml:space="preserve">
     <value>ИИН</value>
   </data>
   <data name="NameLength" xml:space="preserve">
     <value>Поле должно содержать от 3 до 300 символов</value>
+  </data>
+  <data name="ObjectNotFound" xml:space="preserve">
+    <value>Объект не найден</value>
   </data>
   <data name="Organization" xml:space="preserve">
     <value>Организация</value>
