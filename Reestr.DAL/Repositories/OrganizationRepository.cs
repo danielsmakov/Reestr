@@ -35,7 +35,7 @@ namespace Reestr.DAL.Repositories
                 }
                 catch (Exception)
                 {
-                    throw new ApplicationException(/*Resources.Resources_ru.ErrorInRepositories*/);
+                    throw new ApplicationException();
                 }
             }
         }
@@ -72,7 +72,7 @@ namespace Reestr.DAL.Repositories
                 }
                 catch (Exception)
                 {
-                    throw new ApplicationException(/*Resources.Resources_ru.ErrorInRepositories*/);
+                    throw new ApplicationException();
                 }
             }
         }
@@ -96,7 +96,7 @@ namespace Reestr.DAL.Repositories
                 }
                 catch (Exception)
                 {
-                    throw new ApplicationException(/*Resources.Resources_ru.ErrorInRepositories*/);
+                    throw new ApplicationException();
                 }
             }
         }
@@ -106,7 +106,8 @@ namespace Reestr.DAL.Repositories
         {
             using (var _con = new SqlConnection(connectString))
             {
-                string sqlQuery = "INSERT INTO Organizations (Name, BIN, PhoneNumber, BeginDate) VALUES ( @Name, @BIN, @PhoneNumber, @BeginDate)";
+                string sqlQuery = "INSERT INTO Organizations (Name, BIN, PhoneNumber, BeginDate) VALUES ( @Name, @BIN, @PhoneNumber, @BeginDate);" +
+                    "SELECT CAST(SCOPE_IDENTITY() AS int)";
 
                 SqlTransaction transaction = null;
 
@@ -115,14 +116,15 @@ namespace Reestr.DAL.Repositories
 
                 try
                 {
-                    _con.Execute(sqlQuery, entity, transaction: transaction);
+                    int id = _con.Query<int>(sqlQuery, entity, transaction: transaction).First();
+                    entity.Id = id;
 
                     transaction.Commit();
                 }
                 catch (Exception)
                 {
                     transaction.Rollback();
-                    throw new ApplicationException(/*Resources.Resources_ru.ErrorInRepositories*/);
+                    throw new ApplicationException();
                 } 
                 finally
                 {
@@ -150,7 +152,7 @@ namespace Reestr.DAL.Repositories
                 catch (Exception)
                 {
                     transaction.Rollback();
-                    throw new ApplicationException(/*Resources.Resources_ru.ErrorInRepositories*/);
+                    throw new ApplicationException();
                 }
                 finally
                 {
@@ -178,7 +180,7 @@ namespace Reestr.DAL.Repositories
                 catch (Exception)
                 {
                     transaction.Rollback();
-                    throw new ApplicationException(/*Resources.Resources_ru.ErrorInRepositories*/);
+                    throw new ApplicationException();
                 }
                 finally
                 {
@@ -210,7 +212,7 @@ namespace Reestr.DAL.Repositories
             }
             catch
             {
-                throw new ApplicationException(/*Resources.Resources_ru.ErrorInRepositories*/);
+                throw new ApplicationException();
             }
         }
     }

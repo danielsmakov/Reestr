@@ -31,9 +31,9 @@ namespace Reestr.DAL.Repositories
                     _con.Close();
                     return service;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    throw ex;
+                    throw new ApplicationException();
                 }
             }
         }
@@ -67,9 +67,9 @@ namespace Reestr.DAL.Repositories
                     _con.Close();
                     return orgs;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    throw ex;
+                    throw new ApplicationException();
                 }
             }
         }
@@ -91,9 +91,9 @@ namespace Reestr.DAL.Repositories
                     _con.Close();
                     return totalRecords;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    throw ex;
+                    throw new ApplicationException();
                 }
             }
         }
@@ -103,15 +103,29 @@ namespace Reestr.DAL.Repositories
         {
             using (var _con = new SqlConnection(connectString))
             {
+                string sqlQuery = "INSERT INTO Services (Name, Code, Price, BeginDate) VALUES (@Name, @Code, @Price, @BeginDate); " +
+                    "SELECT CAST(SCOPE_IDENTITY() AS int)";
+
+                SqlTransaction transaction = null;
+
+                _con.Open();
+                transaction = _con.BeginTransaction();
+
                 try
                 {
-                    _con.Open();
-                    _con.Execute("INSERT INTO Services (Name, Code, Price, BeginDate) VALUES (@Name, @Code, @Price, @BeginDate)", entity);
-                    _con.Close();
+                    int id = _con.Query<int>(sqlQuery, entity, transaction: transaction).First();
+                    entity.Id = id;
+
+                    transaction.Commit();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    throw ex;
+                    transaction.Rollback();
+                    throw new ApplicationException();
+                }
+                finally
+                {
+                    _con.Close();
                 }
             }
         }
@@ -119,15 +133,27 @@ namespace Reestr.DAL.Repositories
         {
             using (var _con = new SqlConnection(connectString))
             {
+                string sqlQuery = "UPDATE Services SET Name = @Name, Code = @Code, Price = @Price, BeginDate = @BeginDate WHERE Id = @Id";
+
+                SqlTransaction transaction = null;
+
+                _con.Open();
+                transaction = _con.BeginTransaction();
+
                 try
                 {
-                    _con.Open();
-                    _con.Execute("UPDATE Services SET Name = @Name, Code = @Code, Price = @Price, BeginDate = @BeginDate WHERE Id = @Id", entity);
-                    _con.Close();
+                    _con.Execute(sqlQuery, entity, transaction: transaction);
+
+                    transaction.Commit();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    throw ex;
+                    transaction.Rollback();
+                    throw new ApplicationException();
+                }
+                finally
+                {
+                    _con.Close();
                 }
             }
         }
@@ -135,37 +161,56 @@ namespace Reestr.DAL.Repositories
         {
             using (var _con = new SqlConnection(connectString))
             {
+                string sqlQuery = "UPDATE Services SET EndDate = GETDATE() WHERE Id = @Id";
+
+                SqlTransaction transaction = null;
+
+                _con.Open();
+                transaction = _con.BeginTransaction();
+
                 try
                 {
-                    _con.Open();
-                    _con.Execute("UPDATE Services SET EndDate = GETDATE() WHERE Id = @Id", new { id });
-                    _con.Close();
+                    _con.Execute(sqlQuery, new { id }, transaction: transaction);
+
+                    transaction.Commit();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    throw ex;
+                    transaction.Rollback();
+                    throw new ApplicationException();
+                }
+                finally
+                {
+                    _con.Close();
                 }
             }
         }
 
         private string ConfigureWhereClause(ServiceQuery query)
         {
-            var where = "WHERE 1=1";
-
-            if (query.IsDeleted)
+            try
             {
-                where += " AND EndDate is NOT NULL ";
-            }
-            else
-            {
-                where += " AND EndDate is NULL ";
-            }
-            if (!string.IsNullOrEmpty(query.Name)) where += " AND Name LIKE @Name";
-            if (!string.IsNullOrEmpty(query.NameToSearchFor)) where += $" AND Name LIKE '%' + @NameToSearchFor + '%'";
-            if (!string.IsNullOrEmpty(query.Code)) where += " AND Code LIKE @Code";
-            if (query.Id != 0) where += " AND Id NOT like @Id";
+                var where = "WHERE 1=1";
 
-            return where;
+                if (query.IsDeleted)
+                {
+                    where += " AND EndDate is NOT NULL ";
+                }
+                else
+                {
+                    where += " AND EndDate is NULL ";
+                }
+                if (!string.IsNullOrEmpty(query.Name)) where += " AND Name LIKE @Name";
+                if (!string.IsNullOrEmpty(query.NameToSearchFor)) where += $" AND Name LIKE '%' + @NameToSearchFor + '%'";
+                if (!string.IsNullOrEmpty(query.Code)) where += " AND Code LIKE @Code";
+                if (query.Id != 0) where += " AND Id NOT like @Id";
+
+                return where;
+            }
+            catch
+            {
+                throw new ApplicationException();
+            }
         }
     }
 }
