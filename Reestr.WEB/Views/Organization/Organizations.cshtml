@@ -23,6 +23,8 @@
 
         $(document).ready(function () {
 
+            
+
             var dataSource = new kendo.data.DataSource({
                 type: "odata",
                 transport: {
@@ -90,7 +92,7 @@
 
 
 
-            var grid = $("#grid").kendoGrid({
+            $("#grid").kendoGrid({
                 dataSource: dataSource,
                 pageable: true,
                 height: 550,
@@ -125,11 +127,16 @@
                         mask: '(000)-000-0000'
                     });
                 },
-            }).data('kendoGrid');
+            }).data("kendoGrid");
+
+            
 
             $("body").on("keyup", "#txtsearch", function () {
                 var value = $("#txtsearch").val();
-                if (value.length < 3) {
+                if (value.length == 0) {
+                    $("#grid").data("kendoGrid").refresh();
+                }
+                if (value.length < 3 && value.length > 0) {
                     return
                 }
                 else {
@@ -137,33 +144,43 @@
                         logic: "or",
                         filters: [
                             { field: "Name", operator: "contains", value: value }
-                        ]
-                    })
+                        ],
+
+                    });
+                    $("#grid").data("kendoGrid").dataSource.read();
                 }
             });
 
             $("body").on("click", "#isdeleted", function () {
                 if (document.getElementById('isdeleted').click) {
                     var value = $("#isdeleted").val();
+
                     $("#grid").data("kendoGrid").dataSource.filter({
                         logic: "or",
                         filters: [
                             { field: "EndDate" }
                         ]
-                    })
+                    });
+                    $("#grid").data("kendoGrid").dataSource.read();
+                    @*$("#grid").data("kendoGrid").dataSource({
+                        schema: {
+                            data: "Data",
+                            total: "Total",
+                            model: {
+                                id: "Id",
+                                fields: {
+                                    Id: { type: "number", editable: false, nullable: true },
+                                    Name: { type: "string", validation: { required: true } },
+                                    BIN: { type: "string", validation: { required: true } },
+                                    PhoneNumber: { type: "string", validation: { required: true } },
+                                    BeginDate: { type: "date", validation: { required: true } }
+                                }
+                            }
+                        }
+                    });*@
                 }
                 
             });
-
-        @*var checkbox = grid.find("#isdeleted");
-            var value = $("#isdeleted").val();
-            checkbox.on("click", function () {
-                grid.data("kendoGrid").dataSource.read({ IsDeleted: value});
-            });*@
-
-            @*if (document.getElementById('isdeleted').click) {
-
-            }*@
 
         });
     </script>
