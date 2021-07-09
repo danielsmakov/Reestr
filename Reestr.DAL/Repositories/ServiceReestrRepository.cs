@@ -31,9 +31,9 @@ namespace Reestr.DAL.Repositories
                     _con.Close();
                     return entity;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    throw ex;
+                    throw new ApplicationException();
                 }
             }
         }

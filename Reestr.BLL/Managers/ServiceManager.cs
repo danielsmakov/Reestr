@@ -12,6 +12,7 @@ using Reestr.DAL.Queries;
 using System.ComponentModel.DataAnnotations;
 using Reestr.DAL.Repositories;
 using Resources;
+using log4net;
 
 namespace Reestr.BLL.Managers
 {
@@ -19,6 +20,7 @@ namespace Reestr.BLL.Managers
     {
         private IUnitOfWork _unitOfWork;
         private IMapper Mapper { get; } = AutoMapperConfigurator.GetMapper();
+        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         public ServiceManager(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
@@ -33,11 +35,18 @@ namespace Reestr.BLL.Managers
 
                 var serviceEntity = _unitOfWork.Services.Get(id);
 
-                return Mapper.Map<ServiceDTO>(serviceEntity);
+                ServiceDTO serviceDTO = Mapper.Map<ServiceDTO>(serviceEntity);
+
+                return serviceDTO;
             }
-            catch (Exception)
+            catch (ApplicationException)
             {
-                throw new Exception(Resources_ru.ErrorInRepositories);
+                throw new ApplicationException(Resources_ru.ErrorInRepositories);
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+                throw new ApplicationException(Resources_ru.ErrorInRepositories);
             }
         }
 
@@ -62,10 +71,17 @@ namespace Reestr.BLL.Managers
 
                 return serviceDTOs;
             }
-            catch (Exception)
+            catch (ApplicationException)
             {
-                throw new Exception(Resources_ru.ErrorInRepositories);
+                throw new ApplicationException(Resources_ru.ErrorInRepositories);
             }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+                throw new ApplicationException(Resources_ru.ErrorInRepositories);
+            }
+
+            
         }
 
         public ValidationResponse Insert(ServiceDTO serviceDTO)
@@ -80,10 +96,14 @@ namespace Reestr.BLL.Managers
 
                 _unitOfWork.Services.Insert(serviceEntity);
             }
-            catch (Exception)
+            catch (ApplicationException)
             {
-                validationResponse.Status = false;
-                validationResponse.ErrorMessage = Resources_ru.ErrorInRepositories;
+                throw new ApplicationException(Resources_ru.ErrorInRepositories);
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+                throw new ApplicationException(Resources_ru.ErrorInRepositories);
             }
 
             return validationResponse;
@@ -102,10 +122,14 @@ namespace Reestr.BLL.Managers
 
                 _unitOfWork.Services.Update(serviceEntity);
             }
-            catch (Exception)
+            catch (ApplicationException)
             {
-                validationResponse.Status = false;
-                validationResponse.ErrorMessage = Resources_ru.ErrorInRepositories;
+                throw new ApplicationException(Resources_ru.ErrorInRepositories);
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+                throw new ApplicationException(Resources_ru.ErrorInRepositories);
             }
 
             return validationResponse;
@@ -122,10 +146,14 @@ namespace Reestr.BLL.Managers
 
                 _unitOfWork.Services.Delete(id);
             }
-            catch (Exception)
+            catch (ApplicationException)
             {
-                validationResponse.Status = false;
-                validationResponse.ErrorMessage = Resources_ru.ErrorInRepositories;
+                throw new ApplicationException(Resources_ru.ErrorInRepositories);
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+                throw new ApplicationException(Resources_ru.ErrorInRepositories);
             }
 
             return validationResponse;
