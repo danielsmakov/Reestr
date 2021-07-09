@@ -28,7 +28,6 @@ namespace Reestr.BLL.Managers
 
         public OrganizationDTO Get(int id)
         {
-            OrganizationDTO organizationDTO = new OrganizationDTO();
             try
             {
                 if (id <= 0)
@@ -36,7 +35,9 @@ namespace Reestr.BLL.Managers
 
                 var organizationEntity = _unitOfWork.Organizations.Get(id);
 
-                organizationDTO = Mapper.Map<OrganizationDTO>(organizationEntity);
+                OrganizationDTO organizationDTO = Mapper.Map<OrganizationDTO>(organizationEntity);
+
+                return organizationDTO;
             }
             catch (ApplicationException)
             {
@@ -47,14 +48,11 @@ namespace Reestr.BLL.Managers
                 log.Error(ex);
                 throw new ApplicationException(Resources_ru.ErrorInRepositories);
             }
-
-            return organizationDTO;
         }
 
         public List<OrganizationDTO> List(IQuery query)
         {
             var organizationRepository = _unitOfWork.Organizations as OrganizationRepository;
-            List<OrganizationDTO> organizationDTOs = new List<OrganizationDTO>();
             try
             {
                 if (query is null)
@@ -64,14 +62,14 @@ namespace Reestr.BLL.Managers
 
                 int totalRecords = organizationRepository.CountRecords(query);
 
-                organizationDTOs = Mapper.Map<List<OrganizationDTO>>(organizationEntities);
+                List<OrganizationDTO> organizationDTOs = Mapper.Map<List<OrganizationDTO>>(organizationEntities);
 
                 if (organizationDTOs.Any())
                 {
                     organizationDTOs.First().TotalRecords = totalRecords;
                 }
 
-                
+                return organizationDTOs;
             }
             catch (ApplicationException)
             {
@@ -82,8 +80,6 @@ namespace Reestr.BLL.Managers
                 log.Error(ex);
                 throw new ApplicationException(Resources_ru.ErrorInRepositories);
             }
-
-            return organizationDTOs;
         }
 
         public ValidationResponse Insert(OrganizationDTO organizationDTO)
@@ -121,6 +117,14 @@ namespace Reestr.BLL.Managers
 
         public ValidationResponse Update(OrganizationDTO organizationDTO)
         {
+            if (organizationDTO is null)
+            {
+                throw new Exception("Модель не может быть равна null");
+            }
+
+            organizationDTO.BIN = MaskCharactersHandler.RemoveEveryCharacterExceptForDigits(organizationDTO.BIN);
+            organizationDTO.PhoneNumber = MaskCharactersHandler.RemoveEveryCharacterExceptForDigits(organizationDTO.PhoneNumber);
+
             var validationResponse = ValidateOrganizationDTO(organizationDTO);
             if (!validationResponse.Status)
                 return validationResponse;

@@ -10,6 +10,9 @@ using Reestr.DAL.Entities;
 using Reestr.BLL.Validation;
 using Reestr.DAL.Queries;
 using System.ComponentModel.DataAnnotations;
+using log4net;
+using Resources;
+using Reestr.DAL.Repositories;
 
 namespace Reestr.BLL.Managers
 {
@@ -17,6 +20,8 @@ namespace Reestr.BLL.Managers
     {
         private IUnitOfWork _unitOfWork;
         private IMapper Mapper { get; } = AutoMapperConfigurator.GetMapper();
+
+        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         public ServiceReestrManager(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
@@ -34,9 +39,14 @@ namespace Reestr.BLL.Managers
 
                 return Mapper.Map<ServiceReestrDTO>(serviceReestrEntity);
             }
+            catch (ApplicationException)
+            {
+                throw new ApplicationException(Resources_ru.ErrorInRepositories);
+            }
             catch (Exception ex)
             {
-                throw ex;
+                log.Error(ex);
+                throw new ApplicationException(Resources_ru.ErrorInRepositories);
             }
         }
 
@@ -45,16 +55,32 @@ namespace Reestr.BLL.Managers
         {
             try
             {
+                var serviceReestrRepository = _unitOfWork.ServiceReestres as ServiceReestrRepository;
+
                 if (query is null)
                     throw new Exception("Query не может быть равен null");
 
                 List<ServiceReestr> serviceReestrEntities = _unitOfWork.ServiceReestres.List(query);
 
-                return Mapper.Map<List<ServiceReestrDTO>>(serviceReestrEntities);
+                int totalRecords = serviceReestrRepository.CountRecords(query);
+
+                List<ServiceReestrDTO> serviceReestrDTOs = Mapper.Map<List<ServiceReestrDTO>>(serviceReestrEntities);
+
+                if (serviceReestrDTOs.Any())
+                {
+                    serviceReestrDTOs.First().TotalRecords = totalRecords;
+                }
+
+                return serviceReestrDTOs;
+            }
+            catch (ApplicationException)
+            {
+                throw new ApplicationException(Resources_ru.ErrorInRepositories);
             }
             catch (Exception ex)
             {
-                throw ex;
+                log.Error(ex);
+                throw new ApplicationException(Resources_ru.ErrorInRepositories);
             }
         }
 
@@ -71,10 +97,14 @@ namespace Reestr.BLL.Managers
 
                 _unitOfWork.ServiceReestres.Insert(serviceReestrEntity);
             }
+            catch (ApplicationException)
+            {
+                throw new ApplicationException(Resources_ru.ErrorInRepositories);
+            }
             catch (Exception ex)
             {
-                validationResponse.Status = false;
-                validationResponse.ErrorMessage = ex.Message;
+                log.Error(ex);
+                throw new ApplicationException(Resources_ru.ErrorInRepositories);
             }
 
             return validationResponse;
@@ -93,10 +123,14 @@ namespace Reestr.BLL.Managers
 
                 _unitOfWork.ServiceReestres.Update(serviceReestrEntity);
             }
+            catch (ApplicationException)
+            {
+                throw new ApplicationException(Resources_ru.ErrorInRepositories);
+            }
             catch (Exception ex)
             {
-                validationResponse.Status = false;
-                validationResponse.ErrorMessage = ex.Message;
+                log.Error(ex);
+                throw new ApplicationException(Resources_ru.ErrorInRepositories);
             }
 
             return validationResponse;
@@ -114,10 +148,14 @@ namespace Reestr.BLL.Managers
 
                 _unitOfWork.ServiceReestres.Delete(id);
             }
+            catch (ApplicationException)
+            {
+                throw new ApplicationException(Resources_ru.ErrorInRepositories);
+            }
             catch (Exception ex)
             {
-                validationResponse.Status = false;
-                validationResponse.ErrorMessage = ex.Message;
+                log.Error(ex);
+                throw new ApplicationException(Resources_ru.ErrorInRepositories);
             }
 
             return validationResponse;
@@ -154,15 +192,6 @@ namespace Reestr.BLL.Managers
                     validationResponse.ErrorMessage = error.ErrorMessage;
                     return validationResponse;
                 }
-            }
-
-
-
-            if (model.Price < 0)
-            {
-                validationResponse.ErrorMessage = "Цена услуги не может быть отрицательной";
-                validationResponse.Status = false;
-                return validationResponse;
             }
 
             return validationResponse;
