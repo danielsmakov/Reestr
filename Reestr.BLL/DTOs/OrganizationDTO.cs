@@ -7,6 +7,7 @@ using System.Linq;
 using System.Resources;
 using System.Text;
 using System.Threading.Tasks;
+using Resources;
 
 
 namespace Reestr.BLL.DTOs
@@ -17,8 +18,7 @@ namespace Reestr.BLL.DTOs
         public int Id { get; set; }
 
 
-        /*[Required(ErrorMessage = "Не указано название организации")]*/
-        [Required(ErrorMessageResourceType = typeof(Resources.Resources_ru), ErrorMessageResourceName = "Required")]
+        [Required(ErrorMessageResourceType = typeof(Resources_ru), ErrorMessageResourceName = "Required")]
         [StringLength(300, MinimumLength = 2, ErrorMessageResourceType = typeof(Resources.Resources_ru), ErrorMessageResourceName = "NameLength")]
         public string Name { get; set; }
 
@@ -26,17 +26,17 @@ namespace Reestr.BLL.DTOs
         /// <summary>
         /// BIN (БИН) состоит из 12 цифр и является уникальным идентификатором организации
         /// </summary>
-        [Required(ErrorMessageResourceType = typeof(Resources.Resources_ru), ErrorMessageResourceName = "Required")]
+        [Required(ErrorMessageResourceType = typeof(Resources_ru), ErrorMessageResourceName = "Required")]
         [RegularExpression(@"^\d{12}", ErrorMessageResourceType = typeof(Resources.Resources_ru), ErrorMessageResourceName = "BINAndIINLength")]
         public string BIN { get; set; }
 
 
-        [Required(ErrorMessageResourceType = typeof(Resources.Resources_ru), ErrorMessageResourceName = "Required")]
+        [Required(ErrorMessageResourceType = typeof(Resources_ru), ErrorMessageResourceName = "Required")]
         [RegularExpression(@"^\d{10}", ErrorMessageResourceType = typeof(Resources.Resources_ru), ErrorMessageResourceName = "PhoneNumberLength")]
         public string PhoneNumber { get; set; }
 
 
-        [Required(ErrorMessageResourceType = typeof(Resources.Resources_ru), ErrorMessageResourceName = "Required")]
+        [Required(ErrorMessageResourceType = typeof(Resources_ru), ErrorMessageResourceName = "Required")]
         public DateTime BeginDate { get; set; }
 
         [NotMapped()]

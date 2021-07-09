@@ -38,13 +38,14 @@ namespace Reestr.BLL.Managers
 
                 organizationDTO = Mapper.Map<OrganizationDTO>(organizationEntity);
             }
-            catch (ApplicationException ex)
+            catch (ApplicationException)
             {
-                throw ex;
+                throw new ApplicationException(Resources_ru.ErrorInRepositories);
             }
             catch (Exception ex)
             {
                 log.Error(ex);
+                throw new ApplicationException(Resources_ru.ErrorInRepositories);
             }
 
             return organizationDTO;
@@ -72,13 +73,14 @@ namespace Reestr.BLL.Managers
 
                 
             }
-            catch (ApplicationException ex)
+            catch (ApplicationException)
             {
-                throw ex;
+                throw new ApplicationException(Resources_ru.ErrorInRepositories);
             }
             catch (Exception ex)
             {
                 log.Error(ex);
+                throw new ApplicationException(Resources_ru.ErrorInRepositories);
             }
 
             return organizationDTOs;
@@ -104,13 +106,14 @@ namespace Reestr.BLL.Managers
 
                 _unitOfWork.Organizations.Insert(organizationEntity);
             }
-            catch (ApplicationException ex)
+            catch (ApplicationException)
             {
-                throw ex;
+                throw new ApplicationException(Resources_ru.ErrorInRepositories);
             }
             catch (Exception ex)
             {
                 log.Error(ex);
+                throw new ApplicationException(Resources_ru.ErrorInRepositories);
             }
 
             return validationResponse;
@@ -128,13 +131,14 @@ namespace Reestr.BLL.Managers
 
                 _unitOfWork.Organizations.Update(organizationEntity);
             }
-            catch (ApplicationException ex)
+            catch (ApplicationException)
             {
-                throw ex;
+                throw new ApplicationException(Resources_ru.ErrorInRepositories);
             }
             catch (Exception ex)
             {
                 log.Error(ex);
+                throw new ApplicationException(Resources_ru.ErrorInRepositories);
             }
 
             return validationResponse;
@@ -150,13 +154,14 @@ namespace Reestr.BLL.Managers
                     throw new Exception("Id не может быть равен или меньше 0");
                 _unitOfWork.Organizations.Delete(id);
             }
-            catch (ApplicationException ex)
+            catch (ApplicationException)
             {
-                throw ex;
+                throw new ApplicationException(Resources_ru.ErrorInRepositories);
             }
             catch (Exception ex)
             {
                 log.Error(ex);
+                throw new ApplicationException(Resources_ru.ErrorInRepositories);
             }
 
             return validationResponse;

@@ -35,7 +35,7 @@ namespace Reestr.DAL.Repositories
                 }
                 catch (Exception)
                 {
-                    throw new ApplicationException(Resources.Resources_ru.ErrorInRepositories);
+                    throw new ApplicationException(/*Resources.Resources_ru.ErrorInRepositories*/);
                 }
             }
         }
@@ -72,7 +72,7 @@ namespace Reestr.DAL.Repositories
                 }
                 catch (Exception)
                 {
-                    throw new ApplicationException(Resources.Resources_ru.ErrorInRepositories);
+                    throw new ApplicationException(/*Resources.Resources_ru.ErrorInRepositories*/);
                 }
             }
         }
@@ -96,7 +96,7 @@ namespace Reestr.DAL.Repositories
                 }
                 catch (Exception)
                 {
-                    throw new ApplicationException(Resources.Resources_ru.ErrorInRepositories);
+                    throw new ApplicationException(/*Resources.Resources_ru.ErrorInRepositories*/);
                 }
             }
         }
@@ -122,7 +122,7 @@ namespace Reestr.DAL.Repositories
                 catch (Exception)
                 {
                     transaction.Rollback();
-                    throw new ApplicationException(Resources.Resources_ru.ErrorInRepositories);
+                    throw new ApplicationException(/*Resources.Resources_ru.ErrorInRepositories*/);
                 } 
                 finally
                 {
@@ -150,7 +150,7 @@ namespace Reestr.DAL.Repositories
                 catch (Exception)
                 {
                     transaction.Rollback();
-                    throw new ApplicationException(Resources.Resources_ru.ErrorInRepositories);
+                    throw new ApplicationException(/*Resources.Resources_ru.ErrorInRepositories*/);
                 }
                 finally
                 {
@@ -178,7 +178,7 @@ namespace Reestr.DAL.Repositories
                 catch (Exception)
                 {
                     transaction.Rollback();
-                    throw new ApplicationException(Resources.Resources_ru.ErrorInRepositories);
+                    throw new ApplicationException(/*Resources.Resources_ru.ErrorInRepositories*/);
                 }
                 finally
                 {
@@ -202,7 +202,7 @@ namespace Reestr.DAL.Repositories
                     where += " AND EndDate is null ";
                 }
                 if (!string.IsNullOrEmpty(query.Name)) where += " AND Name LIKE @Name";
-                if (!string.IsNullOrEmpty(query.NameToSearchFor)) where += $" AND Name LIKE '%{query.NameToSearchFor}%'";
+                if (!string.IsNullOrEmpty(query.NameToSearchFor)) where += $" AND Name LIKE '%' + @NameToSearchFor + '%'";
                 if (!string.IsNullOrEmpty(query.BIN)) where += " AND BIN LIKE @BIN";
                 if (query.Id != 0) where += " AND Id NOT like @Id";
 
@@ -210,7 +210,7 @@ namespace Reestr.DAL.Repositories
             }
             catch
             {
-                throw new ApplicationException(Resources.Resources_ru.ErrorInRepositories);
+                throw new ApplicationException(/*Resources.Resources_ru.ErrorInRepositories*/);
             }
         }
     }

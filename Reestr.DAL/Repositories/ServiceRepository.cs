@@ -161,7 +161,7 @@ namespace Reestr.DAL.Repositories
                 where += " AND EndDate is NULL ";
             }
             if (!string.IsNullOrEmpty(query.Name)) where += " AND Name LIKE @Name";
-            if (!string.IsNullOrEmpty(query.NameToSearchFor)) where += $" AND Name LIKE '%{query.NameToSearchFor}%'";
+            if (!string.IsNullOrEmpty(query.NameToSearchFor)) where += $" AND Name LIKE '%' + @NameToSearchFor + '%'";
             if (!string.IsNullOrEmpty(query.Code)) where += " AND Code LIKE @Code";
             if (query.Id != 0) where += " AND Id NOT like @Id";
 

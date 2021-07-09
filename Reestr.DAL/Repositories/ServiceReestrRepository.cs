@@ -48,6 +48,7 @@ namespace Reestr.DAL.Repositories
                     _con.Open();
 
                     var where = "WHERE 1=1";
+                    var orderBy = " ORDER BY BeginDate DESC";
                     if (query.IsDeleted)
                     {
                         where += " AND EndDate is not null ";
@@ -59,12 +60,25 @@ namespace Reestr.DAL.Repositories
                     if (!string.IsNullOrEmpty(query.OrganizationName)) where += " AND Organizations.Name like @OrganizationName";
                     if (!string.IsNullOrEmpty(query.ServiceName)) where += " AND Services.Name like @ServiceName";
 
-                    List<ServiceReestr> orgs = _con.Query<ServiceReestr>($"SELECT ServiceReestr.Id, ServiceReestr.OrganizationId, " +
-                        $"ServiceReestr.ServiceId, ServiceReestr.Price, ServiceReestr.BeginDate FROM ServiceReestr " +
-                        $"INNER JOIN Organizations ON ServiceReestr.OrganizationId = Organizations.Id " +
-                        $"INNER JOIN Services ON ServiceReestr.ServiceId = Services.Id {where} " +
-                        $"GROUP BY (SELECT NULL)" +
+                    if (!(query.SortingParameters is null))
+                    {
+                        if (!string.IsNullOrEmpty(query.SortingParameters[0]["field"]))
+                        {
+                            if (!string.IsNullOrEmpty(query.SortingParameters[0]["dir"]))
+                            {
+                                orderBy = $" ORDER BY {query.SortingParameters[0]["field"]} {query.SortingParameters[0]["dir"]}";
+                            }
+                        }
+                    }
+
+                    List<ServiceReestr> orgs = _con.Query<ServiceReestr>($"SELECT sr.Id, sr.OrganizationId, sr.ServiceId, sr.Price, sr.BeginDate, " +
+                        $"o.Id, o.Name, o.BIN, o.PhoneNumber, o.BeginDate, " +
+                        $"s.Id, s.Name, s.Code, s.Price, s.BeginDate FROM ServiceReestr sr" +
+                        $"INNER JOIN Organizations o ON sr.OrganizationId = o.Id " +
+                        $"INNER JOIN Services s ON sr.ServiceId = s.Id {where} " +
+                        $"{orderBy} " +
                         $"OFFSET @Offset ROWS FETCH NEXT @Limit ROWS ONLY",
+
                         new
                         {
                             OrganizationName = query.OrganizationName,
