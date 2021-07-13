@@ -48,7 +48,7 @@ namespace Reestr.DAL.Repositories
                     _con.Open();
 
                     var where = ConfigureWhereClause(query);
-                    var orderBy = " ORDER BY BeginDate DESC";
+                    var orderBy = " ORDER BY sr.BeginDate DESC";
                     
 
                     if (!(query.SortingParameters is null))
@@ -61,10 +61,18 @@ namespace Reestr.DAL.Repositories
                             }
                         }
                     }
-                    string sqlQuery = $"SELECT sr.Id, sr.OrganizationId, sr.ServiceId, sr.Price, sr.BeginDate, " +
-                        $"o.Id, o.Name, o.BIN, o.PhoneNumber, o.BeginDate, " +
-                        $"s.Id, s.Name, s.Code, s.Price, s.BeginDate FROM ServiceReestr sr" +
-                        $"INNER JOIN Organizations o ON sr.OrganizationId = o.Id " +
+                    /*string sqlQuery = $"SELECT sr.Id, sr.Price, sr.BeginDate, sr.EndDate, " +
+                        $"sr.OrganizationId, o.Id, o.Name, o.BIN, o.PhoneNumber, o.BeginDate, o.EndDate, " +
+                        $"sr.ServiceId, s.Id, s.Name, s.Code, s.Price, s.BeginDate, s.EndDate FROM ServiceReestr sr" +
+                        $"INNER JOIN Organizations o ON o.Id = sr.OrganizationId " +
+                        $"INNER JOIN Services s ON s.Id = sr.ServiceId {where} " +
+                        $"{orderBy} " +
+                        $"OFFSET @Offset ROWS FETCH NEXT @Limit ROWS ONLY";*/
+
+                    string sqlQuery = $"SELECT sr.Id, sr.Price, sr.BeginDate, " +
+                        $"sr.OrganizationId, o.Id, o.Name, o.BIN, o.PhoneNumber, o.BeginDate, " +
+                        $"sr.ServiceId, s.Id, s.Name, s.Code, s.Price, s.BeginDate FROM ServiceReestr sr " +
+                        $"INNER JOIN Organizations o ON o.Id = sr.OrganizationId " +
                         $"INNER JOIN Services s ON sr.ServiceId = s.Id {where} " +
                         $"{orderBy} " +
                         $"OFFSET @Offset ROWS FETCH NEXT @Limit ROWS ONLY";
@@ -80,7 +88,7 @@ namespace Reestr.DAL.Repositories
                     _con.Close();
                     return orgs;
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     throw new ApplicationException();
                 }
@@ -99,7 +107,7 @@ namespace Reestr.DAL.Repositories
 
                     var where = ConfigureWhereClause(query);
 
-                    int totalRecords = _con.QuerySingle<int>($"SELECT COUNT(*) FROM ServiceReestr {where}", query);
+                    int totalRecords = _con.QuerySingle<int>($"SELECT COUNT(*) FROM ServiceReestr sr {where}", query);
 
                     _con.Close();
                     return totalRecords;
@@ -206,11 +214,11 @@ namespace Reestr.DAL.Repositories
                 var where = "WHERE 1=1";
                 if (query.IsDeleted)
                 {
-                    where += " AND EndDate is not null ";
+                    where += " AND sr.EndDate is not null ";
                 }
                 else
                 {
-                    where += " AND EndDate is null ";
+                    where += " AND sr.EndDate is null ";
                 }
                 if (!string.IsNullOrEmpty(query.OrganizationName)) where += " AND Organizations.Name like @OrganizationName";
                 if (!string.IsNullOrEmpty(query.ServiceName)) where += " AND Services.Name like @ServiceName";

@@ -106,8 +106,8 @@ namespace Reestr.DAL.Repositories
         {
             using (var _con = new SqlConnection(connectString))
             {
-                string sqlQuery = "INSERT INTO Organizations (Name, BIN, PhoneNumber, BeginDate) VALUES ( @Name, @BIN, @PhoneNumber, @BeginDate);" +
-                    "SELECT CAST(SCOPE_IDENTITY() AS int)";
+                string sqlQuery = @"INSERT INTO Organizations (Name, BIN, PhoneNumber, BeginDate) VALUES ( @Name, @BIN, @PhoneNumber, @BeginDate);
+                    SELECT CAST(SCOPE_IDENTITY() AS int)";
 
                 SqlTransaction transaction = null;
 

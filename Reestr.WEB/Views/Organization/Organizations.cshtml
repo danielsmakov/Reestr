@@ -7,10 +7,11 @@
 
 
 <div>
-    <div class="demo-section k-content">
+    <div class="k-content">
 
         <h3>Организации</h3>
         <div id="grid"></div>
+        <div id="window"></div>
     </div>
 
     <script type="text/x-template" id="searchbar">
@@ -19,20 +20,30 @@
         <input type="checkbox" name="isdeleted" id="isdeleted" class="k-checkbox" />
     </script>
 
+    <script type="text/x-kendo-template" id="windowTemplate">
+        <p><strong>Delete confirmation window</strong></p>
+        <button class="k-button" id="yesButton">Yes</button>
+        <button class="k-button" id="noButton">No</button>
+    </script>
+
     <script type="text/javascript">
 
         $(document).ready(function () {
 
-            
+            var windowTemplate = kendo.template($("#windowTemplate").html());
 
             var dataSource = new kendo.data.DataSource({
                 type: "odata",
                 transport: {
                     read: {
                         url: "/Organization/List",
+                        data: function (data) {
+                            return {
+                                data
+                            }
+                        },
                         type: "GET",
                         dataType: "json",
-                        contentType: "",
                     },
                     create: {
                         url: "/Organization/Insert",
@@ -57,7 +68,6 @@
                             return kendo.stringify(data);
                         }
                         if (type == "create") {
-                            console.log(data);
                             return kendo.stringify(data);
                         }
                         if (type == "read") {
@@ -92,6 +102,10 @@
 
 
 
+
+
+
+
             $("#grid").kendoGrid({
                 dataSource: dataSource,
                 pageable: true,
@@ -106,13 +120,42 @@
                     { field: "BIN", title: "БИН", width: 120, hidden: true },
                     { field: "PhoneNumber", title: "Номер телефона", width: 120 },
                     { field: "BeginDate", title: "Дата начала действия", format: "{0:dd/MM/yyyy}", width: 120 },
-                    { command: [{ name: "edit", text: "Редактировать" }, { name: "destroy", text: "Удалить" }], width: 170 }],
+                    {
+                        command: [
+                            { name: "edit", text: "Редактировать" },
+                            { name: "delete", text: "Удалить",
+                            @*click: function (e) {
+                                var window = $("window").kendoWindow({
+                                    title: "Вы уверены, что хотите удалить запись?",
+                                    visible: false,
+                                    width: "400px",
+                                    height: "200px",
+                                }).data("kendoWindow");
+
+                                e.preventDefault();
+                                var tr = $(e.target).closest("tr");
+                                var data = this.dataItem(tr);
+                                window.content(windowTemplate(data));
+
+                                window.center().open();
+
+                                $("#yesButton").click(function () {
+                                    grid.dataSource.remove(data);
+                                    grid.dataSource.sync();
+
+                                    window.close();
+                                });
+                                $("#noButton").click(function () {
+                                    window.close();
+                                });
+                            }*@
+                        }], width: 170
+                    }],
                 editable: {
                     mode: "popup",
-                    confirmation: "Вы уверены, что хотите удалить запись?",
+                    confirmation: true,
                     window: {
                         title: "",
-                        animation: true,
                     },
                 },
                 edit: function (e) {
@@ -129,7 +172,9 @@
                 },
             }).data("kendoGrid");
 
-            
+            $('k-grid-delete').click(function () {
+                alert('Ты кликнул на кнопку удалить.')
+            });
 
             $("body").on("keyup", "#txtsearch", function () {
                 var value = $("#txtsearch").val();
@@ -162,24 +207,8 @@
                         ]
                     });
                     $("#grid").data("kendoGrid").dataSource.read();
-                    @*$("#grid").data("kendoGrid").dataSource({
-                        schema: {
-                            data: "Data",
-                            total: "Total",
-                            model: {
-                                id: "Id",
-                                fields: {
-                                    Id: { type: "number", editable: false, nullable: true },
-                                    Name: { type: "string", validation: { required: true } },
-                                    BIN: { type: "string", validation: { required: true } },
-                                    PhoneNumber: { type: "string", validation: { required: true } },
-                                    BeginDate: { type: "date", validation: { required: true } }
-                                }
-                            }
-                        }
-                    });*@
                 }
-                
+
             });
 
         });

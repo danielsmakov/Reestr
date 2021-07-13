@@ -1,8 +1,198 @@
-﻿
-@{
-    ViewBag.Title = "ServiceReestr";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+﻿@{
+    ViewBag.Title = "Реестр услуг оказываемых организацией";
 }
+@model List<Reestr.BLL.DTOs.ServiceReestrDTO>
+@using Kendo.Mvc.UI
 
-<h2>ServiceReestr</h2>
 
+<div>
+    <div class="k-content">
+        <h2>ServiceReestr</h2>
+        <div id="grid"></div>
+        <div id="popupWindow"></div>
+    </div>
+
+    <script type="text/x-template" id="searchbar">
+        <button id="addButton" class="k-button k-i-plus"><span class="k-icon k-i-plus"></span>Добавить</button>
+        <input type="text" name="txtsearch" id="txtsearch" class="k-textbox" placeholder="Поиск..." style="width: 270px" />
+        <label for="isdeleted" style="margin-left: 30px">Искать удаленные записи?</label>
+        <input type="checkbox" name="isdeleted" id="isdeleted" class="k-checkbox" />
+    </script>
+
+    <script type="text/x-kendo-template" id="popupWindowTemplate">
+        <p><strong>Add/Edit Window</strong></p>
+        <button class="k-button" id="yesButton">Yes</button>
+        <button class="k-button" id="noButton">No</button>
+    </script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+
+
+            var dataSource = new kendo.data.DataSource({
+                type: "odata",
+                transport: {
+                    read: {
+                        url: "/ServiceReestr/List",
+                        data: function (data) {
+                            return {
+                                data
+                            }
+                        },
+                        type: "GET",
+                        dataType: "json",
+                    },
+                    create: {
+                        url: "/ServiceReestr/Insert",
+                        type: "POST",
+                        dataType: "json",
+                    },
+                    update: {
+                        url: "/ServiceReestr/Update",
+                        type: "POST",
+                        dataType: "json"
+                    },
+                    destroy: {
+                        url: "/ServiceReestr/Delete",
+                        type: "POST",
+                        dataType: "json"
+                    },
+                    parameterMap: function (data, type) {
+                        if (type == "destroy") {
+                            return { Id: kendo.stringify(data.Id) };
+                        }
+                        if (type == "update") {
+                            return kendo.stringify(data);
+                        }
+                        if (type == "create") {
+                            return kendo.stringify(data);
+                        }
+                        if (type == "read") {
+                            return {
+                                Offset: $('#grid').data('kendoGrid').dataSource.skip(),
+                                Limit: $('#grid').data('kendoGrid').dataSource.pageSize(),
+                                SortingParameters: data.sort,
+                                NameToSearchFor: $("#txtsearch").val(),
+                                IsDeleted: document.getElementById('isdeleted').checked
+                            }
+                        }
+                    },
+                },
+                pageSize: 20,
+                serverPaging: true,
+                serverSorting: true,
+                schema: {
+                    data: "Data",
+                    total: "Total",
+                    model: {
+                        id: "Id",
+                        fields: {
+                            Id: { type: "number", editable: false, nullable: true },
+                            Organization: [{ Name: { type: "string" } }],
+                            Service: [{ Name: { type: "string" } }],
+                            Price: { type: "number", validation: { required: true } },
+                            BeginDate: { type: "date", validation: { required: true } }
+                        }
+                    }
+                }
+            });
+
+
+
+            $("#grid").kendoGrid({
+                dataSource: dataSource,
+                pageable: true,
+                height: 550,
+                sortable: true,
+                toolbar: [{ template: kendo.template($("#searchbar").html()) }],
+                search: {
+                    fields: ["Name"],
+                },
+                columns: [
+                    { field: "Organization.Name", title: "Организация", width: 450 },
+                    { field: "Service.Name", title: "Услуга", width: 120 },
+                    { field: "Price", title: "Стоимость", width: 120 },
+                    { field: "BeginDate", title: "Дата начала действия", format: "{0:dd/MM/yyyy}", width: 120 },
+                    {
+                        command: [
+                            { name: "edit", text: "Редактировать" },
+                            { name: "delete", text: "Удалить" }
+                        ], width: 170
+                    }],
+                editable: {
+                    mode: "popup",
+                    confirmation: true,
+                    window: { title: "" },
+                },
+                edit: function (e) {
+                    var update = $(e.container).parent().find(".k-grid-update");
+                    var cancel = $(e.container).parent().find(".k-grid-cancel");
+                    $(update).html('<span class="k-update">Подтвердить</span>');
+                    $(cancel).html('<span class="k-cancel">Отмена</span>');
+                    $('#BIN').kendoMaskedTextBox({
+                        mask: '0000-0000-0000'
+                    })
+                    $('#PhoneNumber').kendoMaskedTextBox({
+                        mask: '(000)-000-0000'
+                    });
+                },
+            }).data("kendoGrid");
+
+
+            $("body").on("keyup", "#txtsearch", function () {
+                var value = $("#txtsearch").val();
+                if (value.length == 0) {
+                    $("#grid").data("kendoGrid").refresh();
+                }
+                if (value.length < 3 && value.length > 0) {
+                    return
+                }
+                else {
+                    $("#grid").data("kendoGrid").dataSource.filter({
+                        logic: "or",
+                        filters: [
+                            { field: "Name", operator: "contains", value: value }
+                        ],
+
+                    });
+                    $("#grid").data("kendoGrid").dataSource.read();
+                }
+            });
+
+            $("body").on("click", "#isdeleted", function () {
+                if (document.getElementById('isdeleted').click) {
+                    var value = $("#isdeleted").val();
+
+                    $("#grid").data("kendoGrid").dataSource.filter({
+                        logic: "or",
+                        filters: [
+                            { field: "EndDate" }
+                        ]
+                    });
+                    $("#grid").data("kendoGrid").dataSource.read();
+                }
+
+            });
+
+
+            $('#addButton').click(function () {
+                var window = $("window").kendoWindow({
+                    title: "Форма",
+                    visible: false,
+                    width: "400px",
+                    height: "500px",
+                }).data("kendoWindow");
+
+                e.preventDefault();
+
+                window.center().open();
+
+
+            });
+        })
+
+    </script>
+
+</div>
