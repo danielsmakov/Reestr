@@ -177,20 +177,144 @@
             });
 
 
-            $('#addButton').click(function () {
-                var window = $("window").kendoWindow({
+            var popupWindow = $('#popupWindow'),
+                addButton = $('#addButton');
+
+            addButton.click(function () {
+
+                popupWindow.kendoWindow({
+                    width: "300px",
+                    height: "500px",
+                    title: "Добавление/Редактирование",
+                    visible: false,
+                    draggable: false,
+                    actions: [
+                        "Close"
+                    ],
+                    content: "/ServiceReestr/Edit/"
+                }).data('kendoWindow');
+
+                popupWindow.data('kendoWindow').center().open();
+            });
+
+
+            
+
+            @*$('#addForm').kendoForm({
+                orientation: "vertical",
+                items: [{
+                    type: "group",
+                    items: [
+                        {
+                            field: "Organization",
+                            editor: "ComboBox",
+                            label: "Организация:",
+                            editorOptions: {
+                                placeholder: "Выберите организацию",
+                                dataTextField: "Name",
+                                dataValueField: "Id",
+                                filter: "contains",
+                                dataSource: {
+                                    type: "odata",
+                                    transport: {
+                                        read: {
+                                            url: "/Organization/List",
+                                            data: function (data) {
+                                                return {
+                                                    data
+                                                }
+                                            },
+                                            type: "GET",
+                                            dataType: "json"
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        model: {
+                                            id: "Id",
+                                            fields: {
+                                                Id: { type: "number", editable: false, nullable: true },
+                                                Name: { type: "string", validation: { required: true } },
+                                                BIN: { type: "string", validation: { required: true } },
+                                                PhoneNumber: { type: "string", validation: { required: true } },
+                                                BeginDate: { type: "date", validation: { required: true } }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            field: "Service",
+                            editor: "ComboBox",
+                            label: "Услуга:",
+                            editorOptions: {
+                                placeholder: "Выберите услугу",
+                                dataTextField: "Name",
+                                dataValueField: "Id",
+                                filter: "contains",
+                                dataSource: {
+                                    type: "odata",
+                                    transport: {
+                                        read: {
+                                            url: "/Service/List",
+                                            data: function (data) {
+                                                return {
+                                                    data
+                                                }
+                                            },
+                                            type: "GET",
+                                            dataType: "json"
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        model: {
+                                            id: "Id",
+                                            fields: {
+                                                Id: { type: "number", editable: false, nullable: true },
+                                                Name: { type: "string", validation: { required: true } },
+                                                Code: { type: "string", validation: { required: true } },
+                                                Price: { type: "number", validation: { required: true } },
+                                                BeginDate: { type: "date", validation: { required: true } }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            field: "Price",
+                            label: "Стоимость:"
+                        },
+                        {
+                            field: "BeginDate",
+                            editor: "DatePicker",
+                            label: "Дата начала действия:"
+                        },
+                    ]
+                }],
+                submit: function (e) {
+                    e.preventDefault();
+                }
+            });*@
+
+            @*$('#addButton').click(function (e) {
+                var window = $('window').kendoWindow({
                     title: "Форма",
                     visible: false,
                     width: "400px",
                     height: "500px",
-                }).data("kendoWindow");
+                }).data('kendoWindow');
 
                 e.preventDefault();
 
                 window.center().open();
 
 
-            });
+            });*@
         })
 
     </script>

@@ -43,7 +43,7 @@ namespace Reestr.WEB.Controllers
             ListModel<ServiceDTO> listModel = new ListModel<ServiceDTO>();
             if (serviceDTOs.Any())
             {
-                listModel = new ListModel<ServiceDTO>()
+                listModel = new ListModel<ServiceDTO>
                 {
                     Data = serviceDTOs,
                     Total = serviceDTOs.First().TotalRecords
@@ -51,7 +51,7 @@ namespace Reestr.WEB.Controllers
             }
             else
             {
-                listModel = new ListModel<ServiceDTO>()
+                listModel = new ListModel<ServiceDTO>
                 {
                     Data = serviceDTOs,
                     Total = 0

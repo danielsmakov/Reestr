@@ -43,7 +43,7 @@ namespace Reestr.WEB.Controllers
             ListModel<OrganizationDTO> listModel = new ListModel<OrganizationDTO>();
             if (organizationDTOs.Any())
             {
-                listModel = new ListModel<OrganizationDTO>()
+                listModel = new ListModel<OrganizationDTO>
                 {
                     Data = organizationDTOs,
                     Total = organizationDTOs.First().TotalRecords
@@ -51,7 +51,7 @@ namespace Reestr.WEB.Controllers
             }
             else
             {
-                listModel = new ListModel<OrganizationDTO>()
+                listModel = new ListModel<OrganizationDTO>
                 {
                     Data = organizationDTOs,
                     Total = 0

@@ -88,7 +88,7 @@ namespace Reestr.DAL.Repositories
                     _con.Close();
                     return orgs;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     throw new ApplicationException();
                 }

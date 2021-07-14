@@ -88,5 +88,15 @@ namespace Reestr.WEB.Controllers
             
             return Json(validationResponse);
         }
+
+        public ActionResult Edit(int? id)
+        {
+            if (id == 0)
+            {
+                return PartialView("Edit");
+            }
+
+            return PartialView("Edit");
+        }
     }
 }

@@ -2851,6 +2851,7 @@
     <Content Include="Views\ServiceReestr\ServiceReestr.cshtml" />
     <Content Include="Views\EmployeeReestr\EmployeeReestr.cshtml" />
     <Content Include="Views\ProducedService\ProducedServices.cshtml" />
+    <Content Include="Views\ServiceReestr\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
