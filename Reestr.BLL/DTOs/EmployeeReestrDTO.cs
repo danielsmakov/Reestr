@@ -19,6 +19,8 @@ namespace Reestr.BLL.DTOs
         [Required(ErrorMessageResourceType = typeof(Resources.Resources_ru), ErrorMessageResourceName = "Required")]
         public int OrganizationId { get; set; }
 
+        public OrganizationDTO Organization { get; set; }
+
 
         /// <summary>
         /// IIN состоит из 12 цифр

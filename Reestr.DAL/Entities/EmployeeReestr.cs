@@ -15,6 +15,9 @@ namespace Reestr.DAL.Entities
         /// </summary>
         public int OrganizationId { get; set; }
 
+        public Organization Organization { get; set; }
+        
+
         /// <summary>
         /// IIN - Individual Identification Number, consists of 12 digits
         /// </summary>
