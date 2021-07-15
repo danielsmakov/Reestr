@@ -61,9 +61,9 @@ namespace Reestr.DAL.Repositories
                         }
                     }
 
-                    List<Service> orgs = _con.Query<Service>($"SELECT * FROM Services {where} " +
-                        $"{orderBy} " +
-                        $"OFFSET @Offset ROWS FETCH NEXT @Limit ROWS ONLY", query).ToList();
+                    List<Service> orgs = _con.Query<Service>($@"SELECT * FROM Services {where} 
+                        {orderBy} 
+                        OFFSET @Offset ROWS FETCH NEXT @Limit ROWS ONLY", query).ToList();
                     _con.Close();
                     return orgs;
                 }
@@ -103,8 +103,8 @@ namespace Reestr.DAL.Repositories
         {
             using (var _con = new SqlConnection(connectString))
             {
-                string sqlQuery = "INSERT INTO Services (Name, Code, Price, BeginDate) VALUES (@Name, @Code, @Price, @BeginDate); " +
-                    "SELECT CAST(SCOPE_IDENTITY() AS int)";
+                string sqlQuery = @"INSERT INTO Services (Name, Code, Price, BeginDate) VALUES (@Name, @Code, @Price, @BeginDate); 
+                    SELECT CAST(SCOPE_IDENTITY() AS int)";
 
                 SqlTransaction transaction = null;
 

@@ -61,21 +61,14 @@ namespace Reestr.DAL.Repositories
                             }
                         }
                     }
-                    /*string sqlQuery = $"SELECT sr.Id, sr.Price, sr.BeginDate, sr.EndDate, " +
-                        $"sr.OrganizationId, o.Id, o.Name, o.BIN, o.PhoneNumber, o.BeginDate, o.EndDate, " +
-                        $"sr.ServiceId, s.Id, s.Name, s.Code, s.Price, s.BeginDate, s.EndDate FROM ServiceReestr sr" +
-                        $"INNER JOIN Organizations o ON o.Id = sr.OrganizationId " +
-                        $"INNER JOIN Services s ON s.Id = sr.ServiceId {where} " +
-                        $"{orderBy} " +
-                        $"OFFSET @Offset ROWS FETCH NEXT @Limit ROWS ONLY";*/
 
-                    string sqlQuery = $"SELECT sr.Id, sr.Price, sr.BeginDate, " +
-                        $"sr.OrganizationId, o.Id, o.Name, o.BIN, o.PhoneNumber, o.BeginDate, " +
-                        $"sr.ServiceId, s.Id, s.Name, s.Code, s.Price, s.BeginDate FROM ServiceReestr sr " +
-                        $"INNER JOIN Organizations o ON o.Id = sr.OrganizationId " +
-                        $"INNER JOIN Services s ON sr.ServiceId = s.Id {where} " +
-                        $"{orderBy} " +
-                        $"OFFSET @Offset ROWS FETCH NEXT @Limit ROWS ONLY";
+                    string sqlQuery = $@"SELECT sr.Id, sr.Price, sr.BeginDate, 
+                        sr.OrganizationId, o.Id, o.Name, o.BIN, o.PhoneNumber, o.BeginDate, 
+                        sr.ServiceId, s.Id, s.Name, s.Code, s.Price, s.BeginDate FROM ServiceReestr sr 
+                        INNER JOIN Organizations o ON o.Id = sr.OrganizationId 
+                        INNER JOIN Services s ON sr.ServiceId = s.Id {where} 
+                        {orderBy} 
+                        OFFSET @Offset ROWS FETCH NEXT @Limit ROWS ONLY";
 
                     List<ServiceReestr> orgs = _con.Query<ServiceReestr, Organization, Service, ServiceReestr>(sqlQuery, 
                     (sr, o, s) =>
@@ -123,8 +116,8 @@ namespace Reestr.DAL.Repositories
         {
             using (var _con = new SqlConnection(connectString))
             {
-                string sqlQuery = "INSERT INTO ServiceReestr (OrganizationId, ServiceId, Price, BeginDate) VALUES (@OrganizationId, @ServiceId, @Price, @BeginDate); " +
-                    "SELECT CAST(SCOPE_IDENTITY() AS int)";
+                string sqlQuery = @"INSERT INTO ServiceReestr (OrganizationId, ServiceId, Price, BeginDate) VALUES (@OrganizationId, @ServiceId, @Price, @BeginDate); 
+                    SELECT CAST(SCOPE_IDENTITY() AS int)";
 
                 SqlTransaction transaction = null;
 

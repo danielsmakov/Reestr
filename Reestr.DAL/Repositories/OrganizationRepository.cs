@@ -64,9 +64,9 @@ namespace Reestr.DAL.Repositories
                     }
 
 
-                    List<Organization> orgs = _con.Query<Organization>($"SELECT * FROM Organizations {where} " +
-                        $"{orderBy} " +
-                        $"OFFSET @Offset ROWS FETCH NEXT @Limit ROWS ONLY", query).ToList();
+                    List<Organization> orgs = _con.Query<Organization>($@"SELECT * FROM Organizations {where} 
+                        {orderBy} 
+                        OFFSET @Offset ROWS FETCH NEXT @Limit ROWS ONLY", query).ToList();
                     _con.Close();
                     return orgs;
                 }
