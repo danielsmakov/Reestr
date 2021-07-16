@@ -49,5 +49,7 @@ namespace Reestr.BLL.DTOs
 
         [Required(ErrorMessageResourceType = typeof(Resources.Resources_ru), ErrorMessageResourceName = "Required")]
         public DateTime BeginDate { get; set; }
+
+        public int TotalRecords { get; set; }
     }
 }

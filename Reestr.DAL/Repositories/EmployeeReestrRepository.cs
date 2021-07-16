@@ -47,21 +47,8 @@ namespace Reestr.DAL.Repositories
                 {
                     _con.Open();
 
-                    var where = "WHERE 1=1";
+                    var where = ConfigureWhereClause(query);
                     var orderBy = " ORDER BY er.BeginDate DESC";
-
-                    if (query.IsDeleted)
-                    {
-                        where += " AND EndDate is not null ";
-                    }
-                    else
-                    {
-                        where += " AND EndDate is null ";
-                    }
-                    if (!string.IsNullOrEmpty(query.OrganizationName)) where += " AND Organizations.Name like @OrganizationName";
-                    if (!string.IsNullOrEmpty(query.FullName)) where += " AND EmployeeReestr.FullName like @FullName";
-                    if (!string.IsNullOrEmpty(query.IIN)) where += " AND IIN like @IIN";
-                    if (query.Id != 0) where += " AND Id NOT like @Id";
 
                     if (!(query.SortingParameters is null))
                     {
@@ -215,18 +202,17 @@ namespace Reestr.DAL.Repositories
                 var where = "WHERE 1=1";
                 if (query.IsDeleted)
                 {
-                    where += " AND sr.EndDate is not null ";
+                    where += " AND er.EndDate is not null ";
                 }
                 else
                 {
-                    where += " AND sr.EndDate is null ";
+                    where += " AND er.EndDate is null ";
                 }
-                if (!string.IsNullOrEmpty(query.OrganizationName)) where += " AND Organizations.Name like @OrganizationName";
-                /*if (!string.IsNullOrEmpty(query.ServiceName)) where += " AND Services.Name like @ServiceName";*/
-                /*if (!string.IsNullOrEmpty(query.Name)) where += " AND Name LIKE @Name";
-                if (!string.IsNullOrEmpty(query.NameToSearchFor)) where += $" AND Name LIKE '%' + @NameToSearchFor + '%'";
-                if (!string.IsNullOrEmpty(query.BIN)) where += " AND BIN LIKE @BIN";
-                if (query.Id != 0) where += " AND Id NOT like @Id";*/
+                if (!string.IsNullOrEmpty(query.FullName)) where += " AND er.FullName like @FullName";
+                if (!string.IsNullOrEmpty(query.OrganizationNameToSearchFor)) where += " AND o.Name like '%' + @OrganizationNameToSearchFor + '%'";
+                if (!string.IsNullOrEmpty(query.FullNameToSearchFor)) where += " AND er.FullName like '%' + @FullNameToSearchFor + '%'";
+                if (!string.IsNullOrEmpty(query.IIN)) where += " AND er.IIN LIKE @BIN";
+                if (query.Id != 0) where += " AND er.Id NOT like @Id";
 
                 return where;
             }

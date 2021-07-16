@@ -10,6 +10,9 @@ using Reestr.DAL.Entities;
 using Reestr.DAL.Queries;
 using Reestr.BLL.Validation;
 using System.ComponentModel.DataAnnotations;
+using log4net;
+using Resources;
+using Reestr.DAL.Repositories;
 
 namespace Reestr.BLL.Managers
 {
@@ -17,6 +20,8 @@ namespace Reestr.BLL.Managers
     {
         private IUnitOfWork _unitOfWork;
         private IMapper Mapper { get; } = AutoMapperConfigurator.GetMapper();
+
+        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         public EmployeeReestrManager(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
@@ -28,15 +33,20 @@ namespace Reestr.BLL.Managers
             try
             {
                 if (id <= 0)
-                    throw new Exception("Id не может быть равен или меньше 0");
+                    throw new Exception(Resources_ru.IdLessThanZero);
 
                 var employeeReestrEntity = _unitOfWork.EmployeeReestres.Get(id);
 
                 return Mapper.Map<EmployeeReestrDTO>(employeeReestrEntity);
             }
+            catch (ApplicationException)
+            {
+                throw new ApplicationException(Resources_ru.ErrorInRepositories);
+            }
             catch (Exception ex)
             {
-                throw ex;
+                log.Error(ex);
+                throw new ApplicationException(Resources_ru.ErrorInRepositories);
             }
         }
 
@@ -45,22 +55,46 @@ namespace Reestr.BLL.Managers
         {
             try
             {
+                var employeeReestrRepository = _unitOfWork.EmployeeReestres as EmployeeReestrRepository;
+
                 if (query is null)
-                    throw new Exception("Query не может быть равен null");
+                    throw new Exception(Resources_ru.ObjectNotFound);
 
-                var employeeReestrEntities = _unitOfWork.EmployeeReestres.List(query);
+                List<EmployeeReestr> employeeReestrEntities = _unitOfWork.EmployeeReestres.List(query);
 
-                return Mapper.Map<List<EmployeeReestrDTO>>(employeeReestrEntities);
+                int totalRecords = employeeReestrRepository.CountRecords(query);
+
+                List<EmployeeReestrDTO> employeeReestrDTOs = Mapper.Map<List<EmployeeReestrDTO>>(employeeReestrEntities);
+
+                if (employeeReestrDTOs.Any())
+                {
+                    employeeReestrDTOs.First().TotalRecords = totalRecords;
+                }
+
+                return employeeReestrDTOs;
+            }
+            catch (ApplicationException)
+            {
+                throw new ApplicationException(Resources_ru.ErrorInRepositories);
             }
             catch (Exception ex)
             {
-                throw ex;
+                log.Error(ex);
+                throw new ApplicationException(Resources_ru.ErrorInRepositories);
             }
         }
 
 
         public ValidationResponse Insert(EmployeeReestrDTO employeeReestrDTO)
         {
+            if (employeeReestrDTO is null)
+            {
+                throw new Exception(Resources_ru.ObjectNotFound);
+            }
+
+            employeeReestrDTO.IIN = MaskCharactersHandler.RemoveEveryCharacterExceptForDigits(employeeReestrDTO.IIN);
+            employeeReestrDTO.PhoneNumber = MaskCharactersHandler.RemoveEveryCharacterExceptForDigits(employeeReestrDTO.PhoneNumber);
+
             var validationResponse = ValidateEmployeeReestrDTO(employeeReestrDTO);
             if (!validationResponse.Status)
                 return validationResponse;
@@ -71,10 +105,14 @@ namespace Reestr.BLL.Managers
 
                 _unitOfWork.EmployeeReestres.Insert(employeeReestrEntity);
             }
+            catch (ApplicationException)
+            {
+                throw new ApplicationException(Resources_ru.ErrorInRepositories);
+            }
             catch (Exception ex)
             {
-                validationResponse.Status = false;
-                validationResponse.ErrorMessage = ex.Message;
+                log.Error(ex);
+                throw new ApplicationException(Resources_ru.ErrorInRepositories);
             }
 
             return validationResponse;
@@ -83,6 +121,14 @@ namespace Reestr.BLL.Managers
 
         public ValidationResponse Update(EmployeeReestrDTO employeeReestrDTO)
         {
+            if (employeeReestrDTO is null)
+            {
+                throw new Exception(Resources_ru.ObjectNotFound);
+            }
+
+            employeeReestrDTO.IIN = MaskCharactersHandler.RemoveEveryCharacterExceptForDigits(employeeReestrDTO.IIN);
+            employeeReestrDTO.PhoneNumber = MaskCharactersHandler.RemoveEveryCharacterExceptForDigits(employeeReestrDTO.PhoneNumber);
+
             var validationResponse = ValidateEmployeeReestrDTO(employeeReestrDTO);
             if (!validationResponse.Status)
                 return validationResponse;
@@ -93,10 +139,14 @@ namespace Reestr.BLL.Managers
 
                 _unitOfWork.EmployeeReestres.Update(employeeReestrEntity);
             }
+            catch (ApplicationException)
+            {
+                throw new ApplicationException(Resources_ru.ErrorInRepositories);
+            }
             catch (Exception ex)
             {
-                validationResponse.Status = false;
-                validationResponse.ErrorMessage = ex.Message;
+                log.Error(ex);
+                throw new ApplicationException(Resources_ru.ErrorInRepositories);
             }
 
             return validationResponse;
@@ -110,14 +160,18 @@ namespace Reestr.BLL.Managers
             try
             {
                 if (id <= 0)
-                    throw new Exception("Id не может быть равен или меньше 0");
+                    throw new Exception(Resources_ru.IdLessThanZero);
 
                 _unitOfWork.EmployeeReestres.Delete(id);
             }
+            catch (ApplicationException)
+            {
+                throw new ApplicationException(Resources_ru.ErrorInRepositories);
+            }
             catch (Exception ex)
             {
-                validationResponse.Status = false;
-                validationResponse.ErrorMessage = ex.Message;
+                log.Error(ex);
+                throw new ApplicationException(Resources_ru.ErrorInRepositories);
             }
 
             return validationResponse;
@@ -139,7 +193,7 @@ namespace Reestr.BLL.Managers
 
             if (model == null)
             {
-                validationResponse.ErrorMessage = "Объект не найден.";
+                validationResponse.ErrorMessage = Resources_ru.ObjectNotFound;
                 validationResponse.Status = false;
                 return validationResponse;
             }
@@ -159,14 +213,6 @@ namespace Reestr.BLL.Managers
             }
 
 
-
-            if (model.IIN.Trim().Length != 12)
-            {
-                validationResponse.ErrorMessage = "ИИН должен содержать ровно 12 цифр";
-                validationResponse.Status = false;
-                return validationResponse;
-            }
-
             if (model.Id > 0)
             {
                 EmployeeReestr employeeReestrEntity = _unitOfWork.EmployeeReestres.Get(model.Id);
@@ -174,7 +220,7 @@ namespace Reestr.BLL.Managers
                 try
                 {
                     if (employeeReestrEntity is null)
-                        throw new Exception("Объект не найден");
+                        throw new Exception(Resources_ru.ObjectNotFound);
 
                     if (model.IIN != employeeReestrEntity.IIN)
                     {
@@ -183,7 +229,7 @@ namespace Reestr.BLL.Managers
                         employeeReestrEntities = _unitOfWork.EmployeeReestres.List(query);
                         if (employeeReestrEntities.Any())
                         {
-                            validationResponse.ErrorMessage = "Введенный Вами ИИН уже зарегистрирован";
+                            validationResponse.ErrorMessage = Resources_ru.DataUniqueness;
                             validationResponse.Status = false;
                             return validationResponse;
                         }
@@ -202,7 +248,7 @@ namespace Reestr.BLL.Managers
                 employeeReestrEntities = _unitOfWork.EmployeeReestres.List(query);
                 if (employeeReestrEntities.Any())
                 {
-                    validationResponse.ErrorMessage = "Введенный Вами ИИН уже зарегистрирован";
+                    validationResponse.ErrorMessage = Resources_ru.DataUniqueness;
                     validationResponse.Status = false;
                     return validationResponse;
                 }
@@ -210,19 +256,6 @@ namespace Reestr.BLL.Managers
 
 
 
-            if (model.FullName.Trim().Length == 0)
-            {
-                validationResponse.ErrorMessage = "ФИО обязательно к заполнению";
-                validationResponse.Status = false;
-                return validationResponse;
-            }
-
-            if (model.FullName.Trim().Length > 150)
-            {
-                validationResponse.ErrorMessage = "ФИО не должно быть длиннее 150 символов";
-                validationResponse.Status = false;
-                return validationResponse;
-            }
 
             if (model.Id > 0)
             {
@@ -231,7 +264,7 @@ namespace Reestr.BLL.Managers
                 try
                 {
                     if (employeeReestrEntity is null)
-                        throw new Exception("Объект не найден");
+                        throw new Exception(Resources_ru.ObjectNotFound);
 
                     if (model.FullName != employeeReestrEntity.FullName)
                     {
@@ -240,7 +273,7 @@ namespace Reestr.BLL.Managers
                         employeeReestrEntities = _unitOfWork.EmployeeReestres.List(query);
                         if (employeeReestrEntities.Any())
                         {
-                            validationResponse.ErrorMessage = "Такое ФИО уже зарегистрировано";
+                            validationResponse.ErrorMessage = Resources_ru.DataUniqueness;
                             validationResponse.Status = false;
                             return validationResponse;
                         }
@@ -259,7 +292,7 @@ namespace Reestr.BLL.Managers
                 employeeReestrEntities = _unitOfWork.EmployeeReestres.List(query);
                 if (employeeReestrEntities.Any())
                 {
-                    validationResponse.ErrorMessage = "Такое ФИО уже зарегистрировано";
+                    validationResponse.ErrorMessage = Resources_ru.DataUniqueness;
                     validationResponse.Status = false;
                     return validationResponse;
                 }
@@ -269,7 +302,7 @@ namespace Reestr.BLL.Managers
 
             if (model.DateOfBirth > DateTime.Now)
             {
-                validationResponse.ErrorMessage = "Дата рождения не может относиться к будущему";
+                validationResponse.ErrorMessage = Resources_ru.DateOfBirthInFuture;
                 validationResponse.Status = false;
                 return validationResponse;
             }
@@ -277,25 +310,17 @@ namespace Reestr.BLL.Managers
             DateTime dateTime = new DateTime(1899, 1, 1, 0, 0, 0);
             if (model.DateOfBirth < dateTime)
             {
-                validationResponse.ErrorMessage = "Дата рождения не может быть раньше 1899 года";
+                validationResponse.ErrorMessage = Resources_ru.DateOfBirthTooEarly;
                 validationResponse.Status = false;
                 return validationResponse;
             }
 
-
-
-            if (model.PhoneNumber.Trim().Length != 10)
-            {
-                validationResponse.ErrorMessage = "Телефон должен включать ровно 10 цифр, без каких-либо других знаков";
-                validationResponse.Status = false;
-                return validationResponse;
-            }
 
 
 
             if (model.BeginDate < model.DateOfBirth)
             {
-                validationResponse.ErrorMessage = "Дата найма не может быть раньше даты рождения";
+                validationResponse.ErrorMessage = Resources_ru.DateOfHiringEarlierThanDateOfBirth;
                 validationResponse.Status = false;
                 return validationResponse;
             }

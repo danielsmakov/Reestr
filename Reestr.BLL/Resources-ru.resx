@@ -132,6 +132,15 @@
   <data name="DataUniqueness" xml:space="preserve">
     <value>Введенные Вами данные уже зарегистрированы</value>
   </data>
+  <data name="DateOfBirthInFuture" xml:space="preserve">
+    <value>Дата рождения не может относиться к будущему</value>
+  </data>
+  <data name="DateOfBirthTooEarly" xml:space="preserve">
+    <value>Дата рождения не может быть раньше 1899 года</value>
+  </data>
+  <data name="DateOfHiringEarlierThanDateOfBirth" xml:space="preserve">
+    <value>Дата найма не может быть раньше даты рождения</value>
+  </data>
   <data name="ErrorInRepositories" xml:space="preserve">
     <value>Уважаемый пользователь, к сожалению, возникла ошибка при обращении к серверу. Приносим вам свои извинения. Пожалуйста, повторите вашу операцию позднее или обратитесь в службу поддержки.</value>
   </data>

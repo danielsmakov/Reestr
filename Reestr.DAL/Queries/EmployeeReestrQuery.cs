@@ -11,11 +11,13 @@ namespace Reestr.DAL.Queries
     {
         public int Id { get; set; }
 
-        public string OrganizationName { get; set; }
+        public string OrganizationNameToSearchFor { get; set; }
 
         public string IIN { get; set; }
 
         public string FullName { get; set; }
+
+        public string FullNameToSearchFor { get; set; }
 
         public string PhoneNumber { get; set; }
 

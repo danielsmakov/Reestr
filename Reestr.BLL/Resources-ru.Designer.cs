@@ -106,6 +106,33 @@ namespace Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Дата рождения не может относиться к будущему.
+        /// </summary>
+        public static string DateOfBirthInFuture {
+            get {
+                return ResourceManager.GetString("DateOfBirthInFuture", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Дата рождения не может быть раньше 1899 года.
+        /// </summary>
+        public static string DateOfBirthTooEarly {
+            get {
+                return ResourceManager.GetString("DateOfBirthTooEarly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Дата найма не может быть раньше даты рождения.
+        /// </summary>
+        public static string DateOfHiringEarlierThanDateOfBirth {
+            get {
+                return ResourceManager.GetString("DateOfHiringEarlierThanDateOfBirth", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Уважаемый пользователь, к сожалению, возникла ошибка при обращении к серверу. Приносим вам свои извинения. Пожалуйста, повторите вашу операцию позднее или обратитесь в службу поддержки..
         /// </summary>
         public static string ErrorInRepositories {
