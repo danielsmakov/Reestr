@@ -213,12 +213,8 @@ namespace Reestr.DAL.Repositories
                 {
                     where += " AND sr.EndDate is null ";
                 }
-                if (!string.IsNullOrEmpty(query.OrganizationName)) where += " AND Organizations.Name like @OrganizationName";
-                if (!string.IsNullOrEmpty(query.ServiceName)) where += " AND Services.Name like @ServiceName";
-                /*if (!string.IsNullOrEmpty(query.Name)) where += " AND Name LIKE @Name";
-                if (!string.IsNullOrEmpty(query.NameToSearchFor)) where += $" AND Name LIKE '%' + @NameToSearchFor + '%'";
-                if (!string.IsNullOrEmpty(query.BIN)) where += " AND BIN LIKE @BIN";
-                if (query.Id != 0) where += " AND Id NOT like @Id";*/
+                if (!string.IsNullOrEmpty(query.OrganizationNameToSearchFor)) where += " AND o.Name like '%' + @OrganizationNameToSearchFor + '%'";
+                if (!string.IsNullOrEmpty(query.ServiceNameToSearchFor)) where += " AND s.Name like '%' + @ServiceNameToSearchFor + '%'";
 
                 return where;
             }

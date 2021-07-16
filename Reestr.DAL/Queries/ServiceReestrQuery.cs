@@ -9,9 +9,9 @@ namespace Reestr.DAL.Queries
 {
     public class ServiceReestrQuery : PaginationSortingQuery, IQuery
     {
-        public string OrganizationName { get; set; }
+        public string OrganizationNameToSearchFor { get; set; }
 
-        public string ServiceName { get; set; }
+        public string ServiceNameToSearchFor { get; set; }
 
         public bool IsDeleted { get; set; }
     }
