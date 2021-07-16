@@ -24,6 +24,7 @@
                             filter: "contains",
                             dataSource: {
                                 type: "odata",
+                                serverFiltering: true,
                                 transport: {
                                     read: {
                                         url: "/Organization/List",
@@ -34,6 +35,11 @@
                                         },
                                         type: "GET",
                                         dataType: "json"
+                                    },
+                                    parameterMap: function (data) {
+                                        if (type == "read") {
+                                            $('.k-input k-valid').val()
+                                        }
                                     }
                                 },
                                 schema: {
@@ -64,6 +70,7 @@
                             filter: "contains",
                             dataSource: {
                                 type: "odata",
+                                serverFiltering: true,
                                 transport: {
                                     read: {
                                         url: "/Service/List",
