@@ -84,7 +84,7 @@ namespace Reestr.BLL.Managers
 
         public ValidationResponse Insert(OrganizationDTO organizationDTO)
         {
-            if (organizationDTO is null)
+            if (organizationDTO.BIN is null || organizationDTO.PhoneNumber is null)
             {
                 throw new Exception(Resources_ru.ObjectNotFound);
             }
@@ -117,7 +117,7 @@ namespace Reestr.BLL.Managers
 
         public ValidationResponse Update(OrganizationDTO organizationDTO)
         {
-            if (organizationDTO is null)
+            if (organizationDTO.BIN is null || organizationDTO.PhoneNumber is null)
             {
                 throw new Exception(Resources_ru.ObjectNotFound);
             }

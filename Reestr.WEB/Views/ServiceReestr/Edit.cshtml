@@ -55,7 +55,7 @@
                     },
                     {
                         field: "Service",
-                        editor: "DropDownList",
+                        editor: "ComboBox",
                         label: "Услуга:",
                         editorOptions: {
                             placeholder: "Выберите услугу",
@@ -102,17 +102,23 @@
                         editor: "DatePicker",
                         label: "Дата начала действия:",
                         editorOptions: {
-                            format: "dd/MM/yyyy"
+                            format: "dd/MM/yyyy hh:mm:ss"
                         }
                     },
                 ]
             }],
             submit: function (e) {
-                console.log(e.model);
                 e.preventDefault();
+
+                var data = {
+                    OrganizationId: e.model.Organization.Id,
+                    ServiceId: e.model.Service.Id,
+                    Price: e.model.Price,
+                    BeginDate: $('#BeginDate').val()
+                }
                 $.ajax({
                     url: "/ServiceReestr/Insert",
-                    data: e.model,
+                    data: data,
                     type: "POST",
                     dataType: "json",
                 });
@@ -125,7 +131,7 @@
             $.ajax({
                 url: "/ServiceReestr/Insert",
                 type: "POST",
-                data: $('#addForm').data(),
+                data: $('#addForm').serialize(),
                 dataType: "json",
             })
         })*@

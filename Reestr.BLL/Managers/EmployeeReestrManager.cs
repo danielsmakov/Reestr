@@ -87,7 +87,7 @@ namespace Reestr.BLL.Managers
 
         public ValidationResponse Insert(EmployeeReestrDTO employeeReestrDTO)
         {
-            if (employeeReestrDTO is null)
+            if (employeeReestrDTO.PhoneNumber is null || employeeReestrDTO.IIN is null)
             {
                 throw new Exception(Resources_ru.ObjectNotFound);
             }
@@ -121,7 +121,7 @@ namespace Reestr.BLL.Managers
 
         public ValidationResponse Update(EmployeeReestrDTO employeeReestrDTO)
         {
-            if (employeeReestrDTO is null)
+            if (employeeReestrDTO.PhoneNumber is null || employeeReestrDTO.IIN is null)
             {
                 throw new Exception(Resources_ru.ObjectNotFound);
             }
