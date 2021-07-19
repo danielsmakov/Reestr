@@ -12,9 +12,12 @@
         <div id="popupWindow"></div>
     </div>
 
-    <script type="text/x-template" id="searchbar">
-        <button id="addButton" class="k-button k-i-plus"><span class="k-icon k-i-plus"></span>Добавить</button>
-        <input type="text" name="txtsearch" id="txtsearch" class="k-textbox" placeholder="Поиск..." style="width: 270px" />
+    <script type="text/x-template" id="toolbar">
+        <button id="addButton" class="k-button"><span class="k-icon k-i-plus"></span>Добавить</button>
+        <input type="text" name="txtsearch" id="organizationSearch" class="k-textbox" placeholder="Поиск организации..." style="width: 270px" />
+        <input type="text" name="txtsearch" id="serviceNameSearch" class="k-textbox" placeholder="Поиск услуги..." style="width: 270px" />
+        <button id="searchButton" class="k-button" style="margin-right: 50px">Поиск</button>
+
         <label for="isdeleted" style="margin-left: 30px">Искать удаленные записи?</label>
         <input type="checkbox" name="isdeleted" id="isdeleted" class="k-checkbox" />
     </script>
@@ -74,7 +77,7 @@
                                 Offset: $('#grid').data('kendoGrid').dataSource.skip(),
                                 Limit: $('#grid').data('kendoGrid').dataSource.pageSize(),
                                 SortingParameters: data.sort,
-                                NameToSearchFor: $("#txtsearch").val(),
+                                OrganizationNameToSearchFor: $("#organizationSearch").val(),
                                 IsDeleted: document.getElementById('isdeleted').checked
                             }
                         }
@@ -106,7 +109,7 @@
                 pageable: true,
                 height: 550,
                 sortable: true,
-                toolbar: [{ template: kendo.template($("#searchbar").html()) }],
+                toolbar: [{ template: kendo.template($("#toolbar").html()) }],
                 search: {
                     fields: ["Name"],
                 },
@@ -140,9 +143,82 @@
                 },
             }).data("kendoGrid");
 
+            $('#searchButton').click(function () {
+                if (document.getElementById('searchButton').click) {
+                    var organizationName = $('#organizationSearch').val();
+                    var serviceName = $('#serviceSearch').val();
 
-            $("body").on("keyup", "#txtsearch", function () {
-                var value = $("#txtsearch").val();
+                    if (organizationName.length > 3 && serviceName.length == 0) {
+                        @* $("#grid").data("kendoGrid").dataSource.filter({
+                            logic: "or",
+                            filters: [
+                                { field: "Organization.Name", operator: "contains", value: organizationName }
+                            ],
+                        });*@
+                        $.ajax({
+                            url: "/ServiceReestr/List",
+                            data: organizationName,
+                            type: "GET",
+                            dataType: "json",
+                        })
+                    }
+                    else if (organizationName.length == 0 && serviceName.length > 3) {
+                        $("#grid").data("kendoGrid").dataSource.filter({
+                            logic: "or",
+                            filters: [
+                                { field: "Service.Name", operator: "contains", value: serviceName }
+                            ],
+                        });
+                    }
+                    else if (organizationName.length > 3 && serviceName.length > 3) {
+                        $("#grid").data("kendoGrid").dataSource.filter({
+                            logic: "or",
+                            filters: [
+                                { field: "Organization.Name", operator: "contains", value: organizationName },
+                                { field: "Service.Name", operator: "contains", value: serviceName }
+                            ],
+                        });
+                    }
+                }
+
+                var organizationName = $('#organizationSearch').val();
+                var serviceName = $('#serviceSearch').val();
+
+                if (organizationName.length > 3 && serviceName.length == 0) {
+                    @* $("#grid").data("kendoGrid").dataSource.filter({
+                        logic: "or",
+                        filters: [
+                            { field: "Organization.Name", operator: "contains", value: organizationName }
+                        ],
+                    });*@
+                    $.ajax({
+                        url: "/ServiceReestr/List",
+                        data: organizationName,
+                        type: "GET",
+                        dataType: "json",
+                    })
+                }
+                else if (organizationName.length == 0 && serviceName.length > 3) {
+                    $("#grid").data("kendoGrid").dataSource.filter({
+                        logic: "or",
+                        filters: [
+                            { field: "Service.Name", operator: "contains", value: serviceName }
+                        ],
+                    });
+                }
+                else if (organizationName.length > 3 && serviceName.length > 3) {
+                    $("#grid").data("kendoGrid").dataSource.filter({
+                        logic: "or",
+                        filters: [
+                            { field: "Organization.Name", operator: "contains", value: organizationName },
+                            { field: "Service.Name", operator: "contains", value: serviceName }
+                        ],
+                    });
+                }
+            })
+
+            @*$("body").on("keyup", "#organizationSearch", function () {
+                var value = $("#organizationSearch").val();
                 if (value.length == 0) {
                     $("#grid").data("kendoGrid").refresh();
                 }
@@ -159,7 +235,38 @@
                     });
                     $("#grid").data("kendoGrid").dataSource.read();
                 }
-            });
+            });*@
+
+            @*$('body').on("click", "#searchButton", function () {
+                var organizationName = $('#organizationSearch').val();
+                var serviceName = $('#serviceSearch').val();
+
+                if (organizationName.length > 3 && serviceName.length == 0) {
+                    $.ajax({
+                        url: "/ServiceReestr/List",
+                        data: organizationName,
+                        type: "GET",
+                        dataType: "json",
+                    })
+                }
+                else if (organizationName.length == 0 && serviceName.length > 3) {
+                    $("#grid").data("kendoGrid").dataSource.filter({
+                        logic: "or",
+                        filters: [
+                            { field: "Service.Name", operator: "contains", value: serviceName }
+                        ],
+                    });
+                }
+                else if (organizationName.length > 3 && serviceName.length > 3) {
+                    $("#grid").data("kendoGrid").dataSource.filter({
+                        logic: "or",
+                        filters: [
+                            { field: "Organization.Name", operator: "contains", value: organizationName },
+                            { field: "Service.Name", operator: "contains", value: serviceName }
+                        ],
+                    });
+                }
+            })*@
 
             $("body").on("click", "#isdeleted", function () {
                 if (document.getElementById('isdeleted').click) {
@@ -198,7 +305,7 @@
             });
 
 
-            
+
 
             @*$('#addForm').kendoForm({
                 orientation: "vertical",

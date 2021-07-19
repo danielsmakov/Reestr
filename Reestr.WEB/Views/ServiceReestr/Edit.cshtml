@@ -10,6 +10,7 @@
     $(document).ready(function () {
         $('#addForm').kendoForm({
             orientation: "vertical",
+            buttonsTemplate: '<button class="k-button k-primary k-form-submit" type="submit">Подтвердить</button><button class="k-button k-form-clear">Очистить</button>',
             items: [{
                 type: "group",
                 items: [
@@ -21,10 +22,10 @@
                             placeholder: "Выберите организацию",
                             dataTextField: "Name",
                             dataValueField: "Id",
+                            serverFiltering: true,
                             filter: "contains",
                             dataSource: {
                                 type: "odata",
-                                serverFiltering: true,
                                 transport: {
                                     read: {
                                         url: "/Organization/List",
@@ -110,6 +111,13 @@
                     },
                 ]
             }],
+            @*edit: function (e) {
+                console.log(e);
+                var update = $(e.container).parent().find(".k-form-submit");
+                var cancel = $(e.container).parent().find(".k-form-clear");
+                $(update).html('<span class="k-submit">Подтвердить</span>');
+                $(cancel).html('<span class="k-clear">Очистить</span>');
+            },*@
             submit: function (e) {
                 e.preventDefault();
 
@@ -125,7 +133,11 @@
                     type: "POST",
                     dataType: "json",
                 });
-            }
+            },
+
+            
+
+
         });
 
         @*$('.k-form-submit').click(function (e, data) {
