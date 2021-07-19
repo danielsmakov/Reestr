@@ -15,13 +15,13 @@ namespace Reestr.BLL.DTOs
         [Required(ErrorMessageResourceType = typeof(Resources.Resources_ru), ErrorMessageResourceName = "Required")]
         public int OrganizationId { get; set; }
 
-        public OrganizationDTO OrganizationDTO { get; set; }
+        public OrganizationDTO Organization { get; set; }
 
 
         [Required(ErrorMessageResourceType = typeof(Resources.Resources_ru), ErrorMessageResourceName = "Required")]
         public int ServiceId { get; set; }
 
-        public ServiceDTO ServiceDTO { get; set; }
+        public ServiceDTO Service { get; set; }
 
 
         [Required(ErrorMessageResourceType = typeof(Resources.Resources_ru), ErrorMessageResourceName = "Required")]

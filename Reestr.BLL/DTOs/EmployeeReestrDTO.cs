@@ -19,7 +19,7 @@ namespace Reestr.BLL.DTOs
         [Required(ErrorMessageResourceType = typeof(Resources.Resources_ru), ErrorMessageResourceName = "Required")]
         public int OrganizationId { get; set; }
 
-        public OrganizationDTO Organization { get; set; }
+        public OrganizationDTO OrganizationDTO { get; set; }
 
 
         /// <summary>
