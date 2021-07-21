@@ -36,7 +36,7 @@ namespace Reestr.WEB.Controllers
         }
 
 
-        public ActionResult List(ServiceReestrQuery query)
+        public ActionResult List(ServiceReestrQuery query) 
         {
             List<ServiceReestrDTO> serviceReestrDTOs = _serviceReestrManager.List(query);
             ListModel<ServiceReestrDTO> listModel = new ListModel<ServiceReestrDTO>();

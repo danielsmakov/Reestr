@@ -133,12 +133,22 @@
                     type: "POST",
                     dataType: "json",
                 });
+
+                e.preventDefault();
+
+                
+
+                @*$.ajax({
+                    url: "/ServiceReestr/List",
+                    type: "GET",
+                    dataType: "json",
+                });*@
             },
-
-            
-
-
         });
+        
+        $('.k-form-submit').click(function () {
+            $('.k-form-submit').closest('.k-window-content').data('kendoWindow').close();
+        })
 
         @*$('.k-form-submit').click(function (e, data) {
             e.preventDefault();
