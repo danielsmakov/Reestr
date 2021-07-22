@@ -22,16 +22,25 @@ namespace Reestr.DAL.Repositories
                 try
                 {
                     _con.Open();
-                    ServiceReestr entity = _con.QuerySingle<ServiceReestr>("SELECT * FROM ServiceReestr WHERE Id = @Id",
-                        new
-                        {
-                            id = id
-                        }
-                        );
+                    string sqlQuery = @"SELECT sr.Id, sr.Price, sr.BeginDate, 
+                    sr.OrganizationId, o.Id, o.Name, o.BIN, o.PhoneNumber, o.BeginDate, 
+                    sr.ServiceId, s.Id, s.Name, s.Code, s.Price, s.BeginDate FROM ServiceReestr sr 
+                    INNER JOIN Organizations o ON o.Id = sr.OrganizationId 
+                    INNER JOIN Services s ON sr.ServiceId = s.Id
+                    WHERE sr.Id = @id";
+
+                    ServiceReestr entity = _con.Query<ServiceReestr, Organization, Service, ServiceReestr>(sqlQuery,
+                    (sr, o, s) =>
+                    {
+                        sr.Organization = o;
+                        sr.Service = s;
+                        return sr;
+                    }, new { id }, splitOn: "OrganizationId, ServiceId").First();
+
                     _con.Close();
                     return entity;
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     throw new ApplicationException();
                 }

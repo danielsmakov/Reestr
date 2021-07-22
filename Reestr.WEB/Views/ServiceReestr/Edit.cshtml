@@ -1,7 +1,5 @@
 ﻿
-
-
-
+@model Reestr.BLL.DTOs.ServiceReestrDTO
 
 <form id="addForm"></form>
 
@@ -22,6 +20,8 @@
                             placeholder: "Выберите организацию",
                             dataTextField: "Name",
                             dataValueField: "Id",
+                            text: model.Organization.Id,
+                            value: model.Organization.Name,
                             serverFiltering: true,
                             filter: "contains",
                             dataSource: {

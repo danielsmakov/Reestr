@@ -126,7 +126,7 @@
                         ], width: 170
                     }],
                 editable: {
-                    mode: "popup",
+                    mode: false,
                     confirmation: true,
                     window: { title: "" },
                 },
@@ -144,67 +144,7 @@
                 },
             }).data("kendoGrid");
 
-            @*$('#searchButton').click(function () {
-                if (document.getElementById('searchButton').click) {
-                    var organizationName = $('#organizationSearch').val();
-                    var serviceName = $('#serviceSearch').val();
-
-                    if (organizationName.length > 3 && serviceName.length == 0) {
-                        $.ajax({
-                            url: "/ServiceReestr/List",
-                            data: organizationName,
-                            type: "GET",
-                            dataType: "json",
-                        })
-                    }
-                    else if (organizationName.length == 0 && serviceName.length > 3) {
-                        $("#grid").data("kendoGrid").dataSource.filter({
-                            logic: "or",
-                            filters: [
-                                { field: "Service.Name", operator: "contains", value: serviceName }
-                            ],
-                        });
-                    }
-                    else if (organizationName.length > 3 && serviceName.length > 3) {
-                        $("#grid").data("kendoGrid").dataSource.filter({
-                            logic: "or",
-                            filters: [
-                                { field: "Organization.Name", operator: "contains", value: organizationName },
-                                { field: "Service.Name", operator: "contains", value: serviceName }
-                            ],
-                        });
-                    }
-                }
-
-                var organizationName = $('#organizationSearch').val();
-                var serviceName = $('#serviceSearch').val();
-
-                if (organizationName.length > 3 && serviceName.length == 0) {
-                    $.ajax({
-                        url: "/ServiceReestr/List",
-                        data: organizationName,
-                        type: "GET",
-                        dataType: "json",
-                    })
-                }
-                else if (organizationName.length == 0 && serviceName.length > 3) {
-                    $("#grid").data("kendoGrid").dataSource.filter({
-                        logic: "or",
-                        filters: [
-                            { field: "Service.Name", operator: "contains", value: serviceName }
-                        ],
-                    });
-                }
-                else if (organizationName.length > 3 && serviceName.length > 3) {
-                    $("#grid").data("kendoGrid").dataSource.filter({
-                        logic: "or",
-                        filters: [
-                            { field: "Organization.Name", operator: "contains", value: organizationName },
-                            { field: "Service.Name", operator: "contains", value: serviceName }
-                        ],
-                    });
-                }
-            })*@
+            
 
 
             $("body").on("keyup", "#organizationSearch", function () {
@@ -292,6 +232,44 @@
 
                 popupWindow.data('kendoWindow').center().open();
             });
+
+            var editButton = $('.k-grid-edit');
+
+            @*editButton.click(function () {
+
+                popupWindow.kendoWindow({
+                    width: "300px",
+                    height: "500px",
+                    title: "Добавление/Редактирование",
+                    visible: false,
+                    draggable: false,
+                    actions: [
+                        "Close"
+                    ],
+                    content: "/ServiceReestr/Edit/"
+                }).data('kendoWindow');
+
+                popupWindow.data('kendoWindow').center().open();
+            })*@
+
+            $('#grid').on('click', '.k-grid-edit', function () {
+                var grid = $('#grid').data('kendoGrid');
+                var model = grid.dataItem($(this).closest('tr'));
+
+                popupWindow.kendoWindow({
+                    width: "300px",
+                    height: "500px",
+                    title: "Добавление/Редактирование",
+                    visible: false,
+                    draggable: false,
+                    actions: [
+                        "Close"
+                    ],
+                    content: "/ServiceReestr/Edit/" + model.Id
+                }).data('kendoWindow');
+
+                popupWindow.data('kendoWindow').center().open();
+            })
 
             @*$('body').closest('.k-form-submit').on('click', function (e) {
                 e.sender.dataSource.read();
