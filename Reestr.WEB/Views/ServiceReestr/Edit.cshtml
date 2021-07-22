@@ -149,15 +149,8 @@
         
         $('.k-form-submit').click(function () {
             $('.k-form-submit').closest('.k-window-content').data('kendoWindow').close();
-
-        })
-
-        @*$('.k-form-submit').closest('.k-window-content').data('kendoWindow').bind('refresh', function (e) {
-            var win = this;
-            $('.k-form-submit').click(function () {
-                win.close();
-            })
-        })*@
+            $('.k-grid').data('kendoGrid').dataSource.read();
+        });
 
         @*$('.k-form-submit').click(function (e, data) {
             e.preventDefault();

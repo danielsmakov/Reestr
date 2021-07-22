@@ -81,7 +81,7 @@ namespace Reestr.DAL.Repositories
                     _con.Close();
                     return orgs;
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     throw new ApplicationException();
                 }
@@ -100,12 +100,15 @@ namespace Reestr.DAL.Repositories
 
                     var where = ConfigureWhereClause(query);
 
-                    int totalRecords = _con.QuerySingle<int>($"SELECT COUNT(*) FROM ServiceReestr sr {where}", query);
+                    int totalRecords = _con.QuerySingle<int>($@"SELECT COUNT(*) FROM ServiceReestr sr 
+                    INNER JOIN Organizations o ON o.Id = sr.OrganizationId 
+                    INNER JOIN Services s ON sr.ServiceId = s.Id 
+                    {where}", query);
 
                     _con.Close();
                     return totalRecords;
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     throw new ApplicationException();
                 }

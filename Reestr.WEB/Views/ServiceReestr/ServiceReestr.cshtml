@@ -14,9 +14,10 @@
 
     <script type="text/x-template" id="toolbar">
         <button id="addButton" class="k-button"><span class="k-icon k-i-plus"></span>Добавить</button>
-        <input type="text" name="txtsearch" id="organizationSearch" class="k-textbox" placeholder="Поиск организации..." style="width: 270px" />
-        <input type="text" name="txtsearch" id="serviceNameSearch" class="k-textbox" placeholder="Поиск услуги..." style="width: 270px" />
-        <button id="searchButton" class="k-button" style="margin-right: 50px">Поиск</button>
+
+        <input type="text" name="organizationSearch" id="organizationSearch" class="k-textbox" placeholder="Поиск организации..." style="width: 280px; margin-left: 15px" />
+        <input type="text" name="serviceSearch" id="serviceSearch" class="k-textbox" placeholder="Поиск услуги..." style="width: 280px; margin-left: 15px" />
+        <button id="searchButton" class="k-button" style="width: 60px">Поиск</button>
 
         <label for="isdeleted" style="margin-left: 30px">Искать удаленные записи?</label>
         <input type="checkbox" name="isdeleted" id="isdeleted" class="k-checkbox" />
@@ -143,18 +144,12 @@
                 },
             }).data("kendoGrid");
 
-            $('#searchButton').click(function () {
+            @*$('#searchButton').click(function () {
                 if (document.getElementById('searchButton').click) {
                     var organizationName = $('#organizationSearch').val();
                     var serviceName = $('#serviceSearch').val();
 
                     if (organizationName.length > 3 && serviceName.length == 0) {
-                        @* $("#grid").data("kendoGrid").dataSource.filter({
-                            logic: "or",
-                            filters: [
-                                { field: "Organization.Name", operator: "contains", value: organizationName }
-                            ],
-                        });*@
                         $.ajax({
                             url: "/ServiceReestr/List",
                             data: organizationName,
@@ -185,63 +180,6 @@
                 var serviceName = $('#serviceSearch').val();
 
                 if (organizationName.length > 3 && serviceName.length == 0) {
-                    @* $("#grid").data("kendoGrid").dataSource.filter({
-                        logic: "or",
-                        filters: [
-                            { field: "Organization.Name", operator: "contains", value: organizationName }
-                        ],
-                    });*@
-                    $.ajax({
-                        url: "/ServiceReestr/List",
-                        data: organizationName,
-                        type: "GET",
-                        dataType: "json",
-                    })
-                }
-                else if (organizationName.length == 0 && serviceName.length > 3) {
-                    $("#grid").data("kendoGrid").dataSource.filter({
-                        logic: "or",
-                        filters: [
-                            { field: "Service.Name", operator: "contains", value: serviceName }
-                        ],
-                    });
-                }
-                else if (organizationName.length > 3 && serviceName.length > 3) {
-                    $("#grid").data("kendoGrid").dataSource.filter({
-                        logic: "or",
-                        filters: [
-                            { field: "Organization.Name", operator: "contains", value: organizationName },
-                            { field: "Service.Name", operator: "contains", value: serviceName }
-                        ],
-                    });
-                }
-            })
-
-            @*$("body").on("keyup", "#organizationSearch", function () {
-                var value = $("#organizationSearch").val();
-                if (value.length == 0) {
-                    $("#grid").data("kendoGrid").refresh();
-                }
-                if (value.length < 3 && value.length > 0) {
-                    return
-                }
-                else {
-                    $("#grid").data("kendoGrid").dataSource.filter({
-                        logic: "or",
-                        filters: [
-                            { field: "Name", operator: "contains", value: value }
-                        ],
-
-                    });
-                    $("#grid").data("kendoGrid").dataSource.read();
-                }
-            });*@
-
-            @*$('body').on("click", "#searchButton", function () {
-                var organizationName = $('#organizationSearch').val();
-                var serviceName = $('#serviceSearch').val();
-
-                if (organizationName.length > 3 && serviceName.length == 0) {
                     $.ajax({
                         url: "/ServiceReestr/List",
                         data: organizationName,
@@ -267,6 +205,57 @@
                     });
                 }
             })*@
+
+
+            $("body").on("keyup", "#organizationSearch", function () {
+                var value = $("#organizationSearch").val();
+                if (value.length == 0) {
+                    $("#grid").data("kendoGrid").refresh();
+                }
+            });
+            $("body").on("keyup", "#serviceSearch", function () {
+                var value = $("#serviceSearch").val();
+                if (value.length == 0) {
+                    $("#grid").data("kendoGrid").refresh();
+                }
+            });
+            $("body").on("click", "#searchButton", function () {
+                var organizationSearchValue = $("#organizationSearch").val();
+                var serviceSearchValue = $("#serviceSearch").val();
+                if (organizationSearchValue.length == 0 && serviceSearchValue.length == 0) {
+                    $("#grid").data("kendoGrid").refresh();
+                }
+                if (serviceSearchValue.length == 0 && organizationSearchValue.length !== 0) {
+                    if (organizationSearchValue.length < 3 && organizationSearchValue.length > 0) {
+                        return
+                    }
+                    else {
+                        $("#grid").data("kendoGrid").dataSource.filter({
+                            logic: "or",
+                            filters: [
+                                { field: "Organization", operator: "contains", value: organizationSearchValue }
+                            ],
+                        });
+                        $("#grid").data("kendoGrid").dataSource.read();
+                    }
+                }
+                else {
+                    if (serviceSearchValue.length < 3 && serviceSearchValue.length > 0) {
+                        return
+                    }
+                    else {
+                        $("#grid").data("kendoGrid").dataSource.filter({
+                            logic: "or",
+                            filters: [
+                                { field: "Service", operator: "contains", value: serviceSearchValue }
+                            ],
+                        });
+                        $("#grid").data("kendoGrid").dataSource.read();
+                    }
+                }
+            });
+
+
 
             $("body").on("click", "#isdeleted", function () {
                 if (document.getElementById('isdeleted').click) {
@@ -304,128 +293,31 @@
                 popupWindow.data('kendoWindow').center().open();
             });
 
-            
-            @*$('#grid').data('kendoGrid').on('close', '#popupWindow', function () {
-                $('#grid').data('kendoGrid').dataSource.read();
+            @*$('body').closest('.k-form-submit').on('click', function (e) {
+                e.sender.dataSource.read();
             })*@
 
+            $('#grid').data('kendoGrid').on('close', '#popupWindow', function () {
+                this.dataSource.read();
+            })
 
+            @*function onGridEdit(e) {
+                e.sender.one("dataBound", function (e) {
+                    e.sender.dataSource.read();
+                });
+            }
 
-            @*$('#addForm').kendoForm({
-                orientation: "vertical",
-                items: [{
-                    type: "group",
-                    items: [
-                        {
-                            field: "Organization",
-                            editor: "ComboBox",
-                            label: "Организация:",
-                            editorOptions: {
-                                placeholder: "Выберите организацию",
-                                dataTextField: "Name",
-                                dataValueField: "Id",
-                                filter: "contains",
-                                dataSource: {
-                                    type: "odata",
-                                    transport: {
-                                        read: {
-                                            url: "/Organization/List",
-                                            data: function (data) {
-                                                return {
-                                                    data
-                                                }
-                                            },
-                                            type: "GET",
-                                            dataType: "json"
-                                        }
-                                    },
-                                    schema: {
-                                        data: "Data",
-                                        total: "Total",
-                                        model: {
-                                            id: "Id",
-                                            fields: {
-                                                Id: { type: "number", editable: false, nullable: true },
-                                                Name: { type: "string", validation: { required: true } },
-                                                BIN: { type: "string", validation: { required: true } },
-                                                PhoneNumber: { type: "string", validation: { required: true } },
-                                                BeginDate: { type: "date", validation: { required: true } }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                        {
-                            field: "Service",
-                            editor: "ComboBox",
-                            label: "Услуга:",
-                            editorOptions: {
-                                placeholder: "Выберите услугу",
-                                dataTextField: "Name",
-                                dataValueField: "Id",
-                                filter: "contains",
-                                dataSource: {
-                                    type: "odata",
-                                    transport: {
-                                        read: {
-                                            url: "/Service/List",
-                                            data: function (data) {
-                                                return {
-                                                    data
-                                                }
-                                            },
-                                            type: "GET",
-                                            dataType: "json"
-                                        }
-                                    },
-                                    schema: {
-                                        data: "Data",
-                                        total: "Total",
-                                        model: {
-                                            id: "Id",
-                                            fields: {
-                                                Id: { type: "number", editable: false, nullable: true },
-                                                Name: { type: "string", validation: { required: true } },
-                                                Code: { type: "string", validation: { required: true } },
-                                                Price: { type: "number", validation: { required: true } },
-                                                BeginDate: { type: "date", validation: { required: true } }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                        {
-                            field: "Price",
-                            label: "Стоимость:"
-                        },
-                        {
-                            field: "BeginDate",
-                            editor: "DatePicker",
-                            label: "Дата начала действия:"
-                        },
-                    ]
-                }],
-                submit: function (e) {
-                    e.preventDefault();
-                }
+            function bindDataAndRefresh(e) {
+                var grid = $("#grid").data("kendoGrid");
+                grid.bind("dataBound", onGridEdit(e));
+            }
+
+            $(document).ready(function () {
+                var grid = $("#grid").data("kendoGrid");
+                grid.bind("save", bindDataAndRefresh(e));
             });*@
 
-            @*$('#addButton').click(function (e) {
-                var window = $('window').kendoWindow({
-                    title: "Форма",
-                    visible: false,
-                    width: "400px",
-                    height: "500px",
-                }).data('kendoWindow');
-
-                e.preventDefault();
-
-                window.center().open();
-
-
-            });*@
+            
         })
 
     </script>
