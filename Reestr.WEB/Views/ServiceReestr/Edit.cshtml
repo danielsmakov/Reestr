@@ -20,8 +20,6 @@
                             placeholder: "Выберите организацию",
                             dataTextField: "Name",
                             dataValueField: "Id",
-                            text: model.Organization.Id,
-                            value: model.Organization.Name,
                             serverFiltering: true,
                             filter: "contains",
                             dataSource: {
@@ -111,13 +109,6 @@
                     },
                 ]
             }],
-            @*edit: function (e) {
-                console.log(e);
-                var update = $(e.container).parent().find(".k-form-submit");
-                var cancel = $(e.container).parent().find(".k-form-clear");
-                $(update).html('<span class="k-submit">Подтвердить</span>');
-                $(cancel).html('<span class="k-clear">Очистить</span>');
-            },*@
             submit: function (e) {
                 e.preventDefault();
 
@@ -132,36 +123,25 @@
                     data: data,
                     type: "POST",
                     dataType: "json",
+                    success: function () {
+                        $('#grid').data('kendoGrid').dataSource.read().promise().done(function () {
+                            $('.k-form-submit').closest('.k-window-content').data('kendoWindow').close();
+                        })
+                    }
                 });
 
                 e.preventDefault();
-
-                
-
-                @*$.ajax({
-                    url: "/ServiceReestr/List",
-                    type: "GET",
-                    dataType: "json",
-                });*@
             },
         });
 
         
-        $('.k-form-submit').click(function () {
+        @*$('.k-form-submit').click(function () {
+            debugger;
             $('.k-form-submit').closest('.k-window-content').data('kendoWindow').close();
-            $('.k-grid').data('kendoGrid').dataSource.read();
-        });
+            $('#grid').data('kendoGrid').dataSource.read();
+        });*@
 
-        @*$('.k-form-submit').click(function (e, data) {
-            e.preventDefault();
-            console.log(e.model);
-            $.ajax({
-                url: "/ServiceReestr/Insert",
-                type: "POST",
-                data: $('#addForm').serialize(),
-                dataType: "json",
-            })
-        })*@
+
     });
 
 </script>

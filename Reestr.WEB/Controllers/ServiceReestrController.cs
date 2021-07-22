@@ -91,12 +91,12 @@ namespace Reestr.WEB.Controllers
 
         public ActionResult Edit(int? id)
         {
-            if (id is null)
+            if (!id.HasValue)
             {
                 return PartialView("Edit");
             }
 
-            var serviceReestrDTO = _serviceReestrManager.Get((int)id);
+            var serviceReestrDTO = _serviceReestrManager.Get(id.Value);
             return PartialView("Edit", serviceReestrDTO);
 
         }

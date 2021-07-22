@@ -126,7 +126,7 @@
                         ], width: 170
                     }],
                 editable: {
-                    mode: false,
+                    mode: "popup",
                     confirmation: true,
                     window: { title: "" },
                 },
@@ -233,24 +233,6 @@
                 popupWindow.data('kendoWindow').center().open();
             });
 
-            var editButton = $('.k-grid-edit');
-
-            @*editButton.click(function () {
-
-                popupWindow.kendoWindow({
-                    width: "300px",
-                    height: "500px",
-                    title: "Добавление/Редактирование",
-                    visible: false,
-                    draggable: false,
-                    actions: [
-                        "Close"
-                    ],
-                    content: "/ServiceReestr/Edit/"
-                }).data('kendoWindow');
-
-                popupWindow.data('kendoWindow').center().open();
-            })*@
 
             $('#grid').on('click', '.k-grid-edit', function () {
                 var grid = $('#grid').data('kendoGrid');
@@ -271,30 +253,17 @@
                 popupWindow.data('kendoWindow').center().open();
             })
 
-            @*$('body').closest('.k-form-submit').on('click', function (e) {
-                e.sender.dataSource.read();
-            })*@
 
-            $('#grid').data('kendoGrid').on('close', '#popupWindow', function () {
-                this.dataSource.read();
+            $('#grid').on('click', '.k-grid-delete', function () {
+                var grid = $('#grid').data('kendoGrid');
+                var model = grid.dataItem($(this).closest('tr'));
+                $.ajax({
+                    url: "/ServiceReestr/Delete/" + model.Id,
+                    data: model.Id,
+                    type: "POST",
+                    dataType: "json",
+                })
             })
-
-            @*function onGridEdit(e) {
-                e.sender.one("dataBound", function (e) {
-                    e.sender.dataSource.read();
-                });
-            }
-
-            function bindDataAndRefresh(e) {
-                var grid = $("#grid").data("kendoGrid");
-                grid.bind("dataBound", onGridEdit(e));
-            }
-
-            $(document).ready(function () {
-                var grid = $("#grid").data("kendoGrid");
-                grid.bind("save", bindDataAndRefresh(e));
-            });*@
-
             
         })
 
