@@ -10,6 +10,11 @@
         <h2>ServiceReestr</h2>
         <div id="grid"></div>
         <div id="popupWindow"></div>
+        <div id="deleteConfirmationPopup">
+            <p><b>Вы уверены, что хотите удалить эту запись?</b></p>
+            <button class="button-success">Подтвердить</button>
+            <button class="button-success">Отмена</button>
+        </div>
     </div>
 
     <script type="text/x-template" id="toolbar">
@@ -23,10 +28,8 @@
         <input type="checkbox" name="isdeleted" id="isdeleted" class="k-checkbox" />
     </script>
 
-    <script type="text/x-kendo-template" id="popupWindowTemplate">
-        <p><strong>Add/Edit Window</strong></p>
-        <button class="k-button" id="yesButton">Yes</button>
-        <button class="k-button" id="noButton">No</button>
+    <script type="text/x-template" id="deleteButtonTemplate">
+        <button class="k-button k-delete" style="margin-left: -4px">Удалить</button>
     </script>
 
     <script type="text/javascript">
@@ -122,12 +125,12 @@
                     {
                         command: [
                             { name: "edit", text: "Редактировать" },
-                            { name: "delete", text: "Удалить" }
+                            { template: kendo.template($('#deleteButtonTemplate').html()) }
                         ], width: 170
                     }],
                 editable: {
-                    mode: "popup",
-                    confirmation: true,
+                    mode: false,
+                    confirmation: false,
                     window: { title: "" },
                 },
                 edit: function (e) {
@@ -147,7 +150,7 @@
             
 
 
-            $("body").on("keyup", "#organizationSearch", function () {
+            @*$("body").on("keyup", "#organizationSearch", function () {
                 var value = $("#organizationSearch").val();
                 if (value.length == 0) {
                     $("#grid").data("kendoGrid").refresh();
@@ -193,10 +196,11 @@
                         $("#grid").data("kendoGrid").dataSource.read();
                     }
                 }
-            });
+            });*@
 
 
 
+            // Displaying deleted/not deleted records
             $("body").on("click", "#isdeleted", function () {
                 if (document.getElementById('isdeleted').click) {
                     var value = $("#isdeleted").val();
@@ -213,6 +217,8 @@
             });
 
 
+
+            // Adding record
             var popupWindow = $('#popupWindow'),
                 addButton = $('#addButton');
 
@@ -234,6 +240,8 @@
             });
 
 
+
+            // Editing record
             $('#grid').on('click', '.k-grid-edit', function () {
                 var grid = $('#grid').data('kendoGrid');
                 var model = grid.dataItem($(this).closest('tr'));
@@ -254,8 +262,31 @@
             })
 
 
-            $('#grid').on('click', '.k-grid-delete', function () {
-                var grid = $('#grid').data('kendoGrid');
+
+            // Deleting record
+            var popup = $('#deleteConfirmationPopup');
+
+            $('#grid').on('click', '.k-delete', function () {
+                popup.kendoWindow({
+                    width: "300px",
+                    height: "150px",
+                    title: "Подтверждение удаления",
+                    visible: false,
+                    draggable: false,
+                    actions: ["Close"]
+                }).data('kendoWindow');
+
+                popup.data('kendoWindow').center().open();
+            });
+
+
+
+
+            @*$('#grid').on('click', '.k-grid-delete', function () {
+                
+
+                
+
                 var model = grid.dataItem($(this).closest('tr'));
                 $.ajax({
                     url: "/ServiceReestr/Delete/" + model.Id,
@@ -263,7 +294,7 @@
                     type: "POST",
                     dataType: "json",
                 })
-            })
+            })*@
             
         })
 
