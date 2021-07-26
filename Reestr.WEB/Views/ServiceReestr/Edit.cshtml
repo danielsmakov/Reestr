@@ -1,11 +1,60 @@
 ﻿
 @model Reestr.BLL.DTOs.ServiceReestrDTO
 
-<form id="addForm"></form>
+<form id="addForm">
+    <input id="organizationComboBox" placeholder="Выберите организацию" />
+</form>
 
 <script type="text/javascript">
 
     $(document).ready(function () {
+        @*$('#organizationComboBox').kendoComboBox({
+            dataTextField: "Name",
+            dataValueField: "Id",
+            filter: "contains",
+            serverFiltering: true,
+            minLength: 3,
+            dataSource: {
+                type: "odata",
+                serverFiltering: true,
+                transport: {
+                    read: {
+                        url: "/Organization/List",
+                        data: function (data) {
+                            return {
+                                data
+                            }
+                        },
+                        type: "GET",
+                        dataType: "json"
+                    },
+                    parameterMap: function (data, type) {
+                        if (type == "read") {
+                            return {
+                                NameToSearchFor: $('#organizationComboBox').val(),
+                            }
+                        }
+                    },
+                },
+                schema: {
+                    data: "Data",
+                    total: "Total",
+                    model: {
+                        id: "Id",
+                        fields: {
+                            Id: { type: "number", editable: false, nullable: true },
+                            Name: { type: "string", validation: { required: true } },
+                            BIN: { type: "string", validation: { required: true } },
+                            PhoneNumber: { type: "string", validation: { required: true } },
+                            BeginDate: { type: "date", validation: { required: true } }
+                        }
+                    }
+                }
+            }
+        });*@
+
+        var model = @Html.Raw(Json.Encode(Model));
+
         $('#addForm').kendoForm({
             orientation: "vertical",
             buttonsTemplate: '<button class="k-button k-primary k-form-submit" type="submit">Подтвердить</button><button class="k-button k-form-clear">Очистить</button>',
@@ -20,11 +69,12 @@
                             placeholder: "Выберите организацию",
                             dataTextField: "Name",
                             dataValueField: "Id",
-                            serverFiltering: true,
                             filter: "contains",
+                            serverFiltering: true,
                             minLength: 3,
                             dataSource: {
                                 type: "odata",
+                                serverFiltering: true,
                                 transport: {
                                     read: {
                                         url: "/Organization/List",
@@ -35,8 +85,14 @@
                                         },
                                         type: "GET",
                                         dataType: "json"
+                                    },                                    
+                                    parameterMap: function (data, type) {
+                                        if (type == "read") {
+                                            return {
+                                                NameToSearchFor: $('.k-input').val(),
+                                            }
+                                        }
                                     },
-                                    
                                 },
                                 schema: {
                                     data: "Data",
@@ -52,7 +108,11 @@
                                         }
                                     }
                                 }
-                            }
+                            },
+                            dataBound: function (data) {
+                                console.log(data);
+
+                            },
                         }
                     },
                     {
@@ -68,6 +128,7 @@
                             minLength: 3,
                             dataSource: {
                                 type: "odata",
+                                serverFiltering: true,
                                 transport: {
                                     read: {
                                         url: "/Service/List",
@@ -78,7 +139,14 @@
                                         },
                                         type: "GET",
                                         dataType: "json"
-                                    }
+                                    },
+                                    parameterMap: function (data, type) {
+                                        if (type == "read") {
+                                            return {
+                                                @*NameToSearchFor: $('.k-form-field:nth-child(2) ~ input').val(),*@
+                                            }
+                                        }
+                                    },
                                 },
                                 schema: {
                                     data: "Data",
@@ -116,7 +184,7 @@
 
                 var model = @Html.Raw(Json.Encode(Model));
                 console.log(model);
-                
+
                 if (model == null) {
                     var data = {
                         OrganizationId: e.model.Organization.Id,
@@ -136,7 +204,7 @@
                             })
                         }
                     });
-                    
+
                 }
                 else {
                     var data = {
@@ -159,7 +227,7 @@
                         }
                     });
                 }
-                
+
 
                 e.preventDefault();
             },
