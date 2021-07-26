@@ -10,10 +10,10 @@
         <h2>ServiceReestr</h2>
         <div id="grid"></div>
         <div id="popupWindow"></div>
-        <div id="deleteConfirmationPopup">
+        <div id="deleteConfirmationPopup" style="display: none">
             <p><b>Вы уверены, что хотите удалить эту запись?</b></p>
-            <button class="button-success">Подтвердить</button>
-            <button class="button-success">Отмена</button>
+            <button id="submitButton">Подтвердить</button>
+            <button id="cancelButton">Отмена</button>
         </div>
     </div>
 
@@ -267,6 +267,9 @@
             var popup = $('#deleteConfirmationPopup');
 
             $('#grid').on('click', '.k-delete', function () {
+                var grid = $('#grid').data('kendoGrid');
+                var model = grid.dataItem($(this).closest('tr'));
+
                 popup.kendoWindow({
                     width: "300px",
                     height: "150px",
@@ -277,6 +280,24 @@
                 }).data('kendoWindow');
 
                 popup.data('kendoWindow').center().open();
+
+                $('#submitButton').click(function () {
+                    console.log(model);
+                    $.ajax({
+                        url: "/ServiceReestr/Delete/" + model.Id,
+                        data: model.Id,
+                        type: "POST",
+                        dataType: "json",
+                        success: function () {
+                            $('#grid').data('kendoGrid').dataSource.read().promise();
+                        }
+                    });
+                    $('#deleteConfirmationPopup').data('kendoWindow').close();
+                });
+
+                $('#cancelButton').click(function () {
+                    $('#deleteConfirmationPopup').data('kendoWindow').close();
+                });
             });
 
 
