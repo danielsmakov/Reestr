@@ -22,6 +22,7 @@
                             dataValueField: "Id",
                             serverFiltering: true,
                             filter: "contains",
+                            minLength: 3,
                             dataSource: {
                                 type: "odata",
                                 transport: {
@@ -62,10 +63,11 @@
                             placeholder: "Выберите услугу",
                             dataTextField: "Name",
                             dataValueField: "Id",
+                            serverFiltering: true,
                             filter: "contains",
+                            minLength: 3,
                             dataSource: {
                                 type: "odata",
-                                serverFiltering: true,
                                 transport: {
                                     read: {
                                         url: "/Service/List",
@@ -112,34 +114,56 @@
             submit: function (e) {
                 e.preventDefault();
 
-                var data = {
-                    OrganizationId: e.model.Organization.Id,
-                    ServiceId: e.model.Service.Id,
-                    Price: e.model.Price,
-                    BeginDate: $('#BeginDate').val()
-                }
-                $.ajax({
-                    url: "/ServiceReestr/Insert",
-                    data: data,
-                    type: "POST",
-                    dataType: "json",
-                    success: function () {
-                        $('#grid').data('kendoGrid').dataSource.read().promise().done(function () {
-                            $('.k-form-submit').closest('.k-window-content').data('kendoWindow').close();
-                        })
+                var model = @Html.Raw(Json.Encode(Model));
+                console.log(model);
+                
+                if (model == null) {
+                    var data = {
+                        OrganizationId: e.model.Organization.Id,
+                        ServiceId: e.model.Service.Id,
+                        Price: e.model.Price,
+                        BeginDate: $('#BeginDate').val()
                     }
-                });
+
+                    $.ajax({
+                        url: "/ServiceReestr/Insert",
+                        data: data,
+                        type: "POST",
+                        dataType: "json",
+                        success: function () {
+                            $('#grid').data('kendoGrid').dataSource.read().promise().done(function () {
+                                $('.k-form-submit').closest('.k-window-content').data('kendoWindow').close();
+                            })
+                        }
+                    });
+                    
+                }
+                else {
+                    var data = {
+                        Id: model.Id,
+                        OrganizationId: e.model.Organization.Id,
+                        ServiceId: e.model.Service.Id,
+                        Price: e.model.Price,
+                        BeginDate: $('#BeginDate').val()
+                    }
+
+                    $.ajax({
+                        url: "/ServiceReestr/Update",
+                        data: data,
+                        type: "POST",
+                        dataType: "json",
+                        success: function () {
+                            $('#grid').data('kendoGrid').dataSource.read().promise().done(function () {
+                                $('.k-form-submit').closest('.k-window-content').data('kendoWindow').close();
+                            })
+                        }
+                    });
+                }
+                
 
                 e.preventDefault();
             },
         });
-
-        
-        @*$('.k-form-submit').click(function () {
-            debugger;
-            $('.k-form-submit').closest('.k-window-content').data('kendoWindow').close();
-            $('#grid').data('kendoGrid').dataSource.read();
-        });*@
 
 
     });

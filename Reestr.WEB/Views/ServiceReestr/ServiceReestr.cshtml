@@ -282,7 +282,6 @@
                 popup.data('kendoWindow').center().open();
 
                 $('#submitButton').click(function () {
-                    console.log(model);
                     $.ajax({
                         url: "/ServiceReestr/Delete/" + model.Id,
                         data: model.Id,
