@@ -89,7 +89,7 @@
                                     parameterMap: function (data, type) {
                                         if (type == "read") {
                                             return {
-                                                NameToSearchFor: $('.k-input').val(),
+                                                NameToSearchFor: $('[name$="Organization_input"]').val(),
                                             }
                                         }
                                     },
@@ -143,7 +143,7 @@
                                     parameterMap: function (data, type) {
                                         if (type == "read") {
                                             return {
-                                                @*NameToSearchFor: $('.k-form-field:nth-child(2) ~ input').val(),*@
+                                                NameToSearchFor: $('[name$="Service_input"]').val(),
                                             }
                                         }
                                     },

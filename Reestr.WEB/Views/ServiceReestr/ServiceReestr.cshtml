@@ -128,11 +128,7 @@
                             { template: kendo.template($('#deleteButtonTemplate').html()) }
                         ], width: 170
                     }],
-                editable: {
-                    mode: false,
-                    confirmation: false,
-                    window: { title: "" },
-                },
+                editable: false,
                 edit: function (e) {
                     var update = $(e.container).parent().find(".k-grid-update");
                     var cancel = $(e.container).parent().find(".k-grid-cancel");
